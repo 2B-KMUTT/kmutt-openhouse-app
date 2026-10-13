@@ -1,0 +1,8 @@
+node_modules
+mysql-data
+mysql-data-prod
+nginx_logs
+.git
+.env*
+public/images/*.old.*
+public/images/Banner เปิดเฮือน มจธ.png

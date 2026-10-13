@@ -4,30 +4,27 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build",
+    "build": "next build",
+    "generate": "prisma generate",
+    "prisma": "prisma",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "seed:admins": "node scripts/generate-admin-accounts.js"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.2.4",
     "@chakra-ui/react": "2.10.9",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
-    "@fontsource/ibm-plex-sans-thai": "^5.2.6",
-    "@fontsource/poppins": "^5.2.6",
     "@prisma/client": "^6.15.0",
     "@supabase/supabase-js": "^2.75.0",
     "axios": "^1.12.2",
     "bcrypt": "^6.0.0",
-    "bcryptjs": "^3.0.2",
     "browser-image-compression": "^2.0.2",
-    "formidable": "2",
     "framer-motion": "^12.23.12",
     "jsonwebtoken": "^9.0.2",
     "jspdf": "^3.0.3",
-    "jspdf-autotable": "^5.0.2",
     "lucide-react": "^0.542.0",
-    "mysql2": "^3.14.4",
     "next": "16.0.7",
     "next-auth": "^4.24.11",
     "nextjs-google-analytics": "^2.3.7",
@@ -46,7 +43,6 @@
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/bcrypt": "^6.0.0",
-    "@types/formidable": "^3.4.5",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/jspdf": "^2.0.0",
     "@types/node": "^24.3.1",
@@ -59,7 +55,6 @@
     "eslint-config-next": "15.5.2",
     "prisma": "^6.15.0",
     "tailwindcss": "^4",
-    "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
   }
 }
