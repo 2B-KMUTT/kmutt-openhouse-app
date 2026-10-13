@@ -43,3 +43,7 @@ yarn-error.log*
 next-env.d.ts
 
 /src/generated/prisma
+
+admins.csv
+public/images/*.old.*
+public/images/Banner เปิดเฮือน มจธ.png
