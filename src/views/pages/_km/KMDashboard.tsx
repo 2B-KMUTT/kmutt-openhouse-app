@@ -39,11 +39,7 @@ const KMDashboardPage = () => {
     const [searchKeyword, setSearchKeyword] = useState("")
 
     // state เก็บ current page ของแต่ละวัน
-    const [pageByDate, setPageByDate] = useState<Record<string, number>>({
-        "10/10/2025": 1,
-        "11/10/2025": 1,
-        "12/10/2025": 1,
-    })
+    const [pageByDate, setPageByDate] = useState<Record<string, number>>({})
 
     useEffect(() => {
         fetch("/api/km/profile")
@@ -76,12 +72,15 @@ const KMDashboardPage = () => {
     }
 
     const dateColors: Record<string, string> = {
+        "30/10/2026": "orange",
+        "2026-10-30": "orange",
         "10/10/2025": "yellow",
         "11/10/2025": "green",
         "12/10/2025": "blue",
     }
 
-    const availableDates = ["10/10/2025", "11/10/2025", "12/10/2025"]
+    const distinctDates = Array.from(new Set(activities.map((a) => a.date))).filter(Boolean)
+    const availableDates = distinctDates.length > 0 ? distinctDates : ["30/10/2026"]
 
     // ฟิลเตอร์ตาม keyword ก่อน
     const filteredActivities = activities.filter((act) => {
@@ -130,12 +129,7 @@ const KMDashboardPage = () => {
                         value={searchKeyword}
                         onChange={(e) => {
                             setSearchKeyword(e.target.value)
-                            // reset pagination ทุกวัน
-                            setPageByDate({
-                                "2025-10-10": 1,
-                                "2025-10-11": 1,
-                                "2025-10-12": 1,
-                            })
+                            setPageByDate({})
                         }}
                     />
 

@@ -149,7 +149,7 @@ const GuestDashboardPage = () => {
                                         ร่วมทำแบบสอบถาม
                                     </Text>
                                     <Text fontSize="sm" color="whiteAlpha.900" mt={-2}>
-                                        Open House 2025
+                                        เปิดเฮือน มจธ. (มดอีสาน)
                                     </Text>
                                 </Flex>
                             </Box>

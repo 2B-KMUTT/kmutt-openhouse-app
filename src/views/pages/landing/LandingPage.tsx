@@ -45,14 +45,14 @@ const LandingPage = () => {
     return (
         <>
             <Head>
-                <title>KMUTT Open House 2025 - Journey of Discovery</title>
+                <title>เปิดเฮือน มจธ. - KMUTT Open House 2569 (มดอีสาน)</title>
                 <meta
                     name="description"
-                    content="KMUTT Open House 2025 | Journey of Discovery - เปิดประสบการณ์ใหม่กับทุกคณะและหน่วยงาน"
+                    content="เปิดเฮือน มจธ. KMUTT Open House (มดอีสาน) | วันที่ 30 ตุลาคม 2569 ณ โรงแรมเพชรรัชต์การ์เด้น จ.ร้อยเอ็ด"
                 />
-                <meta property="og:title" content="KMUTT Open House 2025 - Journey of Discovery" />
-                <meta property="og:description" content="ค้นหาแรงบันดาลใจและเริ่มต้น Journey of Discovery ไปกับ มจธ." />
-                <meta property="og:image" content="/images/banner.png" />
+                <meta property="og:title" content="เปิดเฮือน มจธ. - KMUTT Open House 2569 (มดอีสาน)" />
+                <meta property="og:description" content="เปิดเฮือน มจธ. วันที่ 30 ตุลาคม 2569 ณ โรงแรมเพชรรัชต์การ์เด้น จ.ร้อยเอ็ด" />
+                <meta property="og:image" content="/images/banner_new.png" />
             </Head>
             <Box minH="100vh" bg={useColorModeValue("white", "gray.900")} color={textColor}>
                 {/* ===== NAVBAR ===== */}
@@ -248,20 +248,18 @@ const LandingPage = () => {
                     <VStack zIndex={1} mt="20" textAlign="center" spacing={6} px={6} maxW="4xl">
                         <Heading size={{ base: "md", md: "4xl" }} fontWeight="extrabold" color={textColor}>
                             <Text as="span" color={PRIMARY}>
-                                KMUTT OPEN HOUSE 2025 <br />
+                                KMUTT OPEN HOUSE <br />
                             </Text> {" "}
-                            JOURNEY OF DISCOVERY
+                            เปิดเฮือน มจธ. (มดอีสาน)
                         </Heading>
                         <Text px={6} fontSize={{ base: "md", md: "lg" }} lineHeight={{ base: "25px", md: "32px" }} color={textColor}>
-                            วันที่ 10 – 12 ตุลาคม 2568 เวลา 8:30 น. – 21:00 น. <br />
-                            ณ มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าธนบุรี (มจธ.) บางมด และบางขุนเทียน
-
+                            วันที่ 30 ตุลาคม 2569 เวลา 09.00 – 16.00 น. <br />
+                            ณ โรงแรมเพชรรัชต์การ์เด้น อ.เมือง จ.ร้อยเอ็ด
                         </Text>
 
                         <Text px={6} fontSize={{ base: "sm", md: "md" }} lineHeight={{ base: "25px", md: "32px" }} color={textColor}>
-                            October 10-12, 2025, from  08:30 a.m. to 9:00 p.m.
-                            at King {"Mongkut's"} University of Technology Thonburi (KMUTT), Bangmod and Bang khunthian Campuses
-
+                            October 30, 2026, from 09:00 a.m. to 4:00 p.m. <br />
+                            at Petcharat Garden Hotel, Mueang, Roi Et
                         </Text>
 
 

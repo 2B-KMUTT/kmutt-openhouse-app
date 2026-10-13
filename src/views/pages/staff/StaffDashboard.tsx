@@ -60,7 +60,35 @@ const StaffDashboard = () => {
     const [loading, setLoading] = useState(true)
     const [now, setNow] = useState<Date>(new Date())
 
-    const eventDates = ["10/10/2025", "11/10/2025", "12/10/2025"]
+    const formatDisplayDate = (dateStr: string) => {
+        if (!dateStr) return ""
+        if (dateStr.includes("/")) {
+            const [day, month, year] = dateStr.split("/")
+            const parsed = new Date(`${year}-${month}-${day}`)
+            if (!isNaN(parsed.getTime())) {
+                return parsed.toLocaleDateString("th-TH", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                })
+            }
+            return dateStr
+        }
+        const parsed = new Date(dateStr)
+        if (!isNaN(parsed.getTime())) {
+            return parsed.toLocaleDateString("th-TH", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+            })
+        }
+        return dateStr
+    }
+
+    const eventDates = useMemo(() => {
+        const distinct = Array.from(new Set(activities.map((a) => a.date))).filter(Boolean)
+        return distinct.length > 0 ? distinct : ["30/10/2026"]
+    }, [activities])
 
     useEffect(() => {
         fetch("/api/staff/profile")
@@ -76,9 +104,12 @@ const StaffDashboard = () => {
                 const data = await res.json()
                 // เรียงกิจกรรมตามเวลา
                 const sorted = data.sort(
-                    (a: Activity, b: Activity) =>
-                        new Date(`${a.date}T${a.start_time}`).getTime() -
-                        new Date(`${b.date}T${b.start_time}`).getTime()
+                    (a: Activity, b: Activity) => {
+                        const aDate = a.date?.includes("/") ? a.date.split("/").reverse().join("-") : a.date
+                        const bDate = b.date?.includes("/") ? b.date.split("/").reverse().join("-") : b.date
+                        return new Date(`${aDate}T${a.start_time}`).getTime() -
+                               new Date(`${bDate}T${b.start_time}`).getTime()
+                    }
                 )
                 setActivities(sorted)
             }
@@ -98,9 +129,13 @@ const StaffDashboard = () => {
     }
 
     const isOngoing = (act: Activity) => {
+        if (!act.date || !act.start_time || !act.end_time) return false
         // แปลงวันที่จาก "DD/MM/YYYY" → "YYYY-MM-DD"
-        const [day, month, year] = act.date.split("/")
-        const isoDate = `${year}-${month}-${day}`
+        let isoDate = act.date
+        if (act.date.includes("/")) {
+            const [day, month, year] = act.date.split("/")
+            isoDate = `${year}-${month}-${day}`
+        }
 
         // สร้างเวลาแบบ ISO ที่ JS อ่านได้
         const start = new Date(`${isoDate}T${act.start_time}:00`)
@@ -116,7 +151,7 @@ const StaffDashboard = () => {
             if (groups[a.date]) groups[a.date].push(a)
         })
         return groups
-    }, [activities])
+    }, [activities, eventDates])
 
     if (!profile) {
         return (
@@ -147,11 +182,7 @@ const StaffDashboard = () => {
                         <TabList>
                             {eventDates.map((d) => (
                                 <Tab key={d}>
-                                    {new Date(d).toLocaleDateString("th-TH", {
-                                        day: "2-digit",
-                                        month: "2-digit",
-                                        year: "numeric",
-                                    })}
+                                    {formatDisplayDate(d)}
                                 </Tab>
                             ))}
                         </TabList>

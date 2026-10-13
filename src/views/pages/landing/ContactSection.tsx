@@ -1,4 +1,4 @@
-import { Box, Text, Button, useColorModeValue } from "@chakra-ui/react";
+import { Box, Text, Button, HStack, useColorModeValue } from "@chakra-ui/react";
 import { FaLine } from "react-icons/fa";
 
 const PRIMARY = "#F04E23"; // KMUTT Orange Red
@@ -31,30 +31,51 @@ const ContactSection = () => {
             {/* Content */}
             <Box position="relative" zIndex={1} textAlign="center">
                 <Text fontSize={{ base: "2xl", md: "4xl" }} fontWeight="bold" mb={4} color={PRIMARY}>
-                    ช่องทางการติดต่อ
+                    ช่องทางการติดต่อ & สอบถามข้อมูล
                 </Text>
 
-                <Text fontSize={{ base: "md", md: "lg" }} mb={8} maxW="700px" mx="auto" color={text}>
-                    หากมีข้อสงสัยหรือต้องการสอบถามเพิ่มเติม สามารถเข้าร่วม OpenChat ของเราได้ที่ลิงก์ด้านล่างนี้
+                <Text fontSize={{ base: "md", md: "lg" }} mb={2} maxW="700px" mx="auto" color={text}>
+                    ผู้ประสานงาน: นางสาวสุวะรักษ์ ศิริวรรณ์
+                </Text>
+                <Text fontSize={{ base: "sm", md: "md" }} mb={6} color={text}>
+                    โทร. 0 2470 8471 | อีเมล: admission@kmutt.ac.th
                 </Text>
 
-                <Button
-                    as="a"
-                    href="https://kmutt.me/OpenChatOPH2025"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    size="lg"
-                    colorScheme="green"
-                    leftIcon={<FaLine />}
-                    px={8}
-                    py={6}
-                    borderRadius="full"
-                    fontSize="lg"
-                    fontWeight="bold"
-                    _hover={{ transform: "scale(1.05)", boxShadow: "xl" }}
-                >
-                    เข้าร่วม Line OpenChat
-                </Button>
+                <HStack justify="center" spacing={4} wrap="wrap">
+                    <Button
+                        as="a"
+                        href="https://kmutt.me/oph_RoiEt"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        size="lg"
+                        colorScheme="orange"
+                        px={8}
+                        py={6}
+                        borderRadius="full"
+                        fontSize="md"
+                        fontWeight="bold"
+                        _hover={{ transform: "scale(1.05)", boxShadow: "xl" }}
+                    >
+                        แบบตอบรับเข้าร่วมงาน (kmutt.me/oph_RoiEt)
+                    </Button>
+                    <Button
+                        as="a"
+                        href="https://kmutt.me/OpenChatOPH2025"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        size="lg"
+                        colorScheme="green"
+                        leftIcon={<FaLine />}
+                        px={8}
+                        py={6}
+                        borderRadius="full"
+                        fontSize="md"
+                        fontWeight="bold"
+                        _hover={{ transform: "scale(1.05)", boxShadow: "xl" }}
+                    >
+                        Line OpenChat
+                    </Button>
+                </HStack>
             </Box>
         </Box>
     );

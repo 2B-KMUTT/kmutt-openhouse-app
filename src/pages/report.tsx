@@ -61,7 +61,7 @@ const ReportPage = () => {
     const [date, setDate] = useState("");
     const [loading, setLoading] = useState(false);
 
-    const dates = ["10/10/2025", "11/10/2025", "12/10/2025"];
+    const dates = ["30/10/2026", "10/10/2025", "11/10/2025", "12/10/2025"];
 
     // โหลด department
     useEffect(() => {
@@ -174,7 +174,7 @@ const ReportPage = () => {
                             >
                                 {dates.map((d) => (
                                     <option key={d} value={d}>
-                                        {d}
+                                        {d === "30/10/2026" ? "30 ตุลาคม 2569 (30/10/2026)" : d}
                                     </option>
                                 ))}
                                 <option value={"all"}>ทุกวัน</option>
