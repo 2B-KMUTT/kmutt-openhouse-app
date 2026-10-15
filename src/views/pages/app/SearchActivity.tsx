@@ -126,6 +126,9 @@ const SearchActivityPage = () => {
     }
 
     const dateColors: Record<string, string> = {
+        "30/10/2026": "orange",
+        "2026-10-30": "orange",
+        "30-10-2026": "orange",
         "10/10/2025": "yellow",
         "10-10-2025": "yellow",
         "2025-10-10": "yellow",
@@ -180,9 +183,9 @@ const SearchActivityPage = () => {
                 <Box mb={4}>
                     <Text fontWeight="bold" mb={2} mt={2}>เลือกวัน:</Text>
                     <CheckboxGroup value={selectedDates} onChange={handleDateChange}>
-                        <Stack direction="row">
-                            {["10/10/2025", "11/10/2025", "12/10/2025"].map((d) => (
-                                <Checkbox key={d} value={d}>{d}</Checkbox>
+                        <Stack direction="row" wrap="wrap">
+                            {["30/10/2026"].map((d) => (
+                                <Checkbox key={d} value={d}>30 ตุลาคม 2569 ({d})</Checkbox>
                             ))}
                         </Stack>
                     </CheckboxGroup>

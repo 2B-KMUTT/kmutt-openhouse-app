@@ -127,6 +127,9 @@ const StudentDashboardPage = () => {
     }
 
     const dateColors: Record<string, string> = {
+        "30/10/2026": "orange",
+        "2026-10-30": "orange",
+        "30-10-2026": "orange",
         "10/10/2025": "yellow",
         "2025-10-10": "yellow",
         "11/10/2025": "green",

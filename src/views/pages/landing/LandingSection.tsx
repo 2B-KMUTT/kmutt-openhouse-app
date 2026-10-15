@@ -215,7 +215,7 @@ export function LandingSections() {
                         <HStack spacing={6} mt={{ base: 4, md: 0 }}>
                             <Link href="#schedule">กำหนดการ</Link>
                             <Link href="#booth">บูธแนะนำหลักสูตร</Link>
-                            <Link href="#map">แผนที่</Link>
+                            {/* <Link href="#map">แผนที่</Link> */}
                         </HStack>
                     </Flex>
                 </Container>

@@ -1,0 +1,12 @@
+node_modules
+.next
+mysql-data
+mysql-data-prod
+nginx_logs
+.git
+.env*
+public/images/*.old.*
+public/images/Banner เปิดเฮือน มจธ.png
+*.log
+.DS_Store
+

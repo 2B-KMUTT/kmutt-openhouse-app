@@ -154,9 +154,7 @@ const AddActivityPage = () => {
                             <FormLabel>วันที่จัดกิจกรรม</FormLabel>
                             {/* <Input type="date" value={date} onChange={e => setDate(e.target.value)} /> */}
                             <Select placeholder="เลือกวันที่" value={date} onChange={e => setDate(e.target.value)}>
-                                <option value="10/10/2025">10 ตุลาคม 2568</option>
-                                <option value="11/10/2025">11 ตุลาคม 2568</option>
-                                <option value="12/10/2025">12 ตุลาคม 2568</option>
+                                <option value="30/10/2026">30 ตุลาคม 2569 (วันจัดงาน)</option>
                             </Select>
 
                         </Box>

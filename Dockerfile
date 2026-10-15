@@ -1,40 +1,43 @@
-# Stage 1: Install dependencies
-FROM node:20-alpine AS deps
+# syntax=docker/dockerfile:1
+
+# Stage 1: Build Stage using Bun (Debian glibc)
+FROM oven/bun:1 AS builder
 WORKDIR /app
 
-# Copy lockfile + package.json ก่อน
-COPY package.json yarn.lock ./
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production
 
-# ติดตั้ง dependencies (รวม dev เพราะต้อง build TS)
-RUN yarn install --frozen-lockfile
+# 1. ติดตั้ง Dependencies (ใช้ BuildKit Cache Mount ลดเวลาดาวน์โหลด package)
+COPY package.json ./
+COPY yarn.lock* bun.lock* ./
+RUN --mount=type=cache,id=bun-cache,target=/root/.bun/install/cache \
+    bun install
 
-# Stage 2: Build Next.js
-FROM node:20-alpine AS builder
-WORKDIR /app
+# 2. แยก Prisma Schema ออกมา generate ก่อน (แก้โค้ดหน้าเว็บจะไม่กระทบ Layer นี้ ทำให้ Cache 100%)
+COPY prisma ./prisma
+RUN bunx prisma generate
 
-# Copy source ทั้งหมด
+# 3. คัดลอก Source Code และ Build โดยใช้ Cache Mount สำหรับ .next/cache
 COPY . .
+RUN --mount=type=cache,id=next-cache,target=/app/.next/cache \
+    bun run build
 
-# Copy node_modules จาก deps
-COPY --from=deps /app/node_modules ./node_modules
-
-# Build (Next.js จะ compile TypeScript)
-RUN yarn build
-
-# Stage 3: Production runner
-FROM node:20-alpine AS runner
+# Stage 2: Production Runner (Node 22 Slim - Debian glibc เดียวกับ Bun)
+FROM node:22-slim AS runner
 WORKDIR /app
 
-ENV NODE_ENV production
-ENV PORT 3000
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=80
 
-# Copy เฉพาะไฟล์ที่รันจริง
+RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+
+# คัดลอกเฉพาะ Standalone Bundle, Static Files และ Prisma
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/next.config.ts ./next.config.ts
-COPY --from=builder /app/tsconfig.json ./tsconfig.json
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
 
-EXPOSE 3000
-CMD ["yarn", "start"]
+EXPOSE 80
+CMD ["node", "server.js"]
+

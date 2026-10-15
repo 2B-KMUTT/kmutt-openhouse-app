@@ -95,13 +95,13 @@ const PublicSurvey = () => {
     return (
         <Box bgGradient="linear(to-b, #FFC23320, #F04E2330)" minH="100vh" py={10} px={{ base: 4, md: 10 }}>
             <Head>
-                <title>แบบสอบถาม KMUTT Open House 2025</title>
-                <meta name="description" content="แบบสอบถาม KMUTT Open House 2025" />
+                <title>แบบสอบถาม เปิดเฮือน มจธ. (KMUTT Open House)</title>
+                <meta name="description" content="แบบสอบถาม เปิดเฮือน มจธ. (KMUTT Open House)" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <Center mb={6}>
                 <Heading fontSize={{ base: "2xl", md: "3xl" }} color="#F04E23" textAlign="center">
-                    แบบสอบถาม KMUTT Open House 2025
+                    แบบสอบถาม เปิดเฮือน มจธ. (KMUTT Open House)
                 </Heading>
             </Center>
 

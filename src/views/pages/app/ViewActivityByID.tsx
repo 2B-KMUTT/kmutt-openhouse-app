@@ -198,45 +198,7 @@ const ViewActivityByID = () => {
                         </Button>
                     )} */}
 
-                    {activity.department.name_th === "โครงการร่วมบริหารหลักสูตรมีเดียอาตส์และเทคโนโลยีมีเดีย" ? (
-                        <Box
-                            bg="yellow.100"           // สีพื้นหลังอ่อน ๆ
-                            border="1px"               // เส้นขอบ
-                            borderColor="yellow.400"   // สีเส้นขอบ
-                            p={4}                      // ช่องว่างรอบ ๆ
-                            rounded="md"               // มุมโค้ง
-                            fontWeight="semibold"      // ตัวหนาเล็กน้อย
-                            color="yellow.800"
-                            fontSize={"sm"}
-                        >
-                            หากลงทะเบียนเข้าร่วมกิจกรรมของ <Text as="span" fontWeight="bold">โครงการร่วมบริหารหลักสูตรมีเดียอาตส์และเทคโนโลยีมีเดีย</Text>
-                            {" "}โปรดลงทะเบียนรถเพื่อเดินทางจาก <Text as="span" fontWeight="bold">มจธ.บางมด</Text> ไป <Text as="span" fontWeight="bold">มจธ.บางขุนเทียน</Text> ด้วย
 
-                            Link: <a href="https://kmutt.me/OPHBusBooking2025" target="_blank" style={{ textDecoration: "underline", color: "#3182ce" }}>
-                                https://kmutt.me/OPHBusBooking2025
-                            </a>
-                        </Box>
-
-                    ) : ""}
-
-                    {activity.department.name_th === "คณะสถาปัตยกรรมศาสตร์และการออกแบบ" ? (
-                        <Box
-                            bg="yellow.100"           // สีพื้นหลังอ่อน ๆ
-                            border="1px"               // เส้นขอบ
-                            borderColor="yellow.400"   // สีเส้นขอบ
-                            p={4}                      // ช่องว่างรอบ ๆ
-                            rounded="md"               // มุมโค้ง
-                            fontWeight="semibold"      // ตัวหนาเล็กน้อย
-                            color="yellow.800"
-                            fontSize={"sm"}
-                        >
-                            If you would like to use the transportation service for  school of Architecture and Design, Bang Khun Thian, please register through this link:
-                            : <a href="https://forms.office.com/r/iemtQmb05i" target="_blank" style={{ textDecoration: "underline", color: "#3182ce" }}>
-                                https://forms.office.com/r/iemtQmb05i
-                            </a>
-                        </Box>
-
-                    ) : ""}
 
                     <Divider />
 

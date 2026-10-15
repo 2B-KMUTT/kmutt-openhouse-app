@@ -18,35 +18,74 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials, req): Promise<User | null> {
         if (!credentials) return null;
         const { emailOrUsername, password } = credentials;
-        if(emailOrUsername.startsWith(`KM_`)){
-          // KMUTT user role
-          const kmuser = await prisma.admins.findUnique({ where: { username: emailOrUsername } });
-           if (!kmuser) return null;
+        if (!emailOrUsername || !password) return null;
+
+        // 1. ตรวจสอบตาราง Admins (KMUTT user role - รองรับทั้ง username และ email)
+        const kmuser = await prisma.admins.findFirst({
+          where: {
+            OR: [
+              { username: emailOrUsername },
+              { email: emailOrUsername }
+            ]
+          }
+        });
+        if (kmuser) {
           const isValid = await bcrypt.compare(password, kmuser.password_hash);
-          if (!isValid) return null;
-          return {
+          if (isValid) {
+            return {
               id: kmuser.id,
               role: "kmuser",
               name: kmuser.name,
               email: kmuser.email
-          };
-          }else{
-            // normal role
-            const student = await prisma.students.findUnique({ where: { email: emailOrUsername } });
-            const staff = await prisma.staffs.findUnique({ where: { username: emailOrUsername } });
-            const user = student || staff 
-            if (!user) return null;
-            const isValid = await bcrypt.compare(password, user.password_hash);
-            if (!isValid) return null;
-
-            return {
-                id: user.id,
-                role: student ? student.role : "staff",
-                name: student ? `${student.first_name} ${student.last_name}` : staff!.name,
-                email: user.email
             };
           }
         }
+
+        // 2. ตรวจสอบตาราง Students (รองรับ email และ citizen_id / phone)
+        const student = await prisma.students.findFirst({
+          where: {
+            OR: [
+              { email: emailOrUsername },
+              { citizen_id: emailOrUsername },
+              { phone: emailOrUsername }
+            ]
+          }
+        });
+        if (student) {
+          const isValid = await bcrypt.compare(password, student.password_hash);
+          if (isValid) {
+            return {
+              id: student.id,
+              role: student.role,
+              name: `${student.first_name} ${student.last_name}`,
+              email: student.email
+            };
+          }
+        }
+
+        // 3. ตรวจสอบตาราง Staffs (รองรับทั้ง username และ email)
+        const staff = await prisma.staffs.findFirst({
+          where: {
+            OR: [
+              { username: emailOrUsername },
+              { email: emailOrUsername }
+            ]
+          }
+        });
+        if (staff) {
+          const isValid = await bcrypt.compare(password, staff.password_hash);
+          if (isValid) {
+            return {
+              id: staff.id,
+              role: "staff",
+              name: staff.name,
+              email: staff.email
+            };
+          }
+        }
+
+        return null;
+      }
     })
   ],
   secret: process.env.NEXTAUTH_SECRET,

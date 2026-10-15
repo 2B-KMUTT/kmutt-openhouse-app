@@ -33,12 +33,31 @@ const MapSection = () => {
             {/* Content */}
             <Box position="relative" zIndex={1} textAlign="center">
                 <Text fontSize={{ base: "2xl", md: "4xl" }} fontWeight="bold" mb={4} color={PRIMARY}>
-                    แผนที่มหาวิทยาลัย
+                    สถานที่จัดงาน
                 </Text>
 
-                <Text fontSize={{ base: "md", md: "lg" }} mb={8} maxW="800px" mx="auto" color={text}>
-                    ดูตำแหน่งคณะและหน่วยงานบริการต่างๆ ของ มจธ. แบบง่ายๆ บนแผนที่นี้
+                <Text fontSize={{ base: "md", md: "lg" }} mb={4} maxW="800px" mx="auto" color={text}>
+                    ณ โรงแรมเพชรรัชต์การ์เด้น อ.เมือง จ.ร้อยเอ็ด
                 </Text>
+
+                <Box mb={6}>
+                    <a
+                        href="https://maps.google.com/?q=Petcharat+Garden+Hotel+Roi+Et"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                            display: "inline-block",
+                            padding: "10px 24px",
+                            backgroundColor: PRIMARY,
+                            color: "white",
+                            borderRadius: "9999px",
+                            fontWeight: "bold",
+                            textDecoration: "none",
+                        }}
+                    >
+                        เปิดแผนที่ Google Maps นำทาง
+                    </a>
+                </Box>
 
                 <Box
                     maxW={{ base: "100%", md: "800px" }}
@@ -51,7 +70,7 @@ const MapSection = () => {
                 >
                     <Image
                         src="/images/map.jpg"
-                        alt="แผนที่มหาวิทยาลัย"
+                        alt="แผนที่สถานที่จัดงาน"
                         objectFit="contain"
                         width="100%"
                         height={{ base: "250px", md: "450px" }}

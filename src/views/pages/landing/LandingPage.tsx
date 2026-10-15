@@ -28,6 +28,7 @@ import ContactSection from "./ContactSection";
 import StatSection from "./StatSection";
 import { useSession } from "next-auth/react";
 import FAQSection from "./FAQSection";
+import LogoutButton from "@/components/Auth/LogoutButton";
 
 const PRIMARY = "#F04E23"; // KMUTT Orange Red
 const SECONDARY = "#FFC233"; // KMUTT Yellow
@@ -40,19 +41,35 @@ const LandingPage = () => {
     const textColor = useColorModeValue("gray.800", "gray.100");
     const navBg = useColorModeValue("whiteAlpha.85", "gray.800");
     const borderColor = useColorModeValue("orange.100", "gray.700");
-    const { status } = useSession();
+    const { data: session, status } = useSession();
+
+    const getDashboardUrl = (role?: string) => {
+        switch (role) {
+            case "staff":
+                return "/staff/dashboard";
+            case "kmuser":
+                return "/_km/dashboard";
+            case "guest":
+            case "parent":
+            case "teacher":
+                return "/guest/dashboard";
+            case "student":
+            default:
+                return "/app/dashboard";
+        }
+    };
 
     return (
         <>
             <Head>
-                <title>KMUTT Open House 2025 - Journey of Discovery</title>
+                <title>เปิดเฮือน มจธ. - KMUTT Open House 2569 (มดอีสาน)</title>
                 <meta
                     name="description"
-                    content="KMUTT Open House 2025 | Journey of Discovery - เปิดประสบการณ์ใหม่กับทุกคณะและหน่วยงาน"
+                    content="เปิดเฮือน มจธ. KMUTT Open House (มดอีสาน) | วันที่ 30 ตุลาคม 2569 ณ โรงแรมเพชรรัชต์การ์เด้น จ.ร้อยเอ็ด"
                 />
-                <meta property="og:title" content="KMUTT Open House 2025 - Journey of Discovery" />
-                <meta property="og:description" content="ค้นหาแรงบันดาลใจและเริ่มต้น Journey of Discovery ไปกับ มจธ." />
-                <meta property="og:image" content="/images/banner.png" />
+                <meta property="og:title" content="เปิดเฮือน มจธ. - KMUTT Open House 2569 (มดอีสาน)" />
+                <meta property="og:description" content="เปิดเฮือน มจธ. วันที่ 30 ตุลาคม 2569 ณ โรงแรมเพชรรัชต์การ์เด้น จ.ร้อยเอ็ด" />
+                <meta property="og:image" content="/images/banner_new.png" />
             </Head>
             <Box minH="100vh" bg={useColorModeValue("white", "gray.900")} color={textColor}>
                 {/* ===== NAVBAR ===== */}
@@ -100,7 +117,7 @@ const LandingPage = () => {
                                 {/* <Link href="#how">วิธีใช้งาน</Link> */}
                                 <Link href="#schedule"><center>กำหนดการ <br />Schedule</center></Link>
                                 <Link href="#booth"><center>บูธแนะนำหลักสูตร <br />Program Information Booth</center></Link>
-                                <Link href="#map"><center>แผนที่ <br />Map</center></Link>
+                                {/* <Link href="#map"><center>แผนที่ <br />Map</center></Link> */}
                                 {/* <Link href="#features">ฟีเจอร์</Link>
                             <Link href="#stats">สถิติ</Link>
                             <Link href="#testimonials">เสียงจากผู้ใช้</Link> */}
@@ -116,27 +133,42 @@ const LandingPage = () => {
                                     onClick={toggleColorMode}
                                     variant="ghost"
                                 />
-                                {status === "authenticated" ? <Button
-                                    as={Link}
-                                    href="/app/dashboard"
-                                    bg={PRIMARY}
-                                    _hover={{ bg: "#d6451f" }}
-                                    color="white"
-                                    rounded="xl"
-                                    display={{ base: "none", md: "inline-flex" }}
-                                >
-                                    ไปที่แดชบอร์ด
-                                </Button> : <Button
-                                    as={Link}
-                                    href="/login"
-                                    bg={PRIMARY}
-                                    _hover={{ bg: "#d6451f" }}
-                                    color="white"
-                                    rounded="xl"
-                                    display={{ base: "none", md: "inline-flex" }}
-                                >
-                                    เข้าสู่ระบบ
-                                </Button>}
+                                {status === "authenticated" ? (
+                                    <HStack spacing={2} display={{ base: "none", md: "inline-flex" }}>
+                                        <Button
+                                            as={Link}
+                                            href={getDashboardUrl(session?.user?.role)}
+                                            bg={PRIMARY}
+                                            _hover={{ bg: "#d6451f" }}
+                                            color="white"
+                                            rounded="xl"
+                                        >
+                                            ไปที่แดชบอร์ด
+                                        </Button>
+                                        <LogoutButton
+                                            variant="outline"
+                                            borderColor={PRIMARY}
+                                            color={PRIMARY}
+                                            _hover={{ bg: `${PRIMARY}15` }}
+                                            rounded="xl"
+                                            callbackUrl="/login"
+                                        >
+                                            ออกจากระบบ
+                                        </LogoutButton>
+                                    </HStack>
+                                ) : (
+                                    <Button
+                                        as={Link}
+                                        href="/login"
+                                        bg={PRIMARY}
+                                        _hover={{ bg: "#d6451f" }}
+                                        color="white"
+                                        rounded="xl"
+                                        display={{ base: "none", md: "inline-flex" }}
+                                    >
+                                        เข้าสู่ระบบ
+                                    </Button>
+                                )}
 
                                 {/* Desktop login */}
                                 {/* <Box display={{ base: "none", md: "block" }}>
@@ -178,14 +210,14 @@ const LandingPage = () => {
                                     <Link href="#schedule" onClick={() => setMenuOpen(false)}>
                                         {"> "}      กำหนดการ / Schedule
                                     </Link>
-                                    {/* บูธแนะนำหลักสูตร & หน่วยงาน */}
+                                    {/*บูทแนะนำหลักสูตร & หน่วยงาน */}
                                     <Link href="#booth" onClick={() => setMenuOpen(false)}>
-                                        {"> "} บูธแนะนำหลักสูตร & หน่วยงาน / Program Information Booth
+                                        {"> "}บูทแนะนำหลักสูตร & หน่วยงาน / Program Information Booth
                                     </Link>
                                     {/* แผนที่ */}
-                                    <Link href="#map" onClick={() => setMenuOpen(false)}>
+                                    {/* <Link href="#map" onClick={() => setMenuOpen(false)}>
                                         {"> "} แผนที่ / Map
-                                    </Link>
+                                    </Link> */}
                                     {/* <Link href="#features" onClick={() => setMenuOpen(false)}>
                                     ฟีเจอร์
                                 </Link>
@@ -195,27 +227,45 @@ const LandingPage = () => {
                                 <Link href="#testimonials" onClick={() => setMenuOpen(false)}>
                                     เสียงจากผู้ใช้
                                 </Link>*/}
-                                    {status === "authenticated" ? <Button
-                                        as={Link}
-                                        href="/app/dashboard"
-                                        w="full"
-                                        bg={PRIMARY}
-                                        _hover={{ bg: "#d6451f" }}
-                                        color="white"
-                                        rounded="xl"
-                                    >
-                                        ไปที่แดชบอร์ด
-                                    </Button> : <Button
-                                        as={Link}
-                                        href="/login"
-                                        w="full"
-                                        bg={PRIMARY}
-                                        _hover={{ bg: "#d6451f" }}
-                                        color="white"
-                                        rounded="xl"
-                                    >
-                                        เข้าสู่ระบบ
-                                    </Button>}
+                                    {status === "authenticated" ? (
+                                        <>
+                                            <Button
+                                                as={Link}
+                                                href={getDashboardUrl(session?.user?.role)}
+                                                w="full"
+                                                bg={PRIMARY}
+                                                _hover={{ bg: "#d6451f" }}
+                                                color="white"
+                                                rounded="xl"
+                                                onClick={() => setMenuOpen(false)}
+                                            >
+                                                ไปที่แดชบอร์ด
+                                            </Button>
+                                            <LogoutButton
+                                                w="full"
+                                                variant="outline"
+                                                borderColor={PRIMARY}
+                                                color={PRIMARY}
+                                                _hover={{ bg: `${PRIMARY}15` }}
+                                                rounded="xl"
+                                                callbackUrl="/login"
+                                            >
+                                                ออกจากระบบ
+                                            </LogoutButton>
+                                        </>
+                                    ) : (
+                                        <Button
+                                            as={Link}
+                                            href="/login"
+                                            w="full"
+                                            bg={PRIMARY}
+                                            _hover={{ bg: "#d6451f" }}
+                                            color="white"
+                                            rounded="xl"
+                                        >
+                                            เข้าสู่ระบบ
+                                        </Button>
+                                    )}
 
                                 </VStack>
                             </Box>
@@ -248,20 +298,18 @@ const LandingPage = () => {
                     <VStack zIndex={1} mt="20" textAlign="center" spacing={6} px={6} maxW="4xl">
                         <Heading size={{ base: "md", md: "4xl" }} fontWeight="extrabold" color={textColor}>
                             <Text as="span" color={PRIMARY}>
-                                KMUTT OPEN HOUSE 2025 <br />
+                                KMUTT OPEN HOUSE <br />
                             </Text> {" "}
-                            JOURNEY OF DISCOVERY
+                            เปิดเฮือน มจธ. (มดอีสาน)
                         </Heading>
                         <Text px={6} fontSize={{ base: "md", md: "lg" }} lineHeight={{ base: "25px", md: "32px" }} color={textColor}>
-                            วันที่ 10 – 12 ตุลาคม 2568 เวลา 8:30 น. – 21:00 น. <br />
-                            ณ มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าธนบุรี (มจธ.) บางมด และบางขุนเทียน
-
+                            วันที่ 30 ตุลาคม 2569 เวลา 09.00 – 16.00 น. <br />
+                            ณ โรงแรมเพชรรัชต์การ์เด้น อ.เมือง จ.ร้อยเอ็ด
                         </Text>
 
                         <Text px={6} fontSize={{ base: "sm", md: "md" }} lineHeight={{ base: "25px", md: "32px" }} color={textColor}>
-                            October 10-12, 2025, from  08:30 a.m. to 9:00 p.m.
-                            at King {"Mongkut's"} University of Technology Thonburi (KMUTT), Bangmod and Bang khunthian Campuses
-
+                            October 30, 2026, from 09:00 a.m. to 4:00 p.m. <br />
+                            at Petcharat Garden Hotel, Mueang, Roi Et
                         </Text>
 
 
@@ -322,10 +370,10 @@ const LandingPage = () => {
                 <ScheduleSection />
                 <BoothSection />
 
-                <MapSection />
+                {/* <MapSection /> */}
                 <ContactSection />
                 <StatSection />
-                <FAQSection />
+                {/* <FAQSection /> */}
                 {/* ===== OTHER SECTIONS ===== */}
                 <LandingSections />
 

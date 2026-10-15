@@ -227,10 +227,10 @@ export function RegisterPage() {
                         <Icon as={UserPlus} w={8} h={8} color={PRIMARY} />
                     </Flex>
                     <Heading size="lg" mb={1} color={PRIMARY}>
-                        {lang === "TH" ? "สมัครสมาชิก" : "Register"}
+                        {lang === "TH" ? "สมัครสมาชิก / ลงทะเบียน" : "Register"}
                     </Heading>
                     <Text color={textColor} fontSize="sm">
-                        {lang === "TH" ? "กรอกข้อมูลจริงเพื่อสมัครบัญชีผู้ใช้งาน" : "Please enter valid information to register"}
+                        {lang === "TH" ? "เปิดเฮือน มจธ. (มดอีสาน) ณ โรงแรมเพชรรัชต์การ์เด้น จ.ร้อยเอ็ด" : "KMUTT Open House at Petcharat Garden Hotel, Roi Et"}
                     </Text>
                 </Flex>
 
