@@ -16,6 +16,7 @@ import {
 import Link from "next/link";
 import { Menu, X, Moon, Sun } from "lucide-react";
 import { ReactNode, useState } from "react";
+import LogoutButton from "@/components/Auth/LogoutButton";
 
 const PRIMARY = "#F04E23"; // KMUTT Orange Red
 const SECONDARY = "#FFC233"; // KMUTT Yellow
@@ -85,18 +86,16 @@ export default function GuestLayout({ children }: StudentLayoutProps) {
                                 variant="ghost"
                             />
 
-                            {/* Desktop login */}
+                            {/* Desktop logout */}
                             <Box display={{ base: "none", md: "block" }}>
-                                <Button
-                                    as={Link}
-                                    href="/login"
+                                <LogoutButton
                                     bg={PRIMARY}
                                     _hover={{ bg: "#d6451f" }}
                                     color="white"
                                     rounded="xl"
                                 >
                                     ออกจากระบบ
-                                </Button>
+                                </LogoutButton>
                             </Box>
 
                             {/* Mobile Hamburger */}
@@ -129,9 +128,7 @@ export default function GuestLayout({ children }: StudentLayoutProps) {
                                     {"> "}  กำหนดการ / Schedule
                                 </Link>
 
-                                <Button
-                                    as={Link}
-                                    href="/login"
+                                <LogoutButton
                                     w="full"
                                     size={{ base: "sm", md: "md" }}
                                     bg={PRIMARY}
@@ -141,7 +138,7 @@ export default function GuestLayout({ children }: StudentLayoutProps) {
                                     fontSize={{ base: "sm", md: "md" }}
                                 >
                                     ออกจากระบบ
-                                </Button>
+                                </LogoutButton>
                             </VStack>
                         </Box>
                     )}

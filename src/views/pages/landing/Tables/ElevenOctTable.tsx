@@ -107,7 +107,7 @@ const ElevenOctTable = () => {
                         <Table sx={{ td: { lineHeight: "22px" }, th: { lineHeight: "22px" } }} size="sm">
                             <Tr>
                                 <Td fontSize={"sm"} color={"kmutt.100"} colSpan={3} textAlign="center" fontWeight="bold">
-                                    บูธแนะนำหลักสูตรจากทุกคณะและหน่วยงานบริการการศึกษา  เวลา 08:30 – 16:30 น.
+                                   บูทแนะนำหลักสูตรจากทุกคณะและหน่วยงานบริการการศึกษา  เวลา 08:30 – 16:30 น.
                                 </Td>
                             </Tr>
                             <Tr>
@@ -155,7 +155,7 @@ const ElevenOctTable = () => {
                                 <Td fontWeight="bold" verticalAlign="top">
                                     A3 – อาคารเรียนรวม 2 (CB 2)
                                 </Td>
-                                <Td >• บูธแนะนำกิจกรรมและชมรมของนักศึกษา</Td>
+                                <Td >•บูทแนะนำกิจกรรมและชมรมของนักศึกษา</Td>
                             </Tr>
 
                             <Tr>
@@ -175,7 +175,7 @@ const ElevenOctTable = () => {
                                     A5 – อาคารสำนักหอสมุด (N10)
                                 </Td>
                                 <Td>
-                                    • บูธกิจกรรมสำนักหอสมุด<br />
+                                    •บูทกิจกรรมสำนักหอสมุด<br />
                                     • คณะวิศวกรรมศาสตร์<br />
                                     • คณะครุศาสตร์อุตสาหกรรมและเทคโนโลยี
                                 </Td>

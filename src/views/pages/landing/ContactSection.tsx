@@ -42,7 +42,7 @@ const ContactSection = () => {
                 </Text>
 
                 <HStack justify="center" spacing={4} wrap="wrap">
-                    <Button
+                    {/* <Button
                         as="a"
                         href="https://kmutt.me/oph_RoiEt"
                         target="_blank"
@@ -57,7 +57,7 @@ const ContactSection = () => {
                         _hover={{ transform: "scale(1.05)", boxShadow: "xl" }}
                     >
                         แบบตอบรับเข้าร่วมงาน (kmutt.me/oph_RoiEt)
-                    </Button>
+                    </Button> */}
                     <Button
                         as="a"
                         href="https://kmutt.me/OpenChatOPH2025"

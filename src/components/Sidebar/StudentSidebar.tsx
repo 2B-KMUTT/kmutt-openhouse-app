@@ -15,9 +15,11 @@ import {
     MdPerson,
     MdSettings,
     MdSearch,
+    MdLogout,
 } from "react-icons/md"
 import { RiProfileFill } from "react-icons/ri";
 import { GiJourney } from "react-icons/gi";
+import { signOut } from "next-auth/react";
 
 import { Icon } from "@chakra-ui/react"
 import { FaClipboardList } from "react-icons/fa"
@@ -44,6 +46,7 @@ const StudentSidebar = () => {
         { label: "E-Certificate", icon: GrCertificate, link: "/app/e-certificate" },
         // { label: "Profile", icon: MdPerson },
         // { label: "Settings", icon: MdSettings },
+        { label: "ออกจากระบบ", icon: MdLogout, isLogout: true },
     ]
 
     return (
@@ -60,9 +63,14 @@ const StudentSidebar = () => {
                 <VStack align="stretch" spacing={3}>
                     {menuItems.map((item) => (
                         <Button
-                            onClick={(() => {
-                                router.push(item.link)
-                            })}
+                            onClick={async () => {
+                                if (item.isLogout) {
+                                    await signOut({ redirect: false })
+                                    window.location.href = "/login"
+                                } else if (item.link) {
+                                    router.push(item.link)
+                                }
+                            }}
                             key={item.label}
                             variant="ghost"
                             justifyContent="start"

@@ -11,7 +11,9 @@ import {
     MdQrCode,
     MdPerson,
     MdSettings,
+    MdLogout,
 } from "react-icons/md"
+import { signOut } from "next-auth/react"
 
 const GuestSidebar = () => {
     const PRIMARY = "#F04E23"
@@ -24,6 +26,7 @@ const GuestSidebar = () => {
         { label: "QR Code", icon: MdQrCode },
         { label: "Profile", icon: MdPerson },
         { label: "Settings", icon: MdSettings },
+        { label: "ออกจากระบบ", icon: MdLogout, isLogout: true },
     ]
 
     return (
@@ -38,6 +41,12 @@ const GuestSidebar = () => {
             <VStack align="stretch" spacing={3}>
                 {menuItems.map((item) => (
                     <Button
+                        onClick={async () => {
+                            if (item.isLogout) {
+                                await signOut({ redirect: false })
+                                window.location.href = "/login"
+                            }
+                        }}
                         key={item.label}
                         variant="ghost"
                         justifyContent="start"

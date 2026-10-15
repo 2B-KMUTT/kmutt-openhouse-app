@@ -16,6 +16,7 @@ import {
     MdQuestionAnswer
 } from "react-icons/md"
 import { useRouter } from "next/router"
+import { signOut } from "next-auth/react"
 
 const StaffSidebar = () => {
     const PRIMARY = "#F04E23"
@@ -29,7 +30,7 @@ const StaffSidebar = () => {
         //ตั้งค่ารหัสผ่านให้นักเรียน
         { label: "ตั้งค่ารหัสผ่านให้นักเรียน", icon: MdSettings, link: "/staff/student-setting" },
         // { label: "สแกน QR Code", icon: MdQrCode, link: "/staff/scan" },
-        { label: "ออกจากระบบ", icon: MdLogout, link: "/login" }
+        { label: "ออกจากระบบ", icon: MdLogout, isLogout: true }
     ]
 
     return (
@@ -45,9 +46,14 @@ const StaffSidebar = () => {
             <VStack align="stretch" spacing={3}>
                 {menuItems.map((item) => (
                     <Button
-                        onClick={(() => {
-                            router.push(item.link)
-                        })}
+                        onClick={async () => {
+                            if (item.isLogout) {
+                                await signOut({ redirect: false })
+                                window.location.href = "/login"
+                            } else if (item.link) {
+                                router.push(item.link)
+                            }
+                        }}
                         key={item.label}
                         variant="ghost"
                         justifyContent="start"

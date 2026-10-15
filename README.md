@@ -1,34 +1,163 @@
-# KMUTT Openhouse App (AI gen Readme)
+# KMUTT Openhouse Application
 
-A system for managing students and activities, supporting both student and staff roles, with external APIs secured via JWT access tokens.
+A comprehensive web application for managing the KMUTT Open House event. The platform supports multiple user roles (Students, Parents, Teachers, Guests, Staffs, and KMUTT Admins), activity registration, E-Stamp check-ins, E-Certificates, and secure external APIs with JWT authentication.
 
 ---
 
 ## 📝 Features
 
-- **Student Login/Register**
-  - Students can register and login using their phone number and national ID.
-- **Staff Login**
-  - Staff can login using username and password.
-- **Role-based Access Control**
-  - Different access levels for `student` and `staff`.  
-  - Internal and external APIs enforce access with **auth guards**.
-- **External API**
-  - External clients can login and request an **accessToken (JWT)**.
-  - Retrieve student data securely via external APIs.
-- **Pagination & Filtering**
-  - APIs support pagination and searching for student records.
-- **CORS**
-  - APIs allow cross-origin requests for external clients.
+- **Multi-Role Authentication & Access Control**
+  - Students, Parents, Teachers, and Guests can register and login via Email, Citizen ID, or Phone.
+  - Staff and KMUTT Admins can login using Username or Email with password.
+  - Role-based route protection and authorization guards on both internal and external APIs.
+- **Activity & Workshop Management**
+  - Browse, search, and register for workshops and open-house activities by faculty and department.
+  - Capacity tracking and registration limits.
+- **E-Stamp & Journey Tracking**
+  - QR Code scanning for activity check-in and attendance verification.
+  - Student event journey and completed activity logs.
+- **E-Certificate**
+  - Automatic certificate generation and downloadable PDF for eligible participants.
+- **External API & OAuth2**
+  - Secure API endpoints protected with JWT access tokens for external systems.
+- **Monitoring & Metrics**
+  - Integrated Prometheus, Grafana, and Node Exporter metrics.
 
 ---
 
-## 💻 Technology Stack
+## 💻 Tech Stack
 
-- **Frontend:** Next.js, Chakra UI v2, React  
-- **Backend:** Next.js API Routes, NextAuth.js, Prisma ORM  
-- **Database:** MySQL / PostgreSQL  
-- **Authentication:** JWT, bcrypt  
-- **Tools:** Node.js, TypeScript
+- **Frontend:** Next.js (Pages Router), React 19, Chakra UI v2, Framer Motion
+- **Backend:** Next.js API Routes, NextAuth.js (Credentials Provider)
+- **Database & ORM:** MySQL 8.0, Prisma ORM
+- **Object Storage:** Supabase Storage
+- **Container & Deployment:** Docker (Multi-stage build with Bun & Node 22 Standalone), Docker Compose, Nginx Load Balancer
+- **Monitoring:** Prometheus, Grafana, Node Exporter
 
 ---
+
+## ⚙️ Environment Configuration
+
+Copy `.env.example` to `.env` and fill in the required environment variables:
+
+```bash
+cp .env.example .env
+```
+
+Refer to [`.env.example`](./.env.example) for detailed descriptions and default values.
+
+---
+
+## 🚀 Deployment Guide
+
+The production environment runs on a high-availability architecture with **3 Next.js App Containers** (ports `81`, `82`, `83`) load-balanced behind an **Nginx Reverse Proxy** (port `80`).
+
+### 1. Production Quick Deploy (One-Liner)
+
+Pulls the latest code, builds the production Docker image, and restarts only the application containers with zero downtime on Nginx, Prometheus, and Grafana:
+
+```bash
+git pull origin main && \
+docker build -t kmutt_oph_prod . && \
+docker compose -f docker-compose-external-db.yaml up -d --no-deps openhouse_app_ex openhouse_app_ex_2 openhouse_app_ex_3
+```
+
+---
+
+### 2. Step-by-Step Production Deploy
+
+#### Step 1: Pull the latest code
+```bash
+git pull origin main
+```
+
+#### Step 2: Build the Docker image
+Uses multi-stage build (assets built with Bun, executed with Node.js 22 Standalone runner):
+```bash
+docker build -t kmutt_oph_prod .
+```
+
+#### Step 3: Recreate & update application containers
+Update the 3 application containers to the new image using `--no-deps` to avoid restarting Nginx or other services:
+```bash
+docker compose -f docker-compose-external-db.yaml up -d --no-deps openhouse_app_ex openhouse_app_ex_2 openhouse_app_ex_3
+```
+
+#### Step 4: Verify status & view logs
+```bash
+# Check running containers
+docker ps
+
+# Stream logs from app containers
+docker logs --tail 30 -f kmutt-openhouse-app-prod_1
+docker logs --tail 30 -f kmutt-openhouse-app-prod_2
+docker logs --tail 30 -f kmutt-openhouse-app-prod_3
+
+# Verify HTTP response
+curl -I http://localhost:80/
+```
+
+---
+
+### 3. Production Service Management
+
+#### Start all production services (Nginx, Apps, Prometheus, Grafana, Node Exporter)
+```bash
+docker compose -f docker-compose-external-db.yaml up -d
+```
+
+#### Restart Nginx reverse proxy
+```bash
+docker compose -f docker-compose-external-db.yaml restart nginx
+```
+
+#### Stop all services
+```bash
+docker compose -f docker-compose-external-db.yaml down
+```
+
+---
+
+## 🛠️ Database & Scripts
+
+### Prisma ORM
+```bash
+# Generate Prisma Client
+npx prisma generate
+
+# Push schema changes to the database
+npx prisma db push
+```
+
+### Seed Admin Accounts (42 Departments / Faculties)
+Generates high-security crypto-random passwords and exports to `admins.csv`:
+```bash
+node scripts/generate-admin-accounts.js
+# or
+npm run seed:admins
+```
+
+### Full Backup (Read-Only / Export Only)
+Safely exports MySQL database, Supabase storage assets, and certificates without deleting data:
+```bash
+bash scripts/backup-all.sh
+```
+
+---
+
+## 💻 Local Development
+
+```bash
+# 1. Install dependencies
+npm install
+# or
+bun install
+
+# 2. Generate Prisma Client
+npx prisma generate
+
+# 3. Start development server (http://localhost:3000)
+npm run dev
+# or
+bun run dev
+```

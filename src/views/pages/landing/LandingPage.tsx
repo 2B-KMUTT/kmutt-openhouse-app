@@ -28,6 +28,7 @@ import ContactSection from "./ContactSection";
 import StatSection from "./StatSection";
 import { useSession } from "next-auth/react";
 import FAQSection from "./FAQSection";
+import LogoutButton from "@/components/Auth/LogoutButton";
 
 const PRIMARY = "#F04E23"; // KMUTT Orange Red
 const SECONDARY = "#FFC233"; // KMUTT Yellow
@@ -40,7 +41,23 @@ const LandingPage = () => {
     const textColor = useColorModeValue("gray.800", "gray.100");
     const navBg = useColorModeValue("whiteAlpha.85", "gray.800");
     const borderColor = useColorModeValue("orange.100", "gray.700");
-    const { status } = useSession();
+    const { data: session, status } = useSession();
+
+    const getDashboardUrl = (role?: string) => {
+        switch (role) {
+            case "staff":
+                return "/staff/dashboard";
+            case "kmuser":
+                return "/_km/dashboard";
+            case "guest":
+            case "parent":
+            case "teacher":
+                return "/guest/dashboard";
+            case "student":
+            default:
+                return "/app/dashboard";
+        }
+    };
 
     return (
         <>
@@ -100,7 +117,7 @@ const LandingPage = () => {
                                 {/* <Link href="#how">วิธีใช้งาน</Link> */}
                                 <Link href="#schedule"><center>กำหนดการ <br />Schedule</center></Link>
                                 <Link href="#booth"><center>บูธแนะนำหลักสูตร <br />Program Information Booth</center></Link>
-                                <Link href="#map"><center>แผนที่ <br />Map</center></Link>
+                                {/* <Link href="#map"><center>แผนที่ <br />Map</center></Link> */}
                                 {/* <Link href="#features">ฟีเจอร์</Link>
                             <Link href="#stats">สถิติ</Link>
                             <Link href="#testimonials">เสียงจากผู้ใช้</Link> */}
@@ -116,27 +133,42 @@ const LandingPage = () => {
                                     onClick={toggleColorMode}
                                     variant="ghost"
                                 />
-                                {status === "authenticated" ? <Button
-                                    as={Link}
-                                    href="/app/dashboard"
-                                    bg={PRIMARY}
-                                    _hover={{ bg: "#d6451f" }}
-                                    color="white"
-                                    rounded="xl"
-                                    display={{ base: "none", md: "inline-flex" }}
-                                >
-                                    ไปที่แดชบอร์ด
-                                </Button> : <Button
-                                    as={Link}
-                                    href="/login"
-                                    bg={PRIMARY}
-                                    _hover={{ bg: "#d6451f" }}
-                                    color="white"
-                                    rounded="xl"
-                                    display={{ base: "none", md: "inline-flex" }}
-                                >
-                                    เข้าสู่ระบบ
-                                </Button>}
+                                {status === "authenticated" ? (
+                                    <HStack spacing={2} display={{ base: "none", md: "inline-flex" }}>
+                                        <Button
+                                            as={Link}
+                                            href={getDashboardUrl(session?.user?.role)}
+                                            bg={PRIMARY}
+                                            _hover={{ bg: "#d6451f" }}
+                                            color="white"
+                                            rounded="xl"
+                                        >
+                                            ไปที่แดชบอร์ด
+                                        </Button>
+                                        <LogoutButton
+                                            variant="outline"
+                                            borderColor={PRIMARY}
+                                            color={PRIMARY}
+                                            _hover={{ bg: `${PRIMARY}15` }}
+                                            rounded="xl"
+                                            callbackUrl="/login"
+                                        >
+                                            ออกจากระบบ
+                                        </LogoutButton>
+                                    </HStack>
+                                ) : (
+                                    <Button
+                                        as={Link}
+                                        href="/login"
+                                        bg={PRIMARY}
+                                        _hover={{ bg: "#d6451f" }}
+                                        color="white"
+                                        rounded="xl"
+                                        display={{ base: "none", md: "inline-flex" }}
+                                    >
+                                        เข้าสู่ระบบ
+                                    </Button>
+                                )}
 
                                 {/* Desktop login */}
                                 {/* <Box display={{ base: "none", md: "block" }}>
@@ -178,14 +210,14 @@ const LandingPage = () => {
                                     <Link href="#schedule" onClick={() => setMenuOpen(false)}>
                                         {"> "}      กำหนดการ / Schedule
                                     </Link>
-                                    {/* บูธแนะนำหลักสูตร & หน่วยงาน */}
+                                    {/*บูทแนะนำหลักสูตร & หน่วยงาน */}
                                     <Link href="#booth" onClick={() => setMenuOpen(false)}>
-                                        {"> "} บูธแนะนำหลักสูตร & หน่วยงาน / Program Information Booth
+                                        {"> "}บูทแนะนำหลักสูตร & หน่วยงาน / Program Information Booth
                                     </Link>
                                     {/* แผนที่ */}
-                                    <Link href="#map" onClick={() => setMenuOpen(false)}>
+                                    {/* <Link href="#map" onClick={() => setMenuOpen(false)}>
                                         {"> "} แผนที่ / Map
-                                    </Link>
+                                    </Link> */}
                                     {/* <Link href="#features" onClick={() => setMenuOpen(false)}>
                                     ฟีเจอร์
                                 </Link>
@@ -195,27 +227,45 @@ const LandingPage = () => {
                                 <Link href="#testimonials" onClick={() => setMenuOpen(false)}>
                                     เสียงจากผู้ใช้
                                 </Link>*/}
-                                    {status === "authenticated" ? <Button
-                                        as={Link}
-                                        href="/app/dashboard"
-                                        w="full"
-                                        bg={PRIMARY}
-                                        _hover={{ bg: "#d6451f" }}
-                                        color="white"
-                                        rounded="xl"
-                                    >
-                                        ไปที่แดชบอร์ด
-                                    </Button> : <Button
-                                        as={Link}
-                                        href="/login"
-                                        w="full"
-                                        bg={PRIMARY}
-                                        _hover={{ bg: "#d6451f" }}
-                                        color="white"
-                                        rounded="xl"
-                                    >
-                                        เข้าสู่ระบบ
-                                    </Button>}
+                                    {status === "authenticated" ? (
+                                        <>
+                                            <Button
+                                                as={Link}
+                                                href={getDashboardUrl(session?.user?.role)}
+                                                w="full"
+                                                bg={PRIMARY}
+                                                _hover={{ bg: "#d6451f" }}
+                                                color="white"
+                                                rounded="xl"
+                                                onClick={() => setMenuOpen(false)}
+                                            >
+                                                ไปที่แดชบอร์ด
+                                            </Button>
+                                            <LogoutButton
+                                                w="full"
+                                                variant="outline"
+                                                borderColor={PRIMARY}
+                                                color={PRIMARY}
+                                                _hover={{ bg: `${PRIMARY}15` }}
+                                                rounded="xl"
+                                                callbackUrl="/login"
+                                            >
+                                                ออกจากระบบ
+                                            </LogoutButton>
+                                        </>
+                                    ) : (
+                                        <Button
+                                            as={Link}
+                                            href="/login"
+                                            w="full"
+                                            bg={PRIMARY}
+                                            _hover={{ bg: "#d6451f" }}
+                                            color="white"
+                                            rounded="xl"
+                                        >
+                                            เข้าสู่ระบบ
+                                        </Button>
+                                    )}
 
                                 </VStack>
                             </Box>
@@ -320,10 +370,10 @@ const LandingPage = () => {
                 <ScheduleSection />
                 <BoothSection />
 
-                <MapSection />
+                {/* <MapSection /> */}
                 <ContactSection />
                 <StatSection />
-                <FAQSection />
+                {/* <FAQSection /> */}
                 {/* ===== OTHER SECTIONS ===== */}
                 <LandingSections />
 

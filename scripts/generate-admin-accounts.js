@@ -232,6 +232,11 @@ const adminsData = [
     email: "admin@openhouse.kmutt.ac.th",
     name: "admin",
   },
+  {
+    username: "KM_lisa",
+    email: "lisa@openhouse.kmutt.ac.th",
+    name: "กลุ่มงานส่งเสริมและจัดการการเรียนรู้ตลอดชีวิต - Lifelong Learning Support and Administration Unit",
+  },
 ];
 
 function generateRandomPassword(length = 32) {
@@ -267,12 +272,7 @@ function generateRandomPassword(length = 32) {
 async function main() {
   console.log(`Starting seed process for ${adminsData.length} admins...`);
 
-  // 1. ลบข้อมูลเก่าทั้งหมดในตาราง Admins
-  console.log("Clearing existing records in Admins table...");
-  await prisma.admins.deleteMany();
-  console.log("Cleared Admins table successfully.");
-
-  // 2. สร้าง record ใหม่ พร้อม random password 32 character และ bcrypt hash
+  // 1. สร้าง record ใหม่ พร้อม random password 32 character และ bcrypt hash
   const csvRecords = [];
 
   for (const admin of adminsData) {
@@ -297,7 +297,7 @@ async function main() {
     });
   }
 
-  // 3. Export เป็นไฟล์ admins.csv
+  // 2. Export เป็นไฟล์ admins.csv
   const csvFileName = "admins.csv";
   const csvFilePath = path.join(process.cwd(), csvFileName);
 

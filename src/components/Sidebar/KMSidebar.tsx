@@ -16,6 +16,7 @@ import {
     MdQuestionAnswer
 } from "react-icons/md"
 import { useRouter } from "next/router"
+import { signOut } from "next-auth/react"
 
 const KMSidebar = () => {
     const PRIMARY = "#F04E23"
@@ -30,7 +31,7 @@ const KMSidebar = () => {
         // จัดการ staff
         { label: "จัดการ Staff", icon: MdPerson, link: "/_km/staff" },
         // { label: "จัดการแบบสอบถาม", icon: MdQuestionAnswer, link: "/_km/activity/add" },
-        { label: "ออกจากระบบ", icon: MdLogout, link: "/login" }
+        { label: "ออกจากระบบ", icon: MdLogout, isLogout: true }
     ]
 
     return (
@@ -47,9 +48,14 @@ const KMSidebar = () => {
                 <VStack align="stretch" spacing={3}>
                     {menuItems.map((item) => (
                         <Button
-                            onClick={(() => {
-                                router.push(item.link)
-                            })}
+                            onClick={async () => {
+                                if (item.isLogout) {
+                                    await signOut({ redirect: false })
+                                    window.location.href = "/login"
+                                } else if (item.link) {
+                                    router.push(item.link)
+                                }
+                            }}
                             key={item.label}
                             variant="ghost"
                             justifyContent="start"
