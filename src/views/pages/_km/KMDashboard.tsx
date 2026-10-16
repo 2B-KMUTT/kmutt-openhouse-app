@@ -105,7 +105,56 @@ const KMDashboardPage = () => {
                 <KMProfileCard data={data} />
                 <Divider mt="-1" mb={6} />
 
+                {/* Landing Page Management Banner */}
+                <Box
+                    p={{ base: 4, md: 5 }}
+                    bg={useColorModeValue("orange.50", "whiteAlpha.100")}
+                    border="1px solid"
+                    borderColor={useColorModeValue("orange.200", "orange.700")}
+                    rounded="2xl"
+                    mb={6}
+                >
+                    <Flex
+                        direction={{ base: "column", md: "row" }}
+                        justify="space-between"
+                        align={{ base: "flex-start", md: "center" }}
+                        gap={4}
+                    >
+                        <Box>
+                            <HStack spacing={2} mb={1}>
+                                <Badge colorScheme="orange" fontSize="xs" px={2} py={0.5} rounded="md">
+                                    ระบบจัดการหน้าแรก
+                                </Badge>
+                                <Text fontWeight="bold" fontSize={{ base: "sm", md: "md" }} color="#F04E23">
+                                    จัดการกำหนดการ & บูทกิจกรรมหน้าแรก (Landing Content)
+                                </Text>
+                            </HStack>
+                            <Text fontSize="xs" color="gray.500">
+                                เพิ่ม แก้ไข ลบ กำหนดการจัดกิจกรรม (เวลา) และ บูทแนะนำหลักสูตร (โซน 1, โซน 2, โซน 3)
+                            </Text>
+                        </Box>
+                        <HStack spacing={3} wrap="wrap">
+                            <Button
+                                size="sm"
+                                colorScheme="orange"
+                                variant="outline"
+                                onClick={() => router.push("/_km/landing-schedule")}
+                            >
+                                จัดการกำหนดการ (Schedule)
+                            </Button>
+                            <Button
+                                size="sm"
+                                colorScheme="orange"
+                                onClick={() => router.push("/_km/landing-booth")}
+                            >
+                                จัดการบูท & โซน (Booths)
+                            </Button>
+                        </HStack>
+                    </Flex>
+                </Box>
+
                 <Box>
+
                     {/* Header */}
                     <HStack justify="space-between" mb={2}>
                         <Text fontSize="md" fontWeight="bold" color={textColor}>

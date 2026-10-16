@@ -13,7 +13,9 @@ import {
     MdSettings,
     MdAddBusiness,
     MdLogout,
-    MdQuestionAnswer
+    MdQuestionAnswer,
+    MdCalendarToday,
+    MdStorefront,
 } from "react-icons/md"
 import { useRouter } from "next/router"
 import { signOut } from "next-auth/react"
@@ -28,11 +30,12 @@ const KMSidebar = () => {
     const menuItems = [
         { label: "กิจกรรมทั้งหมด", icon: MdDashboard, link: "/_km/dashboard" },
         { label: "เพิ่มกิจกรรม", icon: MdAddBusiness, link: "/_km/activity/add" },
-        // จัดการ staff
         { label: "จัดการ Staff", icon: MdPerson, link: "/_km/staff" },
-        // { label: "จัดการแบบสอบถาม", icon: MdQuestionAnswer, link: "/_km/activity/add" },
+        { label: "จัดการกำหนดการหน้าแรก", icon: MdCalendarToday, link: "/_km/landing-schedule" },
+        { label: "จัดการบูท & โซนหน้าแรก", icon: MdStorefront, link: "/_km/landing-booth" },
         { label: "ออกจากระบบ", icon: MdLogout, isLogout: true }
     ]
+
 
     return (
         <>

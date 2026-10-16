@@ -52,7 +52,7 @@ const ScheduleSection = () => {
                         shadow="xs"
                     >
                         <Icon as={Calendar} color="#F04E23" />
-                        <Text>วันเสาร์ที่ 30 ตุลาคม 2569 เวลา 09.00 – 16.00 น.</Text>
+                        <Text>วันเสาร์ที่ 30 ตุลาคม 2569 เวลา 09.00 – 17.00 น.</Text>
                     </HStack>
                     <HStack
                         bg={badgeBg}
@@ -76,7 +76,7 @@ const ScheduleSection = () => {
                 <TabList>
                     <Tab fontWeight="bold" fontSize={{ base: "xs", sm: "sm", md: "md" }}>
                         <Text display={{ base: "inline", md: "none" }}>ทั้งหมด</Text>
-                        <Text display={{ base: "none", md: "inline" }}>กำหนดการตลอดวัน (09.00 – 16.00 น.)</Text>
+                        <Text display={{ base: "none", md: "inline" }}>กำหนดการตลอดวัน (09.00 – 17.00 น.)</Text>
                     </Tab>
                     <Tab fontWeight="bold" fontSize={{ base: "xs", sm: "sm", md: "md" }}>
                         <Text display={{ base: "inline", md: "none" }}>รอบเช้า</Text>
@@ -84,9 +84,10 @@ const ScheduleSection = () => {
                     </Tab>
                     <Tab fontWeight="bold" fontSize={{ base: "xs", sm: "sm", md: "md" }}>
                         <Text display={{ base: "inline", md: "none" }}>รอบบ่าย</Text>
-                        <Text display={{ base: "none", md: "inline" }}>รอบบ่าย (13.00 – 16.00 น.)</Text>
+                        <Text display={{ base: "none", md: "inline" }}>รอบบ่าย (13.00 – 17.00 น.)</Text>
                     </Tab>
                 </TabList>
+
 
                 <TabPanels>
                     {/* ---------------- ทั้งหมด ---------------- */}

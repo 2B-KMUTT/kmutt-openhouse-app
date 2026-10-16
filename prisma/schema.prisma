@@ -237,3 +237,31 @@ model SITCert {
 
   @@id([studentId, certName])
 }
+
+model LandingSchedule {
+  id              Int      @id @default(autoincrement())
+  time            String   @db.VarChar(100)
+  session         String   @default("all") @db.VarChar(50)
+  category        String   @db.VarChar(150)
+  categoryColor   String   @default("orange") @db.VarChar(50)
+  title           String   @db.VarChar(500)
+  details         Json?
+  subSectionTitle String?  @db.VarChar(500)
+  subSectionItems Json?
+  isBreak         Boolean  @default(false)
+  orderIndex      Int      @default(0)
+  display         Boolean  @default(true)
+  created_at      DateTime @default(now())
+  updated_at      DateTime @default(now()) @updatedAt
+}
+
+model LandingBooth {
+  id         Int      @id @default(autoincrement())
+  location   String   @db.VarChar(500)
+  units      Json
+  orderIndex Int      @default(0)
+  display    Boolean  @default(true)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+}
+
