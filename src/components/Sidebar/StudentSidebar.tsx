@@ -43,7 +43,7 @@ const StudentSidebar = () => {
         // { label: "ค้นหากิจกรรม", icon: MdSearch },
         { label: "ค้นหากิจกรรม", icon: GrSearch, link: "/app/activity-search" },
         { label: "กิจกรรมที่ลงทะเบียน", icon: GrWorkshop, link: "/app/activity-register" },
-        { label: "E-Certificate", icon: GrCertificate, link: "/app/e-certificate" },
+        // { label: "E-Certificate", icon: GrCertificate, link: "/app/e-certificate" },
         // { label: "Profile", icon: MdPerson },
         // { label: "Settings", icon: MdSettings },
         { label: "ออกจากระบบ", icon: MdLogout, isLogout: true },

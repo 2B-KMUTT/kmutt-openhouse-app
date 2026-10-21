@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { GetServerSideProps } from "next";
 import StudentAppLayout from "@/views/layouts/StudentAppLayout";
 import {
     Box,
@@ -175,6 +176,15 @@ const ECertificate = () => {
             </Box>
         </StudentAppLayout>
     );
+};
+
+export const getServerSideProps: GetServerSideProps = async () => {
+    return {
+        redirect: {
+            destination: "/app/dashboard",
+            permanent: false,
+        },
+    };
 };
 
 export default ECertificate;

@@ -9,6 +9,9 @@ export default withAuth(
       if (token?.role !== "student") {
         return NextResponse.redirect(new URL("/login", req.url));
       }
+      if (req.nextUrl.pathname.startsWith("/app/e-certificate")) {
+        return NextResponse.redirect(new URL("/app/dashboard", req.url));
+      }
     }
 
     if (req.nextUrl.pathname.startsWith("/staff")) {

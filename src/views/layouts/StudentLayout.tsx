@@ -153,9 +153,9 @@ export default function StudentLayout({ children }: StudentLayoutProps) {
                                 <Link href="/app/activity-register" onClick={() => setMenuOpen(false)}>
                                     {"> "}กิจกรรมที่ลงทะเบียน - Registered Activities
                                 </Link>
-                                <Link href="/app/e-certificate" onClick={() => setMenuOpen(false)}>
+                                {/* <Link href="/app/e-certificate" onClick={() => setMenuOpen(false)}>
                                     {"> "}เกียรติบัตร - E-Certificate <Badge colorScheme="green">ใหม่</Badge>
-                                </Link>
+                                </Link> */}
 
                                 <LogoutButton
                                     w="full"
