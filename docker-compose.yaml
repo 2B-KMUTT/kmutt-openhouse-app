@@ -39,18 +39,30 @@ services:
     container_name: openhouse_app_1
     ports:
       - "81:80"
+    networks:
+      default:
+        aliases:
+          - openhouse_app_ex
 
   openhouse_app_2:
     <<: *app-base
     container_name: openhouse_app_2
     ports:
       - "82:80"
+    networks:
+      default:
+        aliases:
+          - openhouse_app_ex_2
 
   openhouse_app_3:
     <<: *app-base
     container_name: openhouse_app_3
     ports:
       - "83:80"
+    networks:
+      default:
+        aliases:
+          - openhouse_app_ex_3
 
   # ==========================================
   # Monitoring Stack (Profile: monitoring)
