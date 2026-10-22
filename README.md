@@ -50,16 +50,16 @@ Refer to [`.env.example`](./.env.example) for detailed descriptions and default 
 
 ## 🚀 Deployment Guide
 
-The production environment runs on a high-availability architecture with **3 Next.js App Containers** (ports `81`, `82`, `83`) load-balanced behind an **Nginx Reverse Proxy** (port `80`).
+The production environment runs on a high-availability architecture with **3 Next.js App Containers** (`openhouse_app_1`, `openhouse_app_2`, `openhouse_app_3` on ports `81`, `82`, `83`) load-balanced behind an **Nginx Reverse Proxy** (port `80`).
 
 ### 1. Production Quick Deploy (One-Liner)
 
-Pulls the latest code, builds the production Docker image, and restarts only the application containers with zero downtime on Nginx, Prometheus, and Grafana:
+Pulls the latest code, builds the production Docker image, and restarts only the application containers with zero downtime:
 
 ```bash
 git pull origin main && \
 docker build -t kmutt_oph_prod . && \
-docker compose -f docker-compose-external-db.yaml up -d --no-deps openhouse_app_ex openhouse_app_ex_2 openhouse_app_ex_3
+docker compose up -d --no-deps openhouse_app_1 openhouse_app_2 openhouse_app_3
 ```
 
 ---
@@ -80,7 +80,7 @@ docker build -t kmutt_oph_prod .
 #### Step 3: Recreate & update application containers
 Update the 3 application containers to the new image using `--no-deps` to avoid restarting Nginx or other services:
 ```bash
-docker compose -f docker-compose-external-db.yaml up -d --no-deps openhouse_app_ex openhouse_app_ex_2 openhouse_app_ex_3
+docker compose up -d --no-deps openhouse_app_1 openhouse_app_2 openhouse_app_3
 ```
 
 #### Step 4: Verify status & view logs
@@ -89,9 +89,9 @@ docker compose -f docker-compose-external-db.yaml up -d --no-deps openhouse_app_
 docker ps
 
 # Stream logs from app containers
-docker logs --tail 30 -f kmutt-openhouse-app-prod_1
-docker logs --tail 30 -f kmutt-openhouse-app-prod_2
-docker logs --tail 30 -f kmutt-openhouse-app-prod_3
+docker logs --tail 30 -f openhouse_app_1
+docker logs --tail 30 -f openhouse_app_2
+docker logs --tail 30 -f openhouse_app_3
 
 # Verify HTTP response
 curl -I http://localhost:80/
@@ -101,19 +101,24 @@ curl -I http://localhost:80/
 
 ### 3. Production Service Management
 
-#### Start all production services (Nginx, Apps, Prometheus, Grafana, Node Exporter)
+#### Start application services (Nginx + Apps, monitoring stays dormant)
 ```bash
-docker compose -f docker-compose-external-db.yaml up -d
+docker compose up -d
+```
+
+#### Start including Monitoring Stack (Prometheus, Grafana, Node Exporter)
+```bash
+docker compose --profile monitoring up -d
 ```
 
 #### Restart Nginx reverse proxy
 ```bash
-docker compose -f docker-compose-external-db.yaml restart nginx
+docker compose restart nginx
 ```
 
 #### Stop all services
 ```bash
-docker compose -f docker-compose-external-db.yaml down
+docker compose down
 ```
 
 ---
