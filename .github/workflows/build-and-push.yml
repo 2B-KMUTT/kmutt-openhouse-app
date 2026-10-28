@@ -16,6 +16,8 @@ jobs:
     permissions:
       contents: read
       packages: write
+    env:
+      DEPLOY_WEBHOOK_URL: ${{ secrets.DEPLOY_WEBHOOK_URL }}
 
     steps:
       - name: Checkout repository
@@ -52,9 +54,8 @@ jobs:
 
       # (Optional) Trigger App VM Webhook automatically after image is pushed
       - name: Trigger App VM Webhook
-        if: ${{ secrets.DEPLOY_WEBHOOK_URL != '' }}
+        if: ${{ env.DEPLOY_WEBHOOK_URL != '' }}
         env:
-          DEPLOY_WEBHOOK_URL: ${{ secrets.DEPLOY_WEBHOOK_URL }}
           DEPLOY_WEBHOOK_SECRET: ${{ secrets.DEPLOY_WEBHOOK_SECRET }}
         run: |
           echo "Triggering App VM Webhook..."
