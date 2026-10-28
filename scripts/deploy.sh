@@ -78,8 +78,10 @@ else
     --network host \
     --env-file .env \
     -v "$REPO_DIR/prisma:/app/prisma" \
+    -v "$REPO_DIR/package.json:/app/package.json" \
+    -w /app \
     oven/bun:1 \
-    sh -c "cd /app && bunx prisma migrate deploy"
+    sh -c "bunx prisma migrate deploy"
 fi
 echo "--> Database migrations applied successfully."
 

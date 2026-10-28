@@ -1,0 +1,67 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  scrape_timeout: 10s
+
+rule_files:
+  - /etc/prometheus/rules/*.yml
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ['alertmanager:9093']
+
+scrape_configs:
+  # 1. Prometheus Self-Monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+        labels:
+          host: 'OpenHouse-DB'
+          service: 'prometheus'
+
+  # 2. Host Metrics: OpenHouse-DB (10.2.15.91)
+  - job_name: 'node-db'
+    static_configs:
+      - targets: ['node-exporter:9100']
+        labels:
+          host: 'OpenHouse-DB'
+          ip: '10.2.15.91'
+          role: 'database'
+
+  # 3. Database Metrics: MySQL 8.4 Exporter (10.2.15.91)
+  - job_name: 'mysql'
+    static_configs:
+      - targets: ['mysqld-exporter:9104']
+        labels:
+          host: 'OpenHouse-DB'
+          service: 'mysql'
+
+  # 4. Host Metrics: OpenHouse-VM (10.2.15.90)
+  - job_name: 'node-vm'
+    static_configs:
+      - targets: ['10.2.15.90:9100']
+        labels:
+          host: 'OpenHouse-VM'
+          ip: '10.2.15.90'
+          role: 'web-app'
+
+  # 5. Reverse Proxy: Nginx Exporter (10.2.15.90)
+  - job_name: 'nginx'
+    static_configs:
+      - targets: ['10.2.15.90:9113']
+        labels:
+          host: 'OpenHouse-VM'
+          service: 'nginx'
+
+  # 6. Application Replicas SLI Metrics: OpenHouse App (10.2.15.90)
+  - job_name: 'openhouse-app'
+    metrics_path: '/api/metrics'
+    static_configs:
+      - targets:
+          - '10.2.15.90:81'
+          - '10.2.15.90:82'
+          - '10.2.15.90:83'
+        labels:
+          host: 'OpenHouse-VM'
+          service: 'openhouse-app'

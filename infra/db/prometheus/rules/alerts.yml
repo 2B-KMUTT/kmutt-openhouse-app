@@ -1,0 +1,81 @@
+groups:
+  - name: OpenHouseSREAlerts
+    rules:
+      # 1. Liveness Alert (INT531 Slide 1.4: Synthetic metric 'up')
+      - alert: TargetInstanceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Target instance {{ $labels.instance }} ({{ $labels.job }}) is down"
+          description: "Prometheus failed to scrape metrics from {{ $labels.instance }} for over 1 minute."
+
+      # 2. Availability SLI Alert (INT531 Slide 1.7: Availability SLI / 5xx error ratio > 1%)
+      - alert: HighErrorRateSLI
+        expr: |
+          (
+            sum(rate(http_requests_total{status=~"5.."}[5m]))
+            /
+            sum(rate(http_requests_total[5m]))
+          ) > 0.01
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High HTTP 5xx error rate (Availability SLI below 99%)"
+          description: "Server error rate is {{ $value | humanizePercentage }} over the last 5 minutes."
+
+      # 3. Latency SLI Alert (INT531 Slide 1.7: p99 Latency > 2.5s)
+      - alert: HighLatencyP99
+        expr: |
+          histogram_quantile(
+            0.99,
+            sum by (le) (rate(http_request_duration_seconds_bucket[5m]))
+          ) > 2.5
+        for: 3m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Cluster 99th percentile latency > 2.5s"
+          description: "99% of requests are taking {{ $value | humanizeDuration }} to respond."
+
+      # 4. Host Memory Saturation (< 10% available)
+      - alert: HostMemoryCritical
+        expr: (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) < 0.10
+        for: 3m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Host {{ $labels.host }} memory critically low"
+          description: "Available memory on {{ $labels.host }} is less than 10%."
+
+      # 5. Host Disk Space Low (< 15% free)
+      - alert: HostDiskSpaceLow
+        expr: (node_filesystem_free_bytes{fstype!~"tmpfs|overlay"} / node_filesystem_size_bytes{fstype!~"tmpfs|overlay"}) < 0.15
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Host {{ $labels.host }} filesystem free space < 15%"
+          description: "Filesystem {{ $labels.mountpoint }} on {{ $labels.host }} has {{ $value | humanizePercentage }} free space remaining."
+
+      # 6. Database Connection Pool Saturation (> 80% max_connections)
+      - alert: MySQLConnectionsHigh
+        expr: (mysql_global_status_threads_connected / mysql_global_variables_max_connections) > 0.80
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "MySQL active connections > 80% limit"
+          description: "Active database threads ({{ $value | humanizePercentage }}) are nearing max_connections limit."
+
+      # 7. Monitoring Self-Protection against Cardinality Trap (INT531 Slide 1.9 & 1.12 Case Study 1)
+      - alert: PrometheusCardinalitySpike
+        expr: prometheus_tsdb_head_series > 50000
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Prometheus active TSDB head series > 50,000"
+          description: "TSDB head series count is rapidly growing ({{ $value }} series). Check for unbounded label injection (Cardinality Trap)."
