@@ -9,7 +9,8 @@
     "prisma": "prisma",
     "start": "next start",
     "lint": "eslint",
-    "seed:admins": "node scripts/generate-admin-accounts.js"
+    "seed:admins": "node scripts/generate-admin-accounts.js",
+    "seed:staffs": "node scripts/generate-staff-accounts.js"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.2.4",

@@ -1,0 +1,24 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  group_by: ['alertname', 'host', 'service', 'severity']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+  receiver: 'sre-team-receiver'
+
+inhibit_rules:
+  # When a target host is completely down, suppress sub-service alerts from that same host
+  # to prevent alert fatigue (INT531 Slide 1.15)
+  - source_match:
+      alertname: 'TargetInstanceDown'
+      severity: 'critical'
+    target_match_re:
+      alertname: 'HighErrorRateSLI|HighLatencyP99|MySQLConnectionsHigh'
+    equal: ['host']
+
+receivers:
+  - name: 'sre-team-receiver'
+    # Default receiver prints to container stdout or can be hooked to Discord/LINE/Slack/Telegram webhook
+    webhook_configs: []

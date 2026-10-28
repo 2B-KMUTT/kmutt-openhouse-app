@@ -11,7 +11,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./data:/var/lib/mysql
+      - mysql_data:/var/lib/mysql
       - ./conf.d/my.cnf:/etc/mysql/conf.d/my.cnf:ro
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
@@ -48,7 +48,7 @@ services:
     volumes:
       - ./conf.d/phpmyadmin-auth.conf:/etc/apache2/conf-enabled/phpmyadmin-auth.conf:ro
     ports:
-      - "8080:80"
+      - "80:80"
 
   rustfs:
     image: rustfs/rustfs:latest
@@ -61,11 +61,121 @@ services:
       RUSTFS_ADDRESS: 0.0.0.0:9000
       RUSTFS_CONSOLE_ADDRESS: 0.0.0.0:9001
       RUSTFS_CONSOLE_ENABLE: "true"
-      RUSTFS_CONSOLE_CORS_ALLOWED_ORIGINS: "https://openhouse.kmutt.ac.th,http://localhost:3000,*"
+      RUSTFS_CONSOLE_CORS_ALLOWED_ORIGINS: "*"
       RUSTFS_OBS_LOGGER_LEVEL: info
+      RUSTFS_UNSAFE_BYPASS_DISK_CHECK: "true"
     ports:
       - "9000:9000"
       - "9001:9001"
     volumes:
-      - ./rustfs_data:/data
-      - ./rustfs_logs:/app/logs
+      - rustfs_data:/data
+      - rustfs_logs:/app/logs
+
+  # ==========================================
+  # Observability & Monitoring Stack (INT531)
+  # Host: OpenHouse-DB (10.2.15.91)
+  # ==========================================
+
+  # 1. Host Metrics Exporter
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: openhouse_db_node_exporter
+    restart: unless-stopped
+    pid: host
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--path.rootfs=/rootfs'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    ports:
+      - "9100:9100"
+
+  # 2. Database Exporter for MySQL 8.4
+  mysqld-exporter:
+    image: prom/mysqld-exporter:v0.15.1
+    container_name: openhouse_mysqld_exporter
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      MYSQLD_EXPORTER_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    command:
+      - "--mysqld.address=mysql:3306"
+      - "--mysqld.username=root"
+      - "--collect.info_schema.innodb_metrics"
+      - "--collect.info_schema.processlist"
+      - "--collect.global_status"
+      - "--collect.global_variables"
+    ports:
+      - "9104:9104"
+
+  # 3. Prometheus TSDB
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: openhouse_prometheus
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=15d'
+      - '--web.enable-lifecycle'
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/rules:/etc/prometheus/rules:ro
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    mem_limit: 1536m
+
+  # 4. Alertmanager
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: openhouse_alertmanager
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--storage.path=/alertmanager'
+    volumes:
+      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+      - alertmanager_data:/alertmanager
+    ports:
+      - "9093:9093"
+
+  # 5. Grafana Dashboard & Visualization
+  grafana:
+    image: grafana/grafana:latest
+    container_name: openhouse_grafana
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-openhouse_grafana_2026}
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SERVER_SERVE_FROM_SUB_PATH=false
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/etc/grafana/dashboards:ro
+    ports:
+      - "3000:3000"
+    mem_limit: 512m
+
+volumes:
+  mysql_data:
+    name: openhouse_mysql_data
+  rustfs_data:
+    name: openhouse_rustfs_data
+  rustfs_logs:
+    name: openhouse_rustfs_logs
+  prometheus_data:
+    name: openhouse_prometheus_data
+  alertmanager_data:
+    name: openhouse_alertmanager_data
+  grafana_data:
+    name: openhouse_grafana_data
