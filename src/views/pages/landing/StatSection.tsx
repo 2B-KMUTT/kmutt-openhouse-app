@@ -21,10 +21,24 @@ const StatSection = () => {
         const fetchStats = async () => {
             try {
                 const res = await fetch("/api/student/stats");
-                const data: StatsResponse = await res.json();
-                setStats(data);
+                if (!res.ok) {
+                    console.warn("Stats API returned non-OK status:", res.status);
+                    setStats({ activitiesCount: 0, registrationsCount: 0 });
+                    return;
+                }
+                const data = await res.json();
+                if (
+                    data &&
+                    typeof data.activitiesCount === "number" &&
+                    typeof data.registrationsCount === "number"
+                ) {
+                    setStats(data);
+                } else {
+                    setStats({ activitiesCount: 0, registrationsCount: 0 });
+                }
             } catch (error) {
                 console.error("Failed to fetch stats:", error);
+                setStats({ activitiesCount: 0, registrationsCount: 0 });
             } finally {
                 setLoading(false);
             }
@@ -67,7 +81,7 @@ const StatSection = () => {
                         textAlign="center"
                     >
                         <Text fontSize="5xl" fontWeight="extrabold" color={PRIMARY}>
-                            {stats.activitiesCount.toLocaleString()}
+                            {stats.activitiesCount?.toLocaleString() ?? 0}
                         </Text>
                         <Text fontSize="lg" color={textColor}>
                             กิจกรรมทั้งหมด
@@ -85,7 +99,7 @@ const StatSection = () => {
                         textAlign="center"
                     >
                         <Text fontSize="5xl" fontWeight="extrabold" color={PRIMARY}>
-                            {stats.registrationsCount.toLocaleString()}
+                            {stats.registrationsCount?.toLocaleString() ?? 0}
                         </Text>
                         <Text fontSize="lg" color={textColor}>
                             ผู้ลงทะเบียนทั้งหมด

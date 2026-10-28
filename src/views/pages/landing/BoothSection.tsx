@@ -58,8 +58,8 @@ const BoothSection = () => {
 
     useEffect(() => {
         fetch("/api/landing/booth")
-            .then((res) => {
-                if (!res.ok) throw new Error("Failed to fetch");
+            .then(async (res) => {
+                if (!res.ok) return null;
                 return res.json();
             })
             .then((data) => {
@@ -68,7 +68,7 @@ const BoothSection = () => {
                 }
             })
             .catch((err) => {
-                console.error("Using default booth data due to fetch error:", err);
+                console.warn("Using default booth data due to fetch error:", err);
             });
     }, []);
 

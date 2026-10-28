@@ -181,18 +181,35 @@ model EStamp {
 }
 
 model PublicSurvey {
-  id                     Int      @id @default(autoincrement())
-  participantType        String
-  educationLevel         String?
-  interestLevel          String?
-  preferredFaculty       Json? // เก็บหลายคณะเป็น JSON
-  infoChannels           Json? // ช่องทางข่าวสารหลายค่า
-  factors                Json? // ปัจจัยหลายค่า
-  creditTransferInterest Int?
-  teachingMode           String?
-  confusionRanking       Json? // 3 อันดับพระจอม
-  interestKMUTT          String?
-  createdAt              DateTime @default(now())
+  id                            Int      @id @default(autoincrement())
+  role                          String   // นักเรียน, ผู้ปกครอง, ครู / ครูแนะแนว
+  province                      String   // จังหวัด
+  sourceChannels                Json?    // ช่องทางที่รู้จักงาน (Array)
+
+  // นักเรียน
+  grade                         String?  // ชั้นเรียน
+  stream                        String?  // แผนการเรียน
+  interestedFaculty             Json?    // คณะที่สนใจ (Array max 2)
+  decisionFactors               Json?    // ปัจจัยในการเลือก (Array max 3)
+  worryPoints                   String?  // กังวลเรื่องใดที่สุด
+
+  // ผู้ปกครอง
+  parentGrade                   String?  // บุตรหลานกำลังเรียนชั้น
+  parentWorries                 Json?    // กังวลเรื่องใด (Array max 2)
+  parentInfoNeeded              String?  // ข้อมูลที่อยากได้เพิ่ม
+  parentContactChannel          String?  // สะดวกรับข่าวทางใด
+
+  // ครูแนะแนว
+  teacherNeeds                  Json?    // อยากให้ มจธ. สนับสนุนเรื่องใด (Array max 2)
+  teacherCreditTransferInterest Int?     // ความสนใจหลักสูตรเรียนล่วงหน้า/เทียบโอน (1-5)
+  teacherSchoolContact          String?  // ข้อมูลติดต่อโรงเรียน
+
+  // ปิดท้าย (ทุกคน)
+  recommendIntent               Int?     // อยากสมัคร/แนะนำแค่ไหน (1-5)
+  overallSatisfaction           Int?     // ความพึงพอใจต่องาน (1-5)
+  feedbackNote                  String?  @db.Text
+
+  createdAt                     DateTime @default(now())
 }
 
 // OAuth2

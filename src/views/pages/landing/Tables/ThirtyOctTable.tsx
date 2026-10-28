@@ -148,8 +148,8 @@ const ThirtyOctTable: React.FC<ThirtyOctTableProps> = ({ filter = "all" }) => {
 
     useEffect(() => {
         fetch("/api/landing/schedule")
-            .then((res) => {
-                if (!res.ok) throw new Error("Failed to fetch");
+            .then(async (res) => {
+                if (!res.ok) return null;
                 return res.json();
             })
             .then((data) => {
@@ -158,7 +158,7 @@ const ThirtyOctTable: React.FC<ThirtyOctTableProps> = ({ filter = "all" }) => {
                 }
             })
             .catch((err) => {
-                console.error("Using default schedule data due to fetch error:", err);
+                console.warn("Using default schedule data due to fetch error:", err);
             });
     }, []);
 
