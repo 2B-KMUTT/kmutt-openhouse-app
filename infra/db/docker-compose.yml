@@ -1,0 +1,71 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: openhouse_mysql
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      MYSQL_DATABASE: openhouse-prod
+      TZ: Asia/Bangkok
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data:/var/lib/mysql
+      - ./conf.d/my.cnf:/etc/mysql/conf.d/my.cnf:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: openhouse_phpmyadmin
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      BLOWFISH_SECRET: ${PMA_BLOWFISH_SECRET}
+      UPLOAD_LIMIT: 128M
+      MEMORY_LIMIT: 256M
+    entrypoint:
+      - /bin/bash
+      - -c
+      - |
+        mkdir -p /etc/phpmyadmin
+        php -r 'echo (getenv("PMA_AUTH_USER") ?: "root") . ":" . password_hash(getenv("PMA_AUTH_PASSWORD") ?: getenv("MYSQL_ROOT_PASSWORD"), PASSWORD_BCRYPT) . "\n";' > /etc/phpmyadmin/.htpasswd
+        exec /docker-entrypoint.sh apache2-foreground
+    volumes:
+      - ./conf.d/phpmyadmin-auth.conf:/etc/apache2/conf-enabled/phpmyadmin-auth.conf:ro
+    ports:
+      - "8080:80"
+
+  rustfs:
+    image: rustfs/rustfs:latest
+    container_name: openhouse_rustfs
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      RUSTFS_VOLUMES: /data/rustfs{0..3}
+      RUSTFS_ADDRESS: 0.0.0.0:9000
+      RUSTFS_CONSOLE_ADDRESS: 0.0.0.0:9001
+      RUSTFS_CONSOLE_ENABLE: "true"
+      RUSTFS_CONSOLE_CORS_ALLOWED_ORIGINS: "https://openhouse.kmutt.ac.th,http://localhost:3000,*"
+      RUSTFS_OBS_LOGGER_LEVEL: info
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./rustfs_data:/data
+      - ./rustfs_logs:/app/logs
