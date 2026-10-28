@@ -210,18 +210,18 @@ const LoginPage = () => {
                                 >
                                     สมัครสมาชิก
                                 </Text>
-                                <br />
-                                ลืมรหัสผ่าน?{" "}
-                                <Link href="/forgot-password">
-                                    <Text
-                                        as="span"
-                                        color={PRIMARY}
-                                        fontWeight="semibold"
-                                        cursor="pointer"
-                                    >
-                                        คลิกที่นี่
-                                    </Text>
-                                </Link>
+                            </Link>
+                            <br />
+                            ลืมรหัสผ่าน?{" "}
+                            <Link href="/forgot-password">
+                                <Text
+                                    as="span"
+                                    color={PRIMARY}
+                                    fontWeight="semibold"
+                                    cursor="pointer"
+                                >
+                                    คลิกที่นี่
+                                </Text>
                             </Link>
                         </Text>
                     </VStack>

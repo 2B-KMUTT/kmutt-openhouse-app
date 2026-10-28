@@ -31,4 +31,20 @@ export const EVENT_CONFIG = {
         "11/10/2025": "green",
         "12/10/2025": "blue",
     } as Record<string, string>,
+    surveyModal: {
+        // Starts on event day: 30 October 2026 00:00:00 (UTC+7)
+        startDate: process.env.NEXT_PUBLIC_SURVEY_START_DATE || "2026-10-30T00:00:00+07:00",
+        // Stops 7 days after the event: 6 November 2026 23:59:59 (UTC+7)
+        endDate: process.env.NEXT_PUBLIC_SURVEY_END_DATE || "2026-11-06T23:59:59+07:00",
+    },
 };
+
+/**
+ * Returns whether the survey modal should be active based on current date
+ */
+export const isSurveyModalActive = (currentDate: Date = new Date()): boolean => {
+    const start = new Date(EVENT_CONFIG.surveyModal.startDate);
+    const end = new Date(EVENT_CONFIG.surveyModal.endDate);
+    return currentDate >= start && currentDate <= end;
+};
+

@@ -16,16 +16,9 @@ import {
     useColorModeValue,
     Icon,
     SimpleGrid,
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-    ModalCloseButton,
-    useDisclosure,
 } from "@chakra-ui/react"
 import StudentProfileCard from "@/components/ProfileCard/StudentProfileCard"
+import SurveyModal from "@/components/Modal/SurveyModal"
 import { GrWorkshop } from "react-icons/gr"
 import Link from "next/link"
 import Head from "next/head"
@@ -79,17 +72,7 @@ const StudentDashboardPage = () => {
     const [page, setPage] = useState(1)
     const [meta, setMeta] = useState<Meta | null>(null)
 
-    const { isOpen, onOpen, onClose } = useDisclosure()
     const textColor = useColorModeValue("gray.800", "gray.100")
-
-    // ✅ ตรวจสอบว่าทำแบบสอบถามหรือยัง
-    useEffect(() => {
-        const doneSurvey = localStorage.getItem("doneSurveyXSIT")
-        if (!doneSurvey) {
-            // ยังไม่ทำ — เด้ง modal ขึ้นหลังโหลด
-            setTimeout(onOpen, 1000)
-        }
-    }, [onOpen])
 
     // ✅ ดึงข้อมูลโปรไฟล์นักเรียน
     useEffect(() => {
@@ -144,39 +127,14 @@ const StudentDashboardPage = () => {
         non_regis_activity: "กิจกรรมทั่วไป",
     }
 
-    // ✅ เมื่อกด “ทำแล้ว” จะไม่เด้งอีก
-    const handleDoneSurvey = () => {
-        localStorage.setItem("doneSurveyXSIT", "true")
-        onClose()
-    }
-
     return (
         <StudentAppLayout navigation="Dashboard">
             <Head>
                 <title>Openhouse / Dashboard</title>
             </Head>
 
-            {/* ✅ Popup Modal */}
-            <Modal isOpen={isOpen} onClose={onClose} isCentered>
-                <ModalOverlay />
-                <ModalContent>
-                    <ModalHeader color="orange.500">ทำแบบสอบถามหรือยัง?</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
-                        <Text fontSize="md" mb={3}>
-                            เพื่อพัฒนา Openhouse ให้ดียิ่งขึ้น รบกวนช่วยทำแบบสอบถามสั้น ๆ หน่อยนะคะ 😊
-                        </Text>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button colorScheme="orange" mr={3} onClick={() => router.push("/survey")}>
-                            ไปทำแบบสอบถาม
-                        </Button>
-                        <Button variant="ghost" onClick={handleDoneSurvey}>
-                            ทำแล้ว
-                        </Button>
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
+            {/* ✅ Popup Survey Modal */}
+            <SurveyModal />
 
             {/* ✅ ส่วนเนื้อหาหลัก */}
             <Box>

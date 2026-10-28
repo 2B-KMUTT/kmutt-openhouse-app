@@ -22,6 +22,7 @@ import StudentSidebar from "@/components/Sidebar/StudentSidebar"
 import { ScheduleSection } from "../landing/ScheduleSection"
 import { FaClipboardList } from "react-icons/fa"
 import { useRouter } from "next/router"
+import SurveyModal from "@/components/Modal/SurveyModal"
 
 const PRIMARY = "#F04E23"
 const SECONDARY = "#FFC233"
@@ -70,6 +71,8 @@ const GuestDashboardPage = () => {
 
     return (
         <GuestLayout>
+            {/* ✅ Popup Survey Modal */}
+            <SurveyModal />
             <Container maxW="7xl" px={4} py={6} mt="-10">
                 <Flex direction={{ base: "column", md: "row" }} gap={6}>
                     {/* Sidebar */}

@@ -72,6 +72,11 @@ const PublicSurvey = () => {
             if (!res.ok) throw new Error("เกิดข้อผิดพลาดในการส่งข้อมูล")
 
             toast({ title: "ส่งแบบสอบถามเรียบร้อยแล้ว", status: "success" })
+            try {
+                localStorage.setItem("doneSurveyXSIT", "true")
+            } catch (e) {
+                console.error("Failed to save survey status in localStorage", e)
+            }
 
             // Reset form
             setParticipantType("")
