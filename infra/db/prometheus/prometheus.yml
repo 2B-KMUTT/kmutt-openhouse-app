@@ -20,16 +20,15 @@ scrape_configs:
           host: 'OpenHouse-DB'
           service: 'prometheus'
 
-  # 2. Host Metrics: OpenHouse-DB (10.2.15.91)
+  # 2. Host Metrics: OpenHouse-DB (Local)
   - job_name: 'node-db'
     static_configs:
       - targets: ['node-exporter:9100']
         labels:
           host: 'OpenHouse-DB'
-          ip: '10.2.15.91'
           role: 'database'
 
-  # 3. Database Metrics: MySQL 8.4 Exporter (10.2.15.91)
+  # 3. Database Metrics: MySQL 8.4 Exporter (Local)
   - job_name: 'mysql'
     static_configs:
       - targets: ['mysqld-exporter:9104']
@@ -37,31 +36,30 @@ scrape_configs:
           host: 'OpenHouse-DB'
           service: 'mysql'
 
-  # 4. Host Metrics: OpenHouse-VM (10.2.15.90)
+  # 4. Host Metrics: OpenHouse-VM (Resolved via extra_hosts: openhouse-vm:${APP_VM_IP})
   - job_name: 'node-vm'
     static_configs:
-      - targets: ['10.2.15.90:9100']
+      - targets: ['openhouse-vm:9100']
         labels:
           host: 'OpenHouse-VM'
-          ip: '10.2.15.90'
           role: 'web-app'
 
-  # 5. Reverse Proxy: Nginx Exporter (10.2.15.90)
+  # 5. Reverse Proxy: Nginx Exporter
   - job_name: 'nginx'
     static_configs:
-      - targets: ['10.2.15.90:9113']
+      - targets: ['openhouse-vm:9113']
         labels:
           host: 'OpenHouse-VM'
           service: 'nginx'
 
-  # 6. Application Replicas SLI Metrics: OpenHouse App (10.2.15.90)
+  # 6. Application Replicas SLI Metrics: OpenHouse App
   - job_name: 'openhouse-app'
     metrics_path: '/api/metrics'
     static_configs:
       - targets:
-          - '10.2.15.90:81'
-          - '10.2.15.90:82'
-          - '10.2.15.90:83'
+          - 'openhouse-vm:81'
+          - 'openhouse-vm:82'
+          - 'openhouse-vm:83'
         labels:
           host: 'OpenHouse-VM'
           service: 'openhouse-app'
