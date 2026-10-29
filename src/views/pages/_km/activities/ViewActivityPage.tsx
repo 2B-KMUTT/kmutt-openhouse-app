@@ -1,6 +1,7 @@
 // pages/km/activities/[id].tsx  (หรือไฟล์ที่คุณมี ViewActivityPage)
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import {
     Box,
     Text,
@@ -86,15 +87,51 @@ import {
 export const ViewActivityPage = () => {
     const router = useRouter();
     const { id } = router.query;
+    const { data: session } = useSession();
+    const isSuperAdmin = session?.user?.adminRole === "SUPER_ADMIN";
+
     const [activity, setActivity] = useState<Activity | null>(null);
     const [loading, setLoading] = useState(true);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [form, setForm] = useState<Partial<Activity>>({});
+    const [adminOwners, setAdminOwners] = useState<{ id: number; name: string; username: string }[]>([]);
 
     // Estamp + survey states
     const [estamps, setEstamps] = useState<Estamp[]>([]);
     const [surveySummary, setSurveySummary] = useState<SurveySummary | null>(null);
     const [loadingEstamps, setLoadingEstamps] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (isSuperAdmin) {
+            fetch("/api/km/admin-owners")
+                .then((res) => res.json())
+                .then((data) => setAdminOwners(data))
+                .catch(() => {});
+        }
+    }, [isSuperAdmin]);
+
+    const handleDelete = async () => {
+        if (!id) return;
+        if (!window.confirm("คุณแน่ใจหรือไม่ว่าต้องการลบกิจกรรมนี้? การลบนี้จะไม่สามารถย้อนกลับได้")) {
+            return;
+        }
+
+        try {
+            const res = await fetch(`/api/km/activities/${id}`, {
+                method: "DELETE",
+            });
+            if (res.ok) {
+                alert("ลบกิจกรรมสำเร็จ");
+                router.push("/_km/dashboard");
+            } else {
+                const data = await res.json().catch(() => null);
+                alert(data?.message || "ไม่สามารถลบกิจกรรมได้");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("เกิดข้อผิดพลาดในการลบกิจกรรม");
+        }
+    };
 
     useEffect(() => {
         if (!id) return;
@@ -211,15 +248,25 @@ export const ViewActivityPage = () => {
                             {activity.display ? "แสดง" : "กิจกรรมนี้ถูกซ่อนอยู่ (ไม่แสดงในหน้ากิจกรรม)"}
                         </Badge>
 
-                        <HStack justify="space-between" mb={2}>
-                            <Text fontSize="md" fontWeight="bold">
-                                #{activity.id} - {activity.title}
-                            </Text>
-                            <Box>
+                        <HStack justify="space-between" mb={2} wrap="wrap">
+                            <HStack spacing={2} wrap="wrap">
+                                <Text fontSize="md" fontWeight="bold">
+                                    #{activity.id} - {activity.title}
+                                </Text>
+                                {activity.owner && isSuperAdmin && (
+                                    <Badge colorScheme="purple" fontSize="xs">
+                                        👑 เจ้าของ: {activity.owner.name} ({activity.owner.username})
+                                    </Badge>
+                                )}
+                            </HStack>
+                            <HStack spacing={2}>
                                 <Button size="sm" colorScheme="yellow" onClick={onOpen}>
                                     แก้ไข
                                 </Button>
-                            </Box>
+                                <Button size="sm" colorScheme="red" variant="outline" onClick={handleDelete}>
+                                    ลบกิจกรรม
+                                </Button>
+                            </HStack>
                         </HStack>
 
                         <Text fontSize="md" color="gray.600" _dark={{ color: "gray.300" }} mb={2}>
@@ -452,6 +499,29 @@ export const ViewActivityPage = () => {
                             <ModalHeader>แก้ไขกิจกรรม</ModalHeader>
                             <ModalCloseButton />
                             <ModalBody>
+                                {isSuperAdmin && (
+                                    <FormControl mb={3} p={3} bg="orange.50" rounded="md" borderWidth="1px" borderColor="orange.200">
+                                        <FormLabel fontWeight="bold" color="orange.800" fontSize="sm">
+                                            👑 เจ้าของกิจกรรม (Activity Owner)
+                                        </FormLabel>
+                                        <select
+                                            value={form.ownerId || ""}
+                                            onChange={(e) => setForm({ ...form, ownerId: e.target.value ? Number(e.target.value) : undefined })}
+                                            style={{ width: "100%", padding: "8px", borderRadius: "6px", border: "1px solid #CBD5E0", background: "white", fontSize: "14px" }}
+                                        >
+                                            <option value="">-- ไม่ระบุ / คงเดิม --</option>
+                                            {adminOwners.map((admin) => (
+                                                <option key={admin.id} value={admin.id}>
+                                                    {admin.name} ({admin.username})
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <Text fontSize="xs" color="gray.600" mt={1}>
+                                            * การเปลี่ยนเจ้าของกิจกรรมจะ Re-sync การมอบหมาย Staff ไปยังคณะใหม่โดยอัตโนมัติ
+                                        </Text>
+                                    </FormControl>
+                                )}
+
                                 <FormControl mb={3} display="flex" alignItems="center">
                                     <FormLabel htmlFor="display" mb="0">
                                         แสดงกิจกรรม

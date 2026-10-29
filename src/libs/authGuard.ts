@@ -5,11 +5,13 @@ import type { JWT } from "next-auth";
 const secret = process.env.NEXTAUTH_SECRET;
 
 export type Role = "student" | "staff" | "admin" | "kmuser" | "parent" | "guest" | "teacher";
+export type AdminRole = "SUPER_ADMIN" | "ADMIN";
 
 export interface AuthenticatedRequest extends NextApiRequest {
   user: {
     id: number;
     role: Role;
+    adminRole?: AdminRole;
     name?: string;
     email?: string;
     accessToken?: string;
@@ -35,6 +37,7 @@ export function withAuth(
     authReq.user = {
       id: token.id,
       role: token.role,
+      adminRole: token.adminRole,
       name: token.name,
       email: token.email,
       accessToken: token.accessToken

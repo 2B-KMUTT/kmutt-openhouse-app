@@ -1,14 +1,29 @@
 import type { NextApiResponse } from "next";
 import { withAuth, AuthenticatedRequest } from "@/libs/authGuard";
 import { PrismaClient } from "@prisma/client";
+import { createActivity } from "@/libs/activityService";
 
 const prisma = new PrismaClient();
 
 async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
   if (req.method === "GET") {
     try {
+      const isSuperAdmin = req.user.adminRole === "SUPER_ADMIN";
+      const ownerFilter = req.query.ownerId ? Number(req.query.ownerId) : undefined;
+
+      const whereClause = isSuperAdmin
+        ? (ownerFilter ? { ownerId: ownerFilter } : {})
+        : { ownerId: req.user.id };
+
       const activities = await prisma.activities.findMany({
         include: {
+          Admins: {
+            select: {
+              id: true,
+              username: true,
+              name: true,
+            },
+          },
           _count: { select: { RegisterActivities: true } },
           department: {
             select: {
@@ -25,7 +40,7 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
             },
           },
         },
-        where: { ownerId: req.user.id },
+        where: whereClause,
         orderBy: {
           date: "asc",
         },
@@ -49,6 +64,14 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
         max_participants: act.max_participants,
         current_register_participants: act._count.RegisterActivities,
         created_at: act.created_at,
+        ownerId: act.ownerId,
+        owner: act.Admins
+          ? {
+              id: act.Admins.id,
+              username: act.Admins.username,
+              name: act.Admins.name,
+            }
+          : null,
         department: {
           id: act.department.id,
           name_en: act.department.name_en,
@@ -76,39 +99,16 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
         title,
         description,
         date,
-        round,
         start_time,
         end_time,
-        location,
-        point,
-        form_link,
-        image_url,
-        max_participants,
       } = req.body;
 
-      // Validation (ง่ายๆก่อน)
+      // Validation
       if (!title || !description || !activity_type || !departmentId || !date || !start_time || !end_time) {
         return res.status(400).json({ message: "Missing required fields" });
       }
 
-      const newActivity = await prisma.activities.create({
-        data: {
-          activity_type,
-          departmentId: Number(departmentId),
-          title,
-          description,
-          date,
-          round: Number(round) || 1,
-          start_time,
-          end_time,
-          location,
-          point: Number(point) || 0,
-          form_link: form_link?.trim() || null,
-          image_url: image_url?.trim() || null,
-          max_participants: Number(max_participants) || 0,
-          ownerId: req.user.id,
-        },
-      });
+      const newActivity = await createActivity(req.body, req.user, prisma);
 
       return res.status(201).json(newActivity);
     } catch (error) {

@@ -18,6 +18,7 @@ concurrency:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  ACTIONS_RUNNER_FORCE_NODE24: "true"
 
 jobs:
   build-and-push:
@@ -31,6 +32,35 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      # แคช Next.js incremental build และ bun packages เพื่อเร่งความเร็ว build ข้าม commit
+      - name: Cache Next.js build & Bun dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.bun/install/cache
+            ${{ github.workspace }}/.next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/bun.lock', '**/yarn.lock', '**/package-lock.json') }}-${{ hashFiles('src/**', 'public/**', 'prisma/**') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/bun.lock', '**/yarn.lock', '**/package-lock.json') }}-
+            ${{ runner.os }}-nextjs-
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile || bun install
+
+      - name: Generate Prisma Client
+        run: bunx prisma generate
+
+      - name: Build Next.js (Standalone)
+        run: bun run build
+        env:
+          NEXT_TELEMETRY_DISABLED: 1
+          NODE_ENV: production
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -56,12 +86,13 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
+          file: ./Dockerfile.standalone
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           annotations: ${{ steps.meta.outputs.annotations }}
           cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-to: type=gha,mode=min
 
       # Trigger App VM Webhook automatically after image is pushed (push to main only)
       - name: Trigger App VM Webhook

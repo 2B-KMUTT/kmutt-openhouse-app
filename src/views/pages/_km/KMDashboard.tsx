@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useSession } from "next-auth/react"
 import {
     Flex,
     Text,
@@ -13,6 +14,7 @@ import {
     Button,
     IconButton,
     Input,
+    Select,
     Tabs,
     Tab,
     TabList,
@@ -32,6 +34,9 @@ const ITEMS_PER_PAGE = 5
 
 const KMDashboardPage = () => {
     const router = useRouter()
+    const { data: session } = useSession()
+    const isSuperAdmin = session?.user?.adminRole === "SUPER_ADMIN"
+
     const cardBg = useColorModeValue("white", "gray.700")
     const textColor = useColorModeValue("gray.800", "gray.100")
     const bannerBg = useColorModeValue("orange.50", "whiteAlpha.100")
@@ -40,19 +45,43 @@ const KMDashboardPage = () => {
     const [data, setData] = useState<KMProfile | null>(null)
     const [activities, setActivities] = useState<Activity[]>([])
     const [searchKeyword, setSearchKeyword] = useState("")
+    const [adminOwners, setAdminOwners] = useState<{ id: number, name: string, username: string }[]>([])
+    const [selectedOwnerFilter, setSelectedOwnerFilter] = useState<number | "">("")
 
     // state เก็บ current page ของแต่ละวัน
     const [pageByDate, setPageByDate] = useState<Record<string, number>>({})
+
+    const fetchActivities = (ownerId?: number | "") => {
+        const query = ownerId ? `?ownerId=${ownerId}` : ""
+        fetch(`/api/km/activities${query}`)
+            .then((res) => res.json())
+            .then((d) => setActivities(d))
+            .catch(() => {})
+    }
+
+    useEffect(() => {
+        if (isSuperAdmin) {
+            fetch("/api/km/admin-owners")
+                .then((res) => res.json())
+                .then((d) => setAdminOwners(d))
+                .catch(() => {})
+        }
+    }, [isSuperAdmin])
 
     useEffect(() => {
         fetch("/api/km/profile")
             .then((res) => res.json())
             .then((d) => setData(d))
 
-        fetch("/api/km/activities")
-            .then((res) => res.json())
-            .then((d) => setActivities(d))
+        fetchActivities()
     }, [])
+
+    const handleOwnerFilterChange = (val: string) => {
+        const ownerId = val ? Number(val) : ""
+        setSelectedOwnerFilter(ownerId)
+        fetchActivities(ownerId)
+        setPageByDate({})
+    }
 
     if (!data) {
         return (
@@ -197,6 +226,35 @@ const KMDashboardPage = () => {
                         </Button>
                     </HStack>
 
+                    {/* Super Admin Faculty Filter */}
+                    {isSuperAdmin && (
+                        <Box mb={3} p={3} bg="orange.50" rounded="xl" borderWidth="1px" borderColor="orange.200">
+                            <HStack justify="space-between" align="center" mb={1}>
+                                <Text fontSize="xs" fontWeight="bold" color="orange.800">
+                                    👑 กรองกิจกรรมตามคณะ/หน่วยงานเจ้าของ (Super Admin Mode)
+                                </Text>
+                                {selectedOwnerFilter && (
+                                    <Button size="xs" variant="ghost" colorScheme="orange" onClick={() => handleOwnerFilterChange("")}>
+                                        ล้างตัวกรอง
+                                    </Button>
+                                )}
+                            </HStack>
+                            <Select
+                                size="sm"
+                                bg="white"
+                                value={selectedOwnerFilter}
+                                onChange={(e) => handleOwnerFilterChange(e.target.value)}
+                            >
+                                <option value="">-- แสดงกิจกรรมของทุกคณะ (ทั้งหมด) --</option>
+                                {adminOwners.map((admin) => (
+                                    <option key={admin.id} value={admin.id}>
+                                        {admin.name} ({admin.username})
+                                    </option>
+                                ))}
+                            </Select>
+                        </Box>
+                    )}
+
                     {/* Search Box */}
                     <Input
                         placeholder="ค้นหากิจกรรม..."
@@ -255,11 +313,17 @@ const KMDashboardPage = () => {
                                                         {!act.display && (
                                                             <Badge w={"full"} rounded={"md"} p={2} colorScheme="red">กิจกรรมนี้ไม่ได้แสดงให้นักเรียนเห็น</Badge>
                                                         )}
-                                                        <HStack justify="space-between" mb={2}>
-
-                                                            <Text fontSize="md" fontWeight="bold">
-                                                                #{act.id} {act.title}
-                                                            </Text>
+                                                        <HStack justify="space-between" mb={2} wrap="wrap">
+                                                            <HStack spacing={2} wrap="wrap">
+                                                                <Text fontSize="md" fontWeight="bold">
+                                                                    #{act.id} {act.title}
+                                                                </Text>
+                                                                {act.owner && isSuperAdmin && (
+                                                                    <Badge colorScheme="purple" fontSize="xs">
+                                                                        👑 {act.owner.name}
+                                                                    </Badge>
+                                                                )}
+                                                            </HStack>
                                                             <HStack spacing={2}>
                                                                 <Badge
                                                                     colorScheme={

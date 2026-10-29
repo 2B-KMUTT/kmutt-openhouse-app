@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useSession } from "next-auth/react"
 import {
     Box,
     Button,
@@ -13,7 +14,8 @@ import {
     NumberInput,
     NumberInputField,
     useToast,
-    Text
+    Text,
+    Badge,
 } from "@chakra-ui/react"
 import KMAppLayout from "@/views/layouts/KMAppLayout"
 import { useRouter } from "next/router"
@@ -23,6 +25,8 @@ type ActivityType = "workshop" | "regis_activity" | "non_regis_activity"
 const AddActivityPage = () => {
     const router = useRouter()
     const toast = useToast()
+    const { data: session } = useSession()
+    const isSuperAdmin = session?.user?.adminRole === "SUPER_ADMIN"
 
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
@@ -38,6 +42,8 @@ const AddActivityPage = () => {
     const [imageUrl, setImageUrl] = useState("")
     const [maxParticipants, setMaxParticipants] = useState(0)
     const [departments, setDepartments] = useState<{ id: number, name_th: string, name_en: string }[]>([])
+    const [adminOwners, setAdminOwners] = useState<{ id: number, name: string, username: string }[]>([])
+    const [selectedOwnerId, setSelectedOwnerId] = useState<number | "">("")
 
     // fetch departments for select dropdown
     useEffect(() => {
@@ -45,6 +51,15 @@ const AddActivityPage = () => {
             .then(res => res.json())
             .then(data => setDepartments(data))
     }, [])
+
+    useEffect(() => {
+        if (isSuperAdmin) {
+            fetch("/api/km/admin-owners")
+                .then(res => res.json())
+                .then(data => setAdminOwners(data))
+                .catch(() => {})
+        }
+    }, [isSuperAdmin])
 
     const handleSubmit = async () => {
         const missingFields: string[] = []
@@ -67,7 +82,7 @@ const AddActivityPage = () => {
             return
         }
 
-        const body = {
+        const body: Record<string, any> = {
             title: title.trim(),
             description: description.trim(),
             activity_type: activityType,
@@ -81,6 +96,10 @@ const AddActivityPage = () => {
             form_link: formLink.trim(),
             image_url: imageUrl.trim(),
             max_participants: maxParticipants,
+        }
+
+        if (isSuperAdmin && selectedOwnerId) {
+            body.ownerId = Number(selectedOwnerId)
         }
 
         try {
@@ -102,6 +121,7 @@ const AddActivityPage = () => {
                 setDescription("")
                 setActivityType("workshop")
                 setDepartmentId(0)
+                setSelectedOwnerId("")
                 setDate("")
                 setRound(1)
                 setStartTime("")
@@ -152,6 +172,29 @@ const AddActivityPage = () => {
                         <option value="regis_activity">Regis Activity</option>
                         <option value="non_regis_activity">Non Regis Activity</option>
                     </Select>
+
+                    {isSuperAdmin && (
+                        <Box bg="orange.50" p={3} rounded="xl" borderWidth="1px" borderColor="orange.200" my={2}>
+                            <FormLabel fontWeight="bold" color="orange.800" mb={1}>
+                                เจ้าของกิจกรรม (Activity Owner) <Badge colorScheme="orange" ml={1}>Super Admin</Badge>
+                            </FormLabel>
+                            <Select
+                                bg="white"
+                                value={selectedOwnerId}
+                                onChange={e => setSelectedOwnerId(e.target.value ? Number(e.target.value) : "")}
+                            >
+                                <option value="">-- กำหนดเป็นตัวเอง ({session?.user?.name || "Super Admin"}) --</option>
+                                {adminOwners.map(admin => (
+                                    <option key={admin.id} value={admin.id}>
+                                        {admin.name} ({admin.username})
+                                    </option>
+                                ))}
+                            </Select>
+                            <Text fontSize="xs" color="gray.600" mt={1}>
+                                * กิจกรรมจะถูกบันทึกให้คณะที่เลือก และระบบจะมอบหมาย (Auto-assign) ให้ Staff ประจำคณะนั้นโดยอัตโนมัติ
+                            </Text>
+                        </Box>
+                    )}
 
                     <FormLabel>หน่วยงาน/สาขาวิชา <Text as="span" color="red.500">*</Text></FormLabel>
                     <Select value={departmentId} onChange={e => setDepartmentId(Number(e.target.value))}>

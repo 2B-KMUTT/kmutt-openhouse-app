@@ -42,6 +42,7 @@ export const authOptions: NextAuthOptions = {
             return {
               id: kmuser.id,
               role: "kmuser",
+              adminRole: kmuser.role as "SUPER_ADMIN" | "ADMIN",
               name: kmuser.name,
               email: kmuser.email
             };
@@ -118,12 +119,14 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = Number(user.id);
         token.role = user.role;
+        token.adminRole = user.adminRole;
         token.name = user.name ?? undefined;
         token.email = user.email ?? undefined;
         token.accessToken = jwt.sign(
           {
             id: Number(user.id),
             role: user.role,
+            adminRole: user.adminRole,
             name: user.name,
             email: user.email,
           },
@@ -138,6 +141,7 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user.id = Number(token.id);
         session.user.role = token.role as "student" | "staff" | "kmuser" | "parent" | "guest" | "teacher";
+        session.user.adminRole = token.adminRole;
         session.user.name = (token.name as string) ?? null;
         session.user.email = (token.email as string) ?? null;
       }

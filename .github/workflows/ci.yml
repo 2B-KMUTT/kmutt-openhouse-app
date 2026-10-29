@@ -15,6 +15,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  ACTIONS_RUNNER_FORCE_NODE24: "true"
+
 jobs:
   verify:
     name: Typecheck, Auth Tests & Build
@@ -28,6 +31,18 @@ jobs:
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
+
+      # แคช Next.js และ Bun สำหรับ PR verification
+      - name: Cache Next.js build & Bun dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.bun/install/cache
+            ${{ github.workspace }}/.next/cache
+          key: ${{ runner.os }}-ci-nextjs-${{ hashFiles('**/bun.lock', '**/yarn.lock', '**/package-lock.json') }}-${{ hashFiles('src/**', 'public/**', 'prisma/**') }}
+          restore-keys: |
+            ${{ runner.os }}-ci-nextjs-${{ hashFiles('**/bun.lock', '**/yarn.lock', '**/package-lock.json') }}-
+            ${{ runner.os }}-ci-nextjs-
 
       - name: Install dependencies
         run: bun install --frozen-lockfile || bun install
