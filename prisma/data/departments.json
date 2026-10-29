@@ -1,0 +1,236 @@
+[
+  {
+    "id": 1,
+    "name_th": "วิศวกรรมคอมพิวเตอร์",
+    "name_en": "Computer Engineering",
+    "facultyId": 1
+  },
+  {
+    "id": 2,
+    "name_th": "สำนักงานคัดเลือกและสรรหานักศึกษา",
+    "name_en": "Admissions and Recruitment Office ",
+    "facultyId": 2
+  },
+  {
+    "id": 3,
+    "name_th": "วิศวกรรมเคมี",
+    "name_en": "Chemical Engineering",
+    "facultyId": 1
+  },
+  {
+    "id": 4,
+    "name_th": "วิศวกรรมเครื่องกล",
+    "name_en": "Mechanical Engineering",
+    "facultyId": 1
+  },
+  {
+    "id": 5,
+    "name_th": "วิศวกรรมเครื่องมือและวัสดุ",
+    "name_en": "Tool and Materials Engineering",
+    "facultyId": 1
+  },
+  {
+    "id": 6,
+    "name_th": "วิศวกรรมไฟฟ้า",
+    "name_en": "Electrical Engineering",
+    "facultyId": 1
+  },
+  {
+    "id": 7,
+    "name_th": "วิศวกรรมอิเล็กทรอนิกส์และโทรคมนาคม",
+    "name_en": "Electronics and Telecommunication Engineering",
+    "facultyId": 1
+  },
+  {
+    "id": 8,
+    "name_th": "วิศวกรรมอุตสาหการ",
+    "name_en": "Production Engineering",
+    "facultyId": 1
+  },
+  {
+    "id": 9,
+    "name_th": "วิศวกรรมโยธา",
+    "name_en": "Civil Engineering",
+    "facultyId": 1
+  },
+  {
+    "id": 10,
+    "name_th": "วิศวกรรมสิ่งแวดล้อม",
+    "name_en": "Environmental Engineering",
+    "facultyId": 1
+  },
+  {
+    "id": 11,
+    "name_th": "วิศวกรรมระบบควบคุมและเครื่องมือวัด",
+    "name_en": "Control System and Instrumentation\r\nEngineering",
+    "facultyId": 1
+  },
+  {
+    "id": 12,
+    "name_th": "สโมสรนักศึกษา",
+    "name_en": "Student Union",
+    "facultyId": 1
+  },
+  {
+    "id": 13,
+    "name_th": "คณิตศาสตร์",
+    "name_en": "Mathematics",
+    "facultyId": 3
+  },
+  {
+    "id": 14,
+    "name_th": "ฟิสิกส์",
+    "name_en": "Physics",
+    "facultyId": 3
+  },
+  {
+    "id": 15,
+    "name_th": "เคมี",
+    "name_en": "Chemistry",
+    "facultyId": 3
+  },
+  {
+    "id": 16,
+    "name_th": "จุลชีววิทยา",
+    "name_en": "Microbiology",
+    "facultyId": 3
+  },
+  {
+    "id": 17,
+    "name_th": "คณะเทคโนโลยีสารสนเทศ",
+    "name_en": "School of Information Technology",
+    "facultyId": 4
+  },
+  {
+    "id": 18,
+    "name_th": "คณะสถาปัตยกรรมศาสตร์และการออกแบบ",
+    "name_en": "School of Architecture and Design",
+    "facultyId": 6
+  },
+  {
+    "id": 19,
+    "name_th": "สถาบันวิทยาการหุ่นยนต์ภาคสนาม",
+    "name_en": "Institute of field robotics",
+    "facultyId": 7
+  },
+  {
+    "id": 20,
+    "name_th": "คณะศิลปศาสตร์",
+    "name_en": "School of Liberal Arts",
+    "facultyId": 9
+  },
+  {
+    "id": 21,
+    "name_th": "บัณฑิตวิทยาลัยการจัดการและนวัตกรรม",
+    "name_en": "Graduate School of Management and Innovation",
+    "facultyId": 11
+  },
+  {
+    "id": 22,
+    "name_th": "มจธ.ราชบุรี",
+    "name_en": "KMUTT (Ratchaburi)",
+    "facultyId": 8
+  },
+  {
+    "id": 23,
+    "name_th": "โครงการร่วมบริหารหลักสูตรมีเดียอาตส์และเทคโนโลยีมีเดีย",
+    "name_en": "Creative Media",
+    "facultyId": 12
+  },
+  {
+    "id": 24,
+    "name_th": "วิทยาลัยสหวิทยาการ (DDCT)",
+    "name_en": "College of Multidisciplinary Sciences (DDCT)",
+    "facultyId": 13
+  },
+  {
+    "id": 25,
+    "name_th": "กลุ่มงานช่วยเหลือทางการเงินแก่นักศึกษา",
+    "name_en": "Student Financial Aid Unit",
+    "facultyId": 2
+  },
+  {
+    "id": 26,
+    "name_th": "หอพักนักศึกษา",
+    "name_en": "Residencehall",
+    "facultyId": 2
+  },
+  {
+    "id": 27,
+    "name_th": "สำนักงานกิจการต่างประเทศ",
+    "name_en": "International Affairs Office",
+    "facultyId": 2
+  },
+  {
+    "id": 28,
+    "name_th": "KMUTTWorks",
+    "name_en": "KMUTTWorks",
+    "facultyId": 2
+  },
+  {
+    "id": 29,
+    "name_th": "สำนักหอสมุด",
+    "name_en": "KMUTT Library",
+    "facultyId": 2
+  },
+  {
+    "id": 30,
+    "name_th": "ชมรมของนักศึกษา",
+    "name_en": "Student Community",
+    "facultyId": 2
+  },
+  {
+    "id": 31,
+    "name_th": "ครุศาสตร์โยธา",
+    "name_en": "Civil Technology Education",
+    "facultyId": 5
+  },
+  {
+    "id": 32,
+    "name_th": "ครุศาสตร์ไฟฟ้า",
+    "name_en": "Electrical Engineering Education",
+    "facultyId": 5
+  },
+  {
+    "id": 33,
+    "name_th": "ครุศาสตร์เครื่องกล",
+    "name_en": "Mechanical Education",
+    "facultyId": 5
+  },
+  {
+    "id": 34,
+    "name_th": "ครุศาสตร์อุตสาหการ",
+    "name_en": "Production Technology Education",
+    "facultyId": 5
+  },
+  {
+    "id": 35,
+    "name_th": "เทคโนโลยีและสื่อสารการศึกษา",
+    "name_en": "Educational Communications and Technology",
+    "facultyId": 5
+  },
+  {
+    "id": 36,
+    "name_th": "คอมพิวเตอร์และเทคโนโลยีสารสนเทศ",
+    "name_en": "Computer and Information Technology",
+    "facultyId": 5
+  },
+  {
+    "id": 37,
+    "name_th": "เทคโนโลยีการพิมพ์และบรรจุภัณฑ์",
+    "name_en": "Printing and Packaging Technology\r\n",
+    "facultyId": 5
+  },
+  {
+    "id": 38,
+    "name_th": "คณะพลังงานสิ่งแวดล้อมและวัสดุ",
+    "name_en": "School of Energy, Environment and Materials",
+    "facultyId": 10
+  },
+  {
+    "id": 39,
+    "name_th": "คณะวิศวกรรมศาสตร์",
+    "name_en": "Faculty of Engineering",
+    "facultyId": 1
+  }
+]

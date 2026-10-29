@@ -1,0 +1,67 @@
+[
+  {
+    "id": 1,
+    "name_th": "คณะวิศวกรรมศาสตร์",
+    "name_en": "Faculty of Engineering"
+  },
+  {
+    "id": 2,
+    "name_th": "กิจกรรมส่วนกลาง มจธ.บางมด",
+    "name_en": "KMUTT (Bangmod)"
+  },
+  {
+    "id": 3,
+    "name_th": "คณะวิทยาศาสตร์",
+    "name_en": "Faculty of Science"
+  },
+  {
+    "id": 4,
+    "name_th": "คณะเทคโนโลยีสารสนเทศ",
+    "name_en": "School of Information Technology"
+  },
+  {
+    "id": 5,
+    "name_th": "คณะครุศาสตร์อุตสาหกรรมและเทคโนโลยี",
+    "name_en": "Faculty of Industrial Education and Technology"
+  },
+  {
+    "id": 6,
+    "name_th": "คณะสถาปัตยกรรมศาสตร์และการออกแบบ",
+    "name_en": "School of Architecture and Design"
+  },
+  {
+    "id": 7,
+    "name_th": "สถาบันวิทยาการหุ่นยนต์ภาคสนาม",
+    "name_en": "Institute of field robotics"
+  },
+  {
+    "id": 8,
+    "name_th": "มจธ.ราชบุรี",
+    "name_en": "KMUTT (Ratchaburi)"
+  },
+  {
+    "id": 9,
+    "name_th": "คณะศิลปศาสตร์",
+    "name_en": "School of Liberal Arts"
+  },
+  {
+    "id": 10,
+    "name_th": "คณะพลังงานสิ่งแวดล้อมและวัสดุ",
+    "name_en": "School of Energy, Environment and Materials"
+  },
+  {
+    "id": 11,
+    "name_th": "บัณฑิตวิทยาลัยการจัดการและนวัตกรรม",
+    "name_en": "Graduate School of Management and Innovation"
+  },
+  {
+    "id": 12,
+    "name_th": "โครงการร่วมบริหารหลักสูตรมีเดียอาตส์และเทคโนโลยีมีเดีย",
+    "name_en": "Creative Media"
+  },
+  {
+    "id": 13,
+    "name_th": "วิทยาลัยสหวิทยาการ (DDCT)",
+    "name_en": "College of Multidisciplinary Sciences (DDCT)"
+  }
+]

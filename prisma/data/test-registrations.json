@@ -1,0 +1,23 @@
+[
+  {
+    "studentEmail": "test.student@kmutt.ac.th",
+    "activitySlug": "test-cpe-workshop"
+  },
+  {
+    "studentEmail": "test.student@kmutt.ac.th",
+    "activitySlug": "test-admission-clinic"
+  },
+  {
+    "studentEmail": "test.student@kmutt.ac.th",
+    "activitySlug": "test-fibo-full"
+  },
+  {
+    "studentEmail": "test.student2@kmutt.ac.th",
+    "activitySlug": "test-cpe-workshop"
+  },
+  {
+    "studentEmail": "test.student2@kmutt.ac.th",
+    "activitySlug": "test-fibo-full"
+  }
+]
+

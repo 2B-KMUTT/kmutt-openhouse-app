@@ -1,0 +1,58 @@
+[
+  {
+    "email": "test.student@kmutt.ac.th",
+    "password": "password123",
+    "role": "student",
+    "first_name": "สมชาย",
+    "last_name": "ใจดี",
+    "school": "โรงเรียนสาธิต มจธ.",
+    "province": "กรุงเทพมหานคร",
+    "phone": "0811111111",
+    "citizen_id": "1100000000001"
+  },
+  {
+    "email": "test.student2@kmutt.ac.th",
+    "password": "password123",
+    "role": "student",
+    "first_name": "สมหญิง",
+    "last_name": "รักเรียน",
+    "school": "โรงเรียนร้อยเอ็ดวิทยาลัย",
+    "province": "ร้อยเอ็ด",
+    "phone": "0822222222",
+    "citizen_id": "1100000000002"
+  },
+  {
+    "email": "test.parent@kmutt.ac.th",
+    "password": "password123",
+    "role": "parent",
+    "first_name": "ประเสริฐ",
+    "last_name": "ใจดี",
+    "school": null,
+    "province": "กรุงเทพมหานคร",
+    "phone": "0833333333",
+    "citizen_id": null
+  },
+  {
+    "email": "test.teacher@kmutt.ac.th",
+    "password": "password123",
+    "role": "teacher",
+    "first_name": "กานดา",
+    "last_name": "ครูดีเด่น",
+    "school": "โรงเรียนสตรีศึกษา",
+    "province": "ร้อยเอ็ด",
+    "phone": "0844444444",
+    "citizen_id": null
+  },
+  {
+    "email": "test.guest@kmutt.ac.th",
+    "password": "password123",
+    "role": "guest",
+    "first_name": "วิชัย",
+    "last_name": "รักรู้",
+    "school": null,
+    "province": "นนทบุรี",
+    "phone": "0855555555",
+    "citizen_id": null
+  }
+]
+

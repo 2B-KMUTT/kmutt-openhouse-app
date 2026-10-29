@@ -1,0 +1,8 @@
+[
+  {
+    "name": "SIT Certificate Service",
+    "client_id": "sit-cert-service-client",
+    "client_secret": "sit-cert-secret-key-kmutt-2026",
+    "redirect_uris": "https://cert.sit.kmutt.ac.th/oauth/callback"
+  }
+]
