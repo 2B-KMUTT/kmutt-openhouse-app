@@ -34,3 +34,18 @@
 ### Staff Mapping (การมอบหมายกิจกรรมให้ Staff)
 - **นิยาม**: ความสัมพันธ์แบบ Many-to-Many ในตาราง `StaffMapping` ระหว่าง `Staffs` และ `Activities`
 - **กลไก Auto-assign**: เมื่อกิจกรรมถูกสร้างขึ้น ระบบจะจับคู่กิจกรรมนั้นกับ Staff ทั้งหมดที่อยู่ภายใต้ `ownerId` ของกิจกรรมนั้นโดยอัตโนมัติทันที
+
+---
+
+## 3. ระบบจัดเก็บไฟล์และสื่อมีเดีย (Object Storage)
+
+### RustFS (Self-hosted Object Storage)
+- **นิยาม**: เซิร์ฟเวอร์จัดเก็บอ็อบเจกต์ (Object Storage) ประสิทธิภาพสูงที่พัฒนาด้วยภาษา Rust และรองรับโปรโตคอล AWS S3 API แบบสมบูรณ์
+- **บทบาท**: ทำหน้าที่แทนที่บริการภายนอก (Supabase Storage เดิม) ในการจัดเก็บภาพถ่ายกิจกรรม ภาพถ่ายนักเรียน (Take Picture) และสื่อมัลติมีเดียทั้งหมด โดยทำงานเป็นคอนเทนเนอร์ภายในเครือข่าย
+
+### Bucket (`openhouse-uploads`)
+- **นิยาม**: ถังจัดเก็บอ็อบเจกต์หลักของระบบ โดยเปิดสิทธิ์การอ่านแบบสาธารณะ (Anonymous Read/Download) ผ่านทาง Nginx Reverse Proxy
+- **โครงสร้าง Path Prefix**:
+  - `take-pictures/`: ภาพถ่ายนักเรียนจากหน้ากิจกรรมถ่ายภาพ (`TakePicture`)
+  - `activities/`: ภาพประกอบกิจกรรม (`Activities.image_url`)
+  - `banners/`: ภาพแบนเนอร์ประชาสัมพันธ์หน้า Landing Page (`LandingBanner.imageUrl`)

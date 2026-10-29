@@ -17,6 +17,7 @@ APP_DIR="/root/kmutt-openhouse-app"
 mkdir -p "${BACKUP_ROOT}/database"
 mkdir -p "${BACKUP_ROOT}/pdf-certificates"
 mkdir -p "${BACKUP_ROOT}/images-and-assets"
+mkdir -p "${BACKUP_ROOT}/storage"
 
 echo "=========================================================="
 echo " Starting Full Backup for KMUTT OpenHouse (${YEAR})"
@@ -82,9 +83,23 @@ prisma.takePicture.findMany({
 });
 ' 2>/dev/null || true
 
-# 4. Attempt Supabase Storage Backup
-echo -e "\n[4/4] Checking Supabase Storage backup..."
-node "${APP_DIR}/scripts/backup-supabase.js" || true
+# 4. Backup RustFS Object Storage Volume
+echo -e "\n[4/4] Backing up RustFS Object Storage Volume..."
+RUSTFS_TAR_FILE="${BACKUP_ROOT}/storage/rustfs_storage_${YEAR}.tar.gz"
+VOLUME_NAME=""
+if docker volume inspect openhouse_rustfs_data >/dev/null 2>&1; then
+  VOLUME_NAME="openhouse_rustfs_data"
+elif docker volume inspect rustfs_data >/dev/null 2>&1; then
+  VOLUME_NAME="rustfs_data"
+fi
+
+if [ -n "${VOLUME_NAME}" ]; then
+  docker run --rm -v "${VOLUME_NAME}":/data:ro -v "${BACKUP_ROOT}/storage":/backup alpine \
+    tar -czf "/backup/rustfs_storage_${YEAR}.tar.gz" -C /data .
+  echo "  -> Finished RustFS Volume Backup (${VOLUME_NAME}): ${RUSTFS_TAR_FILE} ($(du -h "${RUSTFS_TAR_FILE}" 2>/dev/null | cut -f1))"
+else
+  echo "  -> Notice: Docker volume 'openhouse_rustfs_data' or 'rustfs_data' not found, skipping volume backup."
+fi
 
 echo -e "\n=========================================================="
 echo " Backup completed successfully!"
