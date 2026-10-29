@@ -1,0 +1,178 @@
+[
+  {
+    "username": "fen-staff01",
+    "email": "fen-staff01@openhouse.kmutt.ac.th",
+    "name": "Staff คณะวิศวกรรมศาสตร์",
+    "adminUsername": "KM_FEN",
+    "fallbackAdminName": "คณะวิศวกรรมศาสตร์ - Faculty of Engineering",
+    "fallbackAdminEmail": "fen@openhouse.kmutt.ac.th"
+  },
+  {
+    "username": "ratchaburi-staff01",
+    "email": "ratchaburi-staff01@openhouse.kmutt.ac.th",
+    "name": "Staff มจธ.ราชบุรี",
+    "adminUsername": "KM_ratchaburi",
+    "fallbackAdminName": "มจธ.ราชบุรี - KMUTT (Ratchaburi)",
+    "fallbackAdminEmail": "ratchaburi@openhouse.kmutt.ac.th"
+  },
+  {
+    "username": "fiet-staff01",
+    "email": "fiet-staff01@openhouse.kmutt.ac.th",
+    "name": "Staff คณะครุศาสตร์อุตสาหกรรมและเทคโนโลยี (FIET)",
+    "adminUsername": "KM_FIET",
+    "fallbackAdminName": "คณะครุศาสตร์อุตสาหกรรมและเทคโนโลยี (FIET) - Faculty of Industrial Education and Technology",
+    "fallbackAdminEmail": "fiet@openhouse.kmutt.ac.th"
+  },
+  {
+    "username": "media-staff01",
+    "email": "media-staff01@openhouse.kmutt.ac.th",
+    "name": "Staff โครงการร่วมบริหารหลักสูตรมีเดียอาตส์ฯ",
+    "adminUsername": "KM_media",
+    "fallbackAdminName": "โครงการร่วมบริหารหลักสูตรมีเดียอาตส์และเทคโนโลยีมีเดีย - Creative Media",
+    "fallbackAdminEmail": "media@openhouse.kmutt.ac.th"
+  },
+  {
+    "username": "soad-staff01",
+    "email": "soad-staff01@openhouse.kmutt.ac.th",
+    "name": "Staff คณะสถาปัตยกรรมศาสตร์และการออกแบบ (SoAD)",
+    "adminUsername": "KM_soad",
+    "fallbackAdminName": "คณะสถาปัตยกรรมศาสตร์และการออกแบบ - School of Architecture and Design",
+    "fallbackAdminEmail": "soad@openhouse.kmutt.ac.th"
+  },
+  {
+    "username": "li-staff01",
+    "email": "li-staff01@openhouse.kmutt.ac.th",
+    "name": "Staff สถาบันการเรียนรู้ (LI)",
+    "adminUsername": "KM_li",
+    "fallbackAdminName": "สถาบันการเรียนรู้ (LI) - Learning Institute",
+    "fallbackAdminEmail": "li@openhouse.kmutt.ac.th"
+  },
+  {
+    "username": "lisa-staff01",
+    "email": "lisa-staff01@openhouse.kmutt.ac.th",
+    "name": "Staff กลุ่มงานส่งเสริมและจัดการการเรียนรู้ตลอดชีวิต (LISA)",
+    "adminUsername": "KM_lisa",
+    "fallbackAdminName": "กลุ่มงานส่งเสริมและจัดการการเรียนรู้ตลอดชีวิต - Lifelong Learning Support and Administration Unit",
+    "fallbackAdminEmail": "lisa@openhouse.kmutt.ac.th"
+  },
+  {
+    "username": "admission-staff01",
+    "email": "admission-staff01@openhouse.kmutt.ac.th",
+    "name": "Staff สำนักงานคัดเลือกและสรรหานักศึกษา (Admission)",
+    "adminUsername": "KM_admission",
+    "fallbackAdminName": "สำนักงานคัดเลือกและสรรหานักศึกษา - Admissions and Recruitment Office",
+    "fallbackAdminEmail": "admission@openhouse.kmutt.ac.th"
+  },
+  {
+    "username": "sci-staff01",
+    "email": "sci-staff01@openhouse.kmutt.ac.th",
+    "name": "Staff คณะวิทยาศาสตร์",
+    "adminUsername": "KM_sci",
+    "fallbackAdminName": "คณะวิทยาศาสตร์ - Faculty of Science",
+    "fallbackAdminEmail": "sci@openhouse.kmutt.ac.th"
+  },
+  {
+    "username": "sit-staff01",
+    "email": "sit-staff01@openhouse.kmutt.ac.th",
+    "name": "Staff คณะเทคโนโลยีสารสนเทศ (SIT)",
+    "adminUsername": "KM_sit",
+    "fallbackAdminName": "คณะเทคโนโลยีสารสนเทศ - School of Information Technology",
+    "fallbackAdminEmail": "sit@openhouse.kmutt.ac.th"
+  },
+  {
+    "username": "fibo-staff01",
+    "email": "fibo-staff01@openhouse.kmutt.ac.th",
+    "name": "Staff สถาบันวิทยาการหุ่นยนต์ภาคสนาม (FIBO)",
+    "adminUsername": "KM_fibo",
+    "fallbackAdminName": "สถาบันวิทยาการหุ่นยนต์ภาคสนาม - Institute of field robotics",
+    "fallbackAdminEmail": "fibo@openhouse.kmutt.ac.th"
+  },
+  {
+    "username": "sla-staff01",
+    "email": "sla-staff01@openhouse.kmutt.ac.th",
+    "name": "Staff คณะศิลปศาสตร์ (SoLA)",
+    "adminUsername": "KM_sla",
+    "fallbackAdminName": "คณะศิลปศาสตร์ - School of Liberal Arts",
+    "fallbackAdminEmail": "sla@openhouse.kmutt.ac.th"
+  },
+  {
+    "username": "engenv-staff01",
+    "email": "engenv-staff01@openhouse.kmutt.ac.th",
+    "name": "Staff คณะพลังงานสิ่งแวดล้อมและวัสดุ (ENGENV)",
+    "adminUsername": "KM_engenv",
+    "fallbackAdminName": "คณะพลังงานสิ่งแวดล้อมและวัสดุ - School of Energy, Environment and Materials",
+    "fallbackAdminEmail": "engenv@openhouse.kmutt.ac.th"
+  },
+  {
+    "username": "gmi-staff01",
+    "email": "gmi-staff01@openhouse.kmutt.ac.th",
+    "name": "Staff บัณฑิตวิทยาลัยการจัดการและนวัตกรรม (GMI)",
+    "adminUsername": "KM_mainv",
+    "fallbackAdminName": "บัณฑิตวิทยาลัยการจัดการและนวัตกรรม - Graduate School of Management and Innovation",
+    "fallbackAdminEmail": "mainv@openhouse.kmutt.ac.th"
+  },
+  {
+    "username": "ddct-staff01",
+    "email": "ddct-staff01@openhouse.kmutt.ac.th",
+    "name": "Staff วิทยาลัยสหวิทยาการ (DDCT)",
+    "adminUsername": "KM_ddct",
+    "fallbackAdminName": "วิทยาลัยสหวิทยาการ (DDCT) - College of Multidisciplinary Sciences (DDCT)",
+    "fallbackAdminEmail": "ddct@openhouse.kmutt.ac.th"
+  },
+  {
+    "username": "stdunion-staff01",
+    "email": "stdunion-staff01@openhouse.kmutt.ac.th",
+    "name": "Staff สโมสรนักศึกษา (Student Union)",
+    "adminUsername": "KM_stdunion",
+    "fallbackAdminName": "สโมสรนักศึกษา - Student Union",
+    "fallbackAdminEmail": "stdunion@openhouse.kmutt.ac.th"
+  },
+  {
+    "username": "lib-staff01",
+    "email": "lib-staff01@openhouse.kmutt.ac.th",
+    "name": "Staff สำนักหอสมุด (KMUTT Library)",
+    "adminUsername": "KM_lib",
+    "fallbackAdminName": "สำนักหอสมุด - KMUTT Library",
+    "fallbackAdminEmail": "lib@openhouse.kmutt.ac.th"
+  },
+  {
+    "username": "stdfinance-staff01",
+    "email": "stdfinance-staff01@openhouse.kmutt.ac.th",
+    "name": "Staff กลุ่มงานช่วยเหลือทางการเงินแก่นักศึกษา",
+    "adminUsername": "KM_stdfinance",
+    "fallbackAdminName": "กลุ่มงานช่วยเหลือทางการเงินแก่นักศึกษา - Student Financial Aid Unit",
+    "fallbackAdminEmail": "stdfinance@openhouse.kmutt.ac.th"
+  },
+  {
+    "username": "residen-staff01",
+    "email": "residen-staff01@openhouse.kmutt.ac.th",
+    "name": "Staff หอพักนักศึกษา",
+    "adminUsername": "KM_residen",
+    "fallbackAdminName": "หอพักนักศึกษา - Residencehall",
+    "fallbackAdminEmail": "residen@openhouse.kmutt.ac.th"
+  },
+  {
+    "username": "interaff-staff01",
+    "email": "interaff-staff01@openhouse.kmutt.ac.th",
+    "name": "Staff สำนักงานกิจการต่างประเทศ",
+    "adminUsername": "KM_interaff",
+    "fallbackAdminName": "สำนักงานกิจการต่างประเทศ - International Affairs Office",
+    "fallbackAdminEmail": "interaff@openhouse.kmutt.ac.th"
+  },
+  {
+    "username": "works-staff01",
+    "email": "works-staff01@openhouse.kmutt.ac.th",
+    "name": "Staff KMUTTWorks",
+    "adminUsername": "KM_works",
+    "fallbackAdminName": "KMUTTWorks - KMUTTWorks",
+    "fallbackAdminEmail": "works@openhouse.kmutt.ac.th"
+  },
+  {
+    "username": "commu-staff01",
+    "email": "commu-staff01@openhouse.kmutt.ac.th",
+    "name": "Staff ชมรมของนักศึกษา",
+    "adminUsername": "KM_commu",
+    "fallbackAdminName": "ชมรมของนักศึกษา - Student Community",
+    "fallbackAdminEmail": "commu@openhouse.kmutt.ac.th"
+  }
+]

@@ -34,6 +34,8 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env
+.env.*
+!.env.example
 
 # vercel
 .vercel
@@ -45,5 +47,7 @@ next-env.d.ts
 /src/generated/prisma
 
 admins.csv
+staffs.csv
+*.csv
 public/images/*.old.*
 public/images/Banner เปิดเฮือน มจธ.png

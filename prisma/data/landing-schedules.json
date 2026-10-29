@@ -1,0 +1,174 @@
+[
+  {
+    "id": 1,
+    "time": "09.00 – 09.30 น.",
+    "session": "morning",
+    "category": "ลงทะเบียน (รอบเช้า)",
+    "categoryColor": "blue",
+    "title": "ลงทะเบียนเข้าร่วมกิจกรรม (รอบเช้า)",
+    "details": null,
+    "subSectionTitle": null,
+    "subSectionItems": null,
+    "isBreak": false,
+    "orderIndex": 1,
+    "display": true
+  },
+  {
+    "id": 2,
+    "time": "09.00 – 12.00 น.",
+    "session": "morning",
+    "category": "เวทีหลัก",
+    "categoryColor": "orange",
+    "title": "เวทีหลัก:",
+    "details": [
+      "09.00 - 09.10 : กล่าวต้อนรับและกล่าวเปิดงาน โดย รศ. ดร.สยาม เจริญเสียง",
+      "09.10 - 09. 20: รับชมวิดีทัศน์แนะนำ มจธ.",
+      "09.20 - 10.00 : กิจกรรมแลกเปลี่ยน “ทำไมต้อง มจธ. /TCAS70 กับรอบการรับสมัคร และทุนการศึกษา”",
+      "10.00 - 10.30 : แนะนำหลักสูตร โดยคณาจารย์จากคณะต่าง ๆ",
+      "10.30 - 11.00 : บรรยายพิเศษ \"วิศวกรแห่งอนาคตในยุค AI และ Smart Industry\" โดย ศ. ดร.บุญเจริญ ศิริเนาวกุล"
+    ],
+    "subSectionTitle": null,
+    "subSectionItems": null,
+    "isBreak": false,
+    "orderIndex": 2,
+    "display": true
+  },
+  {
+    "id": 3,
+    "time": "11.00 – 12.00 น.",
+    "session": "morning",
+    "category": "ถาม - ตอบ & กิจกรรม",
+    "categoryColor": "purple",
+    "title": "ถาม - ตอบ พร้อมรับของที่ระลึก (เกมแฟนพันธุ์แท้ มจธ.)",
+    "details": null,
+    "subSectionTitle": "กิจกรรมภายในงาน มีทั้งหมด 2 โซน",
+    "subSectionItems": [
+      "โซนที่ 1: Admission Consult & Portfolio Clinic",
+      "โซนที่ 2: บูทคณะต่าง ๆ (ให้ข้อมูลหลักสูตรและคัดเลือกแฟ้มสะสมผลงาน)"
+    ],
+    "isBreak": false,
+    "orderIndex": 3,
+    "display": true
+  },
+  {
+    "id": 4,
+    "time": "12.00 – 13.00 น.",
+    "session": "break",
+    "category": "พักกลางวัน",
+    "categoryColor": "gray",
+    "title": "พักกลางวัน",
+    "details": null,
+    "subSectionTitle": null,
+    "subSectionItems": null,
+    "isBreak": true,
+    "orderIndex": 4,
+    "display": true
+  },
+  {
+    "id": 5,
+    "time": "13.00 – 13.30 น.",
+    "session": "afternoon",
+    "category": "ลงทะเบียน (รอบบ่าย)",
+    "categoryColor": "blue",
+    "title": "ลงทะเบียนเข้าร่วมกิจกรรม (รอบบ่าย)",
+    "details": null,
+    "subSectionTitle": null,
+    "subSectionItems": null,
+    "isBreak": false,
+    "orderIndex": 5,
+    "display": true
+  },
+  {
+    "id": 6,
+    "time": "13.30 – 15.00 น.",
+    "session": "afternoon",
+    "category": "เวทีหลัก",
+    "categoryColor": "orange",
+    "title": "เวทีหลัก:",
+    "details": [
+      "รับชมวิดีทัศน์แนะนำ มจธ.",
+      "กิจกรรมแลกเปลี่ยน “ทำไมต้อง มจธ. /TCAS70 กับรอบการรับสมัคร และทุนการศึกษา”",
+      "แนะนำหลักสูตร โดยคณาจารย์จากคณะต่าง ๆ"
+    ],
+    "subSectionTitle": null,
+    "subSectionItems": null,
+    "isBreak": false,
+    "orderIndex": 6,
+    "display": true
+  },
+  {
+    "id": 7,
+    "time": "15.00 – 17.00 น.",
+    "session": "afternoon",
+    "category": "ถาม - ตอบ & กิจกรรม",
+    "categoryColor": "purple",
+    "title": "ถาม - ตอบ พร้อมรับของที่ระลึก (เกมพันธุ์แท้ มจธ.)",
+    "details": null,
+    "subSectionTitle": "กิจกรรมภายในงาน มีทั้งหมด 3 โซน",
+    "subSectionItems": [
+      "โซนที่ 1: Admission Consult & Portfolio Clinic",
+      "โซนที่ 2: บูทคณะต่าง ๆ (ให้ข้อมูลหลักสูตรและคัดเลือกแฟ้มสะสมผลงาน)",
+      "โซนที่ 3: KMUTT Industry Consultation Clinic (ให้คำปรึกษาแก่ผู้ประกอบการและศิษย์เก่า - ทีม LISA)",
+      "โซนที่ 4 : มจธ.ราชบุรี",
+      "โซนที่ 5 : AI Playground เริ่มต้นออกแบบเกมในสไตล์คุณแบบง่าย ๆ ด้วย AI (Media Technology)",
+      "โซนที่ 6 : มหัศจรรย์แสงล้านสี (The Magic of Light) - Family Learning League"
+    ],
+    "isBreak": false,
+    "orderIndex": 7,
+    "display": true
+  },
+  {
+    "id": 8,
+    "time": "15.00 – 17.00 น.",
+    "session": "afternoon",
+    "category": "โซน 3 (ทีม LISA)",
+    "categoryColor": "teal",
+    "title": "KMUTT Industry Consultation Clinic",
+    "details": [
+      "ให้คำปรึกษาแก่ผู้ประกอบการและศิษย์เก่า",
+      "ดำเนินกิจกรรมโดยทีม LISA (กลุ่มงานส่งเสริมและจัดการการเรียนรู้ตลอดชีวิต)",
+      "เวลา 15.00 – 17.00 น."
+    ],
+    "subSectionTitle": null,
+    "subSectionItems": null,
+    "isBreak": false,
+    "orderIndex": 8,
+    "display": true
+  },
+  {
+    "id": 10,
+    "time": "15.30 - 16.30 น.",
+    "session": "afternoon",
+    "category": "กิจกรรม",
+    "categoryColor": "green",
+    "title": "AI Playground - เริ่มต้นออกแบบเกมในสไตล์คุณแบบง่าย ๆ ด้วย AI (Media)",
+    "details": [
+      "1. ลองเล่น - ทดลองต้นแบบเกมที่ตอบสนองต่อท่าทาง",
+      "2. ร่วมออกแบบ - คิดธีมและกติกา ใช้ AI ช่วยต่อยอดไอเดีย",
+      "3. แชร์ไอเดีย - นำเสนอแนวคิดและรับฟังไอเดียจากเพื่อน ๆ "
+    ],
+    "subSectionTitle": null,
+    "subSectionItems": null,
+    "isBreak": false,
+    "orderIndex": 9,
+    "display": true
+  },
+  {
+    "id": 11,
+    "time": "15.00 - 17.00 น.",
+    "session": "afternoon",
+    "category": "กิจกรรม",
+    "categoryColor": "green",
+    "title": "มหัศจรรย์แสงล้านสี (The Magic of Light) เปิดมุมมองใหม่ ผ่านการรับรู้ ด้วยมหัศจรรย์ของแสง และสี",
+    "details": [
+      "Neuro Discovery Studio นักสืบสมอง ปริศนาสีที่หายไป - มาค้นพบสมองของเห็นภาพลวงตาอย่างไร",
+      "Physics Discovery Studio แสง สี และการมองเห็น - ทดลองผสมแสง RGB สำรวจสีวัตถุเมื่อแสงเปลี่ยน",
+      "Design Studio ศิลปะช่อนสี - ออกแบบภาพด้วยสี เผยภาพที่ซ่อนอยู่ด้วยแสงแดง"
+    ],
+    "subSectionTitle": null,
+    "subSectionItems": null,
+    "isBreak": false,
+    "orderIndex": 10,
+    "display": true
+  }
+]

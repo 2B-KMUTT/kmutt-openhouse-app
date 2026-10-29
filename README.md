@@ -134,12 +134,22 @@ npx prisma generate
 npx prisma db push
 ```
 
-### Seed Admin Accounts (42 Departments / Faculties)
-Generates high-security crypto-random passwords and exports to `admins.csv`:
+### Database Seeding & Data Protection Guard
+ระบบ Seed มีระบบป้องกันอัตโนมัติ (**Safe Guard**) หากตรวจพบว่ามีข้อมูลอยู่ในฐานข้อมูลอยู่แล้ว สคริปต์จะหยุดการทำงานทันทีเพื่อป้องกันข้อมูลสูญหาย หรือการถูกรีเซ็ตรหัสผ่านของผู้ใช้งาน/แอดมิน:
+
 ```bash
-node scripts/generate-admin-accounts.js
-# or
-npm run seed:admins
+# รัน Seed มาตรฐาน (จะหยุดทันทีหากมีข้อมูลอยู่ในฐานข้อมูลแล้ว)
+npm run seed
+
+# บังคับรัน Seed แม้มีข้อมูลอยู่แล้ว (รักษา Password เดิมของ Admin/Staff ไว้ ไม่เขียนทับ)
+npm run seed:force
+# หรือ
+npm run seed -- --force
+
+# รันเฉพาะส่วนที่ต้องการ
+npm run seed:admins   # สร้างเฉพาะบัญชี Admin
+npm run seed:staffs   # สร้างเฉพาะบัญชี Staff
+npm run seed:test     # สร้างข้อมูล Mock สำหรับ Test Environment
 ```
 
 ### Full Backup (Read-Only / Export Only)

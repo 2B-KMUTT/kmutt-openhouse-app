@@ -9,9 +9,17 @@
     "prisma": "prisma",
     "start": "next start",
     "lint": "eslint",
-    "seed:admins": "node scripts/generate-admin-accounts.js",
-    "seed:staffs": "node scripts/generate-staff-accounts.js",
+    "typecheck": "tsc --noEmit",
+    "test:auth": "node scripts/verify-auth-roles.js",
+    "seed": "node prisma/seed.js",
+    "seed:force": "node prisma/seed.js --force",
+    "seed:admins": "node prisma/seed.js --admins-only",
+    "seed:staffs": "node prisma/seed.js --staffs-only",
+    "seed:test": "node prisma/seed-test.js",
     "sync:admins": "node scripts/sync-admins-from-csv.js"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.2.4",

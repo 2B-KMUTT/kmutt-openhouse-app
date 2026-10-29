@@ -46,6 +46,8 @@ export default function LandingSettingsManager() {
     const [heroSubtitle, setHeroSubtitle] = useState("");
     const [heroDateText, setHeroDateText] = useState("");
     const [heroLocationText, setHeroLocationText] = useState("");
+    const [eventDateEn, setEventDateEn] = useState("");
+    const [eventLocationEn, setEventLocationEn] = useState("");
 
     const [regisDeadlineText, setRegisDeadlineText] = useState("");
     const [regisLink, setRegisLink] = useState("");
@@ -65,8 +67,10 @@ export default function LandingSettingsManager() {
 
             setHeroTitle(data.heroTitle ?? DEFAULT_LANDING_CONFIG.heroTitle);
             setHeroSubtitle(data.heroSubtitle ?? DEFAULT_LANDING_CONFIG.heroSubtitle);
-            setHeroDateText(data.heroDateText ?? DEFAULT_LANDING_CONFIG.heroDateText);
-            setHeroLocationText(data.heroLocationText ?? DEFAULT_LANDING_CONFIG.heroLocationText);
+            setHeroDateText(data.heroDateText ?? data.eventDateTh ?? DEFAULT_LANDING_CONFIG.heroDateText);
+            setHeroLocationText(data.heroLocationText ?? data.eventLocationTh ?? DEFAULT_LANDING_CONFIG.heroLocationText);
+            setEventDateEn(data.eventDateEn ?? DEFAULT_LANDING_CONFIG.eventDateEn);
+            setEventLocationEn(data.eventLocationEn ?? DEFAULT_LANDING_CONFIG.eventLocationEn);
 
             setRegisDeadlineText(data.regisDeadlineText ?? DEFAULT_LANDING_CONFIG.regisDeadlineText);
             setRegisLink(data.regisLink ?? DEFAULT_LANDING_CONFIG.regisLink);
@@ -98,6 +102,8 @@ export default function LandingSettingsManager() {
         setHeroSubtitle(DEFAULT_LANDING_CONFIG.heroSubtitle);
         setHeroDateText(DEFAULT_LANDING_CONFIG.heroDateText);
         setHeroLocationText(DEFAULT_LANDING_CONFIG.heroLocationText);
+        setEventDateEn(DEFAULT_LANDING_CONFIG.eventDateEn);
+        setEventLocationEn(DEFAULT_LANDING_CONFIG.eventLocationEn);
 
         setRegisDeadlineText(DEFAULT_LANDING_CONFIG.regisDeadlineText);
         setRegisLink(DEFAULT_LANDING_CONFIG.regisLink);
@@ -124,7 +130,11 @@ export default function LandingSettingsManager() {
                 heroTitle: heroTitle.trim(),
                 heroSubtitle: heroSubtitle.trim(),
                 heroDateText: heroDateText.trim(),
+                eventDateTh: heroDateText.trim(),
                 heroLocationText: heroLocationText.trim(),
+                eventLocationTh: heroLocationText.trim(),
+                eventDateEn: eventDateEn.trim(),
+                eventLocationEn: eventLocationEn.trim(),
                 regisDeadlineText: regisDeadlineText.trim(),
                 regisLink: regisLink.trim(),
                 openChatLink: openChatLink.trim(),
@@ -276,7 +286,7 @@ export default function LandingSettingsManager() {
                                 <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
                                     <FormControl isRequired>
                                         <FormLabel fontSize="sm" fontWeight="bold">
-                                            วันเวลาจัดงาน (Date & Time Text)
+                                            วันเวลาจัดงาน ภาษาไทย (Date & Time Text - TH)
                                         </FormLabel>
                                         <Input
                                             value={heroDateText}
@@ -288,13 +298,41 @@ export default function LandingSettingsManager() {
 
                                     <FormControl isRequired>
                                         <FormLabel fontSize="sm" fontWeight="bold">
-                                            สถานที่จัดงาน (Location Text)
+                                            สถานที่จัดงาน ภาษาไทย (Location Text - TH)
                                         </FormLabel>
                                         <Input
                                             value={heroLocationText}
                                             onChange={(e) => setHeroLocationText(e.target.value)}
                                             size="md"
                                             rounded="xl"
+                                        />
+                                    </FormControl>
+                                </SimpleGrid>
+
+                                <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
+                                    <FormControl>
+                                        <FormLabel fontSize="sm" fontWeight="bold">
+                                            วันเวลาจัดงาน ภาษาอังกฤษ (Date & Time Text - EN)
+                                        </FormLabel>
+                                        <Input
+                                            value={eventDateEn}
+                                            onChange={(e) => setEventDateEn(e.target.value)}
+                                            size="md"
+                                            rounded="xl"
+                                            placeholder="October 30, 2026, from 09:00 a.m. to 5:00 p.m."
+                                        />
+                                    </FormControl>
+
+                                    <FormControl>
+                                        <FormLabel fontSize="sm" fontWeight="bold">
+                                            สถานที่จัดงาน ภาษาอังกฤษ (Location Text - EN)
+                                        </FormLabel>
+                                        <Input
+                                            value={eventLocationEn}
+                                            onChange={(e) => setEventLocationEn(e.target.value)}
+                                            size="md"
+                                            rounded="xl"
+                                            placeholder="at Petcharat Garden Hotel, Mueang, Roi Et"
                                         />
                                     </FormControl>
                                 </SimpleGrid>
