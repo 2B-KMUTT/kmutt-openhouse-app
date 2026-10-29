@@ -33,7 +33,7 @@ const AddActivityPage = () => {
     const [startTime, setStartTime] = useState("")
     const [endTime, setEndTime] = useState("")
     const [location, setLocation] = useState("")
-    const [point, setPoint] = useState(0)
+    const [point, setPoint] = useState(1)
     const [formLink, setFormLink] = useState("")
     const [imageUrl, setImageUrl] = useState("")
     const [maxParticipants, setMaxParticipants] = useState(0)
@@ -47,29 +47,39 @@ const AddActivityPage = () => {
     }, [])
 
     const handleSubmit = async () => {
-        if (!title || !description || !departmentId || !date || !startTime || !endTime || !location) {
+        const missingFields: string[] = []
+        if (!title.trim()) missingFields.push("ชื่อกิจกรรม")
+        if (!description.trim()) missingFields.push("รายละเอียด")
+        if (!departmentId || departmentId === 0) missingFields.push("หน่วยงาน/สาขาวิชา")
+        if (!date) missingFields.push("วันที่จัดกิจกรรม")
+        if (!startTime) missingFields.push("เวลาเริ่มกิจกรรม")
+        if (!endTime) missingFields.push("เวลาสิ้นสุดกิจกรรม")
+        if (!location.trim()) missingFields.push("สถานที่จัดกิจกรรม")
+
+        if (missingFields.length > 0) {
             toast({
                 title: "กรอกข้อมูลไม่ครบ",
+                description: `กรุณากรอกหรือระบุ: ${missingFields.join(", ")}`,
                 status: "error",
-                duration: 3000,
+                duration: 4000,
                 isClosable: true,
             })
             return
         }
 
         const body = {
-            title,
-            description,
+            title: title.trim(),
+            description: description.trim(),
             activity_type: activityType,
             departmentId,
             date,
             round,
             start_time: startTime,
             end_time: endTime,
-            location,
+            location: location.trim(),
             point,
-            form_link: formLink,
-            image_url: imageUrl,
+            form_link: formLink.trim(),
+            image_url: imageUrl.trim(),
             max_participants: maxParticipants,
         }
 
@@ -97,7 +107,7 @@ const AddActivityPage = () => {
                 setStartTime("")
                 setEndTime("")
                 setLocation("")
-                setPoint(0)
+                setPoint(1)
                 setFormLink("")
                 setImageUrl("")
                 setMaxParticipants(0)
@@ -107,8 +117,10 @@ const AddActivityPage = () => {
                 }, 1000)
 
             } else {
+                const data = await res.json().catch(() => null)
                 toast({
                     title: "เกิดข้อผิดพลาด",
+                    description: data?.message || "ไม่สามารถสร้างกิจกรรมได้",
                     status: "error",
                     duration: 3000,
                     isClosable: true,
@@ -128,20 +140,20 @@ const AddActivityPage = () => {
         <KMAppLayout navigation="เพิ่มกิจกรรม">
             <Box mx="auto" mt={4} mb={10} p={3} bg="white" rounded="xl" shadow="sm">
                 <VStack spacing={1} align="stretch">
-                    <FormLabel>ชื่อกิจกรรม</FormLabel>
+                    <FormLabel>ชื่อกิจกรรม <Text as="span" color="red.500">*</Text></FormLabel>
                     <Input value={title} onChange={e => setTitle(e.target.value)} />
 
-                    <FormLabel>รายละเอียด</FormLabel>
+                    <FormLabel>รายละเอียด <Text as="span" color="red.500">*</Text></FormLabel>
                     <Textarea value={description} onChange={e => setDescription(e.target.value)} />
 
-                    <FormLabel>ประเภทกิจกรรม</FormLabel>
+                    <FormLabel>ประเภทกิจกรรม <Text as="span" color="red.500">*</Text></FormLabel>
                     <Select value={activityType} onChange={e => setActivityType(e.target.value as ActivityType)}>
                         <option value="workshop">Workshop</option>
                         <option value="regis_activity">Regis Activity</option>
                         <option value="non_regis_activity">Non Regis Activity</option>
                     </Select>
 
-                    <FormLabel>หน่วยงาน/สาขาวิชา</FormLabel>
+                    <FormLabel>หน่วยงาน/สาขาวิชา <Text as="span" color="red.500">*</Text></FormLabel>
                     <Select value={departmentId} onChange={e => setDepartmentId(Number(e.target.value))}>
                         <option value={0}>-- เลือกหน่วยงาน/สาขาวิชา --</option>
                         {departments.map(dep => (
@@ -151,7 +163,7 @@ const AddActivityPage = () => {
 
                     <HStack spacing={1}>
                         <Box flex={1}>
-                            <FormLabel>วันที่จัดกิจกรรม</FormLabel>
+                            <FormLabel>วันที่จัดกิจกรรม <Text as="span" color="red.500">*</Text></FormLabel>
                             {/* <Input type="date" value={date} onChange={e => setDate(e.target.value)} /> */}
                             <Select placeholder="เลือกวันที่" value={date} onChange={e => setDate(e.target.value)}>
                                 <option value="30/10/2026">30 ตุลาคม 2569 (วันจัดงาน)</option>
@@ -169,17 +181,17 @@ const AddActivityPage = () => {
 
                     <HStack spacing={1}>
                         <Box flex={1}>
-                            <FormLabel>เวลาเริ่มกิจกรรม</FormLabel>
+                            <FormLabel>เวลาเริ่มกิจกรรม <Text as="span" color="red.500">*</Text></FormLabel>
                             <Input type="time" value={startTime} onChange={e => setStartTime(e.target.value)} />
                         </Box>
 
                         <Box flex={1}>
-                            <FormLabel>เวลาสิ้นสุดกิจกรรม</FormLabel>
+                            <FormLabel>เวลาสิ้นสุดกิจกรรม <Text as="span" color="red.500">*</Text></FormLabel>
                             <Input type="time" value={endTime} onChange={e => setEndTime(e.target.value)} />
                         </Box>
                     </HStack>
 
-                    <FormLabel>สถานที่จัดกิจกรรม</FormLabel>
+                    <FormLabel>สถานที่จัดกิจกรรม <Text as="span" color="red.500">*</Text></FormLabel>
                     <Input value={location} placeholder="สถานที่จัดกิจกรรม" onChange={e => setLocation(e.target.value)} />
 
                     <FormLabel>คะแนนของกิจกรรม</FormLabel>
