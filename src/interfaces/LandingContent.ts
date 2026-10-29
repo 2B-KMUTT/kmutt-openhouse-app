@@ -41,6 +41,10 @@ export const DEFAULT_LANDING_CONFIG = {
   heroSubtitle: "เปิดเฮือน มจธ. (มดอีสาน) ครั้งที่ 1",
   heroDateText: "วันศุกร์ที่ 30 ตุลาคม 2569 เวลา 09.00 – 16.00 น.",
   heroLocationText: "ณ โรงแรมเพชรรัชต์การ์เด้น อ.เมือง จ.ร้อยเอ็ด",
+  eventDateTh: "วันที่ 30 ตุลาคม 2569 เวลา 09.00 – 17.00 น.",
+  eventLocationTh: "ณ โรงแรมเพชรรัชต์การ์เด้น อ.เมือง จ.ร้อยเอ็ด",
+  eventDateEn: "October 30, 2026, from 09:00 a.m. to 5:00 p.m.",
+  eventLocationEn: "at Petcharat Garden Hotel, Mueang, Roi Et",
   regisDeadlineText: "26 ตุลาคม 2569",
   regisLink: "https://kmutt.me/oph_RoiEt",
   openChatLink: "https://kmutt.me/OpenChatOPH2025",
@@ -53,10 +57,15 @@ export const DEFAULT_LANDING_CONFIG = {
 export interface LandingConfigMap {
   heroTitle?: string;
   heroSubtitle?: string;
+  heroDateText?: string;
+  heroLocationText?: string;
   eventDateTh?: string;
   eventLocationTh?: string;
   eventDateEn?: string;
   eventLocationEn?: string;
+  regisDeadlineText?: string;
+  regisLink?: string;
+  mapUrl?: string;
   coordinatorName?: string;
   coordinatorPhone?: string;
   coordinatorEmail?: string;

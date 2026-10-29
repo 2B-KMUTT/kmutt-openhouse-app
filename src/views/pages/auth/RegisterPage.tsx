@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import {
     Box,
@@ -87,6 +87,27 @@ export function RegisterPage() {
     const [lang, setLang] = useState<"TH" | "EN">("TH")
     const [usePassport, setUsePassport] = useState(false)
     const router = useRouter()
+
+    const [eventSubtitleTh, setEventSubtitleTh] = useState("เปิดเฮือน มจธ. (มดอีสาน) ณ โรงแรมเพชรรัชต์การ์เด้น จ.ร้อยเอ็ด")
+    const [eventSubtitleEn, setEventSubtitleEn] = useState("KMUTT Open House at Petcharat Garden Hotel, Roi Et")
+
+    useEffect(() => {
+        fetch("/api/landing/config")
+            .then((res) => {
+                if (!res.ok) return null
+                return res.json()
+            })
+            .then((data) => {
+                if (!data) return
+                const subTh = data.heroSubtitle || "เปิดเฮือน มจธ. (มดอีสาน)"
+                const locTh = data.heroLocationText || data.eventLocationTh || "ณ โรงแรมเพชรรัชต์การ์เด้น จ.ร้อยเอ็ด"
+                setEventSubtitleTh(`${subTh} ${locTh}`)
+                const titleEn = data.heroTitle || "KMUTT Open House"
+                const locEn = data.eventLocationEn || "at Petcharat Garden Hotel, Roi Et"
+                setEventSubtitleEn(`${titleEn} ${locEn}`)
+            })
+            .catch(() => {})
+    }, [])
 
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -231,7 +252,7 @@ export function RegisterPage() {
                         {lang === "TH" ? "สมัครสมาชิก / ลงทะเบียน" : "Register"}
                     </Heading>
                     <Text color={textColor} fontSize="sm">
-                        {lang === "TH" ? "เปิดเฮือน มจธ. (มดอีสาน) ณ โรงแรมเพชรรัชต์การ์เด้น จ.ร้อยเอ็ด" : "KMUTT Open House at Petcharat Garden Hotel, Roi Et"}
+                        {lang === "TH" ? eventSubtitleTh : eventSubtitleEn}
                     </Text>
                 </Flex>
 

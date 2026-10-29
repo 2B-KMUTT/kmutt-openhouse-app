@@ -58,11 +58,13 @@ const LandingPage = () => {
                 return res.json();
             })
             .then((data) => {
+                const locTh = data.heroLocationText || data.eventLocationTh;
+                const dateTh = data.heroDateText || data.eventDateTh;
                 setHeroConfig((prev) => ({
                     heroTitle: data.heroTitle || prev.heroTitle,
                     heroSubtitle: data.heroSubtitle || prev.heroSubtitle,
-                    eventDateTh: data.eventDateTh || prev.eventDateTh,
-                    eventLocationTh: data.eventLocationTh || prev.eventLocationTh,
+                    eventDateTh: dateTh || prev.eventDateTh,
+                    eventLocationTh: locTh || prev.eventLocationTh,
                     eventDateEn: data.eventDateEn || prev.eventDateEn,
                     eventLocationEn: data.eventLocationEn || prev.eventLocationEn,
                 }));
@@ -91,13 +93,16 @@ const LandingPage = () => {
     return (
         <>
             <Head>
-                <title>เปิดเฮือน มจธ. - KMUTT Open House 2569 (มดอีสาน)</title>
+                <title>{`${heroConfig.heroSubtitle} - ${heroConfig.heroTitle}`}</title>
                 <meta
                     name="description"
-                    content="เปิดเฮือน มจธ. KMUTT Open House (มดอีสาน) | วันที่ 30 ตุลาคม 2569 ณ โรงแรมเพชรรัชต์การ์เด้น จ.ร้อยเอ็ด"
+                    content={`${heroConfig.heroSubtitle} ${heroConfig.heroTitle} | ${heroConfig.eventDateTh} ${heroConfig.eventLocationTh}`}
                 />
-                <meta property="og:title" content="เปิดเฮือน มจธ. - KMUTT Open House 2569 (มดอีสาน)" />
-                <meta property="og:description" content="เปิดเฮือน มจธ. วันที่ 30 ตุลาคม 2569 ณ โรงแรมเพชรรัชต์การ์เด้น จ.ร้อยเอ็ด" />
+                <meta property="og:title" content={`${heroConfig.heroSubtitle} - ${heroConfig.heroTitle}`} />
+                <meta
+                    property="og:description"
+                    content={`${heroConfig.heroSubtitle} ${heroConfig.heroTitle} | ${heroConfig.eventDateTh} ${heroConfig.eventLocationTh}`}
+                />
                 <meta property="og:image" content="/images/banner_new.png" />
             </Head>
             <Box minH="100vh" bg={useColorModeValue("white", "gray.900")} color={textColor}>
@@ -396,7 +401,10 @@ const LandingPage = () => {
                 </Flex>
                 {/* ===== SCHEDULE ===== */}
                 <BannerSection />
-                <ScheduleSection />
+                <ScheduleSection
+                    eventDateTh={heroConfig.eventDateTh}
+                    eventLocationTh={heroConfig.eventLocationTh}
+                />
                 <BoothSection />
 
                 {/* <MapSection /> */}

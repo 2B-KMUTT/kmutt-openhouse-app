@@ -1,11 +1,41 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Box, Image, Text, useColorModeValue, Modal, ModalOverlay, ModalContent, ModalBody, ModalCloseButton, useDisclosure } from "@chakra-ui/react";
 
 import { PRIMARY, SECONDARY } from "@/constants/colors";
 
-const MapSection = () => {
+interface MapSectionProps {
+    eventLocationTh?: string;
+    mapUrl?: string;
+}
+
+const MapSection: React.FC<MapSectionProps> = ({
+    eventLocationTh,
+    mapUrl,
+}) => {
     const text = useColorModeValue("gray.800", "gray.200");
     const { isOpen, onOpen, onClose } = useDisclosure();
+
+    const [location, setLocation] = useState(eventLocationTh || "ณ โรงแรมเพชรรัชต์การ์เด้น อ.เมือง จ.ร้อยเอ็ด");
+    const [googleMapUrl, setGoogleMapUrl] = useState(mapUrl || "https://maps.google.com/?q=Petcharat+Garden+Hotel+Roi+Et");
+
+    useEffect(() => {
+        if (eventLocationTh) setLocation(eventLocationTh);
+        if (mapUrl) setGoogleMapUrl(mapUrl);
+
+        if (!eventLocationTh || !mapUrl) {
+            fetch("/api/landing/config")
+                .then((res) => {
+                    if (!res.ok) throw new Error("Failed to load map config");
+                    return res.json();
+                })
+                .then((data) => {
+                    const loc = data.heroLocationText || data.eventLocationTh;
+                    if (loc && !eventLocationTh) setLocation(loc);
+                    if (data.mapUrl && !mapUrl) setGoogleMapUrl(data.mapUrl);
+                })
+                .catch(() => {});
+        }
+    }, [eventLocationTh, mapUrl]);
 
     return (
         <Box id="map" position="relative" overflow="hidden" py={{ base: 10, md: 16 }} px={{ base: 4, md: 12 }}>
@@ -36,12 +66,12 @@ const MapSection = () => {
                 </Text>
 
                 <Text fontSize={{ base: "md", md: "lg" }} mb={4} maxW="800px" mx="auto" color={text}>
-                    ณ โรงแรมเพชรรัชต์การ์เด้น อ.เมือง จ.ร้อยเอ็ด
+                    {location}
                 </Text>
 
                 <Box mb={6}>
                     <a
-                        href="https://maps.google.com/?q=Petcharat+Garden+Hotel+Roi+Et"
+                        href={googleMapUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{

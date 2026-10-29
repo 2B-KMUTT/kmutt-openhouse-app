@@ -17,7 +17,15 @@ import { Calendar, MapPin } from "lucide-react";
 import ThirtyOctTable from "./Tables/ThirtyOctTable";
 import { PRIMARY } from "@/constants/colors";
 
-const ScheduleSection = () => {
+interface ScheduleSectionProps {
+    eventDateTh?: string;
+    eventLocationTh?: string;
+}
+
+const ScheduleSection: React.FC<ScheduleSectionProps> = ({
+    eventDateTh,
+    eventLocationTh,
+}) => {
     const badgeBg = useColorModeValue("orange.50", "whiteAlpha.100");
     const badgeBorder = useColorModeValue("orange.200", "orange.700");
     const badgeText = useColorModeValue("orange.900", "orange.100");
@@ -53,7 +61,7 @@ const ScheduleSection = () => {
                         shadow="xs"
                     >
                         <Icon as={Calendar} color={PRIMARY} />
-                        <Text>วันเสาร์ที่ 30 ตุลาคม 2569 เวลา 09.00 – 17.00 น.</Text>
+                        <Text>{eventDateTh || "วันที่ 30 ตุลาคม 2569 เวลา 09.00 – 17.00 น."}</Text>
                     </HStack>
                     <HStack
                         bg={badgeBg}
@@ -68,7 +76,7 @@ const ScheduleSection = () => {
                         shadow="xs"
                     >
                         <Icon as={MapPin} color={PRIMARY} />
-                        <Text>ณ โรงแรมเพชรรัชต์การ์เด้น อ.เมือง จ.ร้อยเอ็ด</Text>
+                        <Text>{eventLocationTh || "ณ โรงแรมเพชรรัชต์การ์เด้น อ.เมือง จ.ร้อยเอ็ด"}</Text>
                     </HStack>
                 </Stack>
             </VStack>
