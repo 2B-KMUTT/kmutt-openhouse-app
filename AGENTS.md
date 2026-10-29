@@ -10,8 +10,10 @@
   - APIs & Config: `src/pages/api/landing/config.ts`, `src/pages/api/km/landing/config.ts`, `src/interfaces/LandingContent.ts`.
   - Dual-key sync: `heroLocationText` ⟷ `eventLocationTh`, `heroDateText` ⟷ `eventDateTh`.
 - **Survey System**: `src/views/pages/PublicSurvey.tsx`, `src/pages/api/survey.ts`, `src/pages/api/survey/config.ts`, `src/views/pages/_km/SurveySettingsManager.tsx`.
+- **Layouts & Navigation**: `src/views/layouts/KMAppLayout.tsx`, `KMLayout.tsx`, `src/components/Sidebar/KMSidebar.tsx`, `src/constants/kmNavigation.ts` (Single Source of Truth for back-office menu items & icons).
+- **Super Admin Management**: `src/libs/activityService.ts` (dual-tier auto-assign & staff re-sync), `src/pages/api/km/admin-owners.ts`, `src/pages/api/km/activities.ts`, `src/pages/api/km/staff/index.ts`.
 - **Database Schema & Seeds**: `prisma/schema.prisma`, `prisma/seed.js`, `prisma/seed-test.js`, `prisma/data/`.
-- **Verification Scripts**: `scripts/verify-all-features.js` (landing & survey), `scripts/verify-auth-roles.js` (multi-role auth & routing).
+- **Verification Scripts**: `scripts/verify-all-features.js` (landing & survey), `scripts/verify-auth-roles.js` (multi-role auth & routing), `scripts/verify-superadmin-activities.js` (Super Admin cross-tenant activities & staff scoping).
 
 ## Agent skills
 
