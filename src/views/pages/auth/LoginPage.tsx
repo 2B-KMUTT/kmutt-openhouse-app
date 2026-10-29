@@ -24,6 +24,23 @@ import Head from "next/head"
 
 import { PRIMARY, SECONDARY } from "@/constants/colors"
 
+export const getDashboardPathByRole = (role?: string): string => {
+    switch (role) {
+        case "student":
+            return "/app/dashboard"
+        case "guest":
+        case "parent":
+        case "teacher":
+            return "/guest/dashboard"
+        case "staff":
+            return "/staff/dashboard"
+        case "kmuser":
+            return "/_km/dashboard"
+        default:
+            return "/"
+    }
+}
+
 const LoginPage = () => {
     const [emailOrUsername, setEmailOrUsername] = useState("")
     const [password, setPassword] = useState("")
@@ -37,39 +54,32 @@ const LoginPage = () => {
         setError("")
         setIsLoading(true)
 
-        // Clear existing session before logging in to prevent session collisions
-        if (status === "authenticated") {
-            await signOut({ redirect: false })
-        }
+        try {
+            const res = await signIn("credentials", {
+                redirect: false,
+                emailOrUsername: emailOrUsername.trim(),
+                password,
+            })
 
-        const res = await signIn("credentials", {
-            redirect: false,
-            emailOrUsername,
-            password,
-        })
+            if (!res || res.error || !res.ok) {
+                setError("❌ Login failed: " + (!res?.error || res.error == "CredentialsSignin" ? "Invalid email or password" : res.error))
+                setIsLoading(false)
+                return
+            }
 
-        if (res?.error) {
-            setError("❌ Login failed: " + (res.error == "CredentialsSignin" ? "Invalid email or password" : res.error))
+            const sessionRes = await fetch("/api/auth/session", {
+                cache: "no-store",
+                headers: {
+                    Pragma: "no-cache",
+                    "Cache-Control": "no-cache",
+                },
+            })
+            const newSession = await sessionRes.json()
+            window.location.href = getDashboardPathByRole(newSession?.user?.role)
+        } catch {
+            setError("❌ Login failed: Invalid email or password")
             setIsLoading(false)
-            return
         }
-
-        const sessionRes = await fetch("/api/auth/session")
-        const newSession = await sessionRes.json()
-
-        if (newSession?.user?.role === "student") {
-            window.location.href = "/app/dashboard"
-        } else if (newSession?.user?.role === "guest" || newSession?.user?.role === "parent" || newSession?.user?.role === "teacher") {
-            window.location.href = "/guest/dashboard"
-        } else if (newSession?.user?.role === "staff") {
-            window.location.href = "/staff/dashboard"
-        } else if (newSession?.user?.role === "kmuser") {
-            window.location.href = "/_km/dashboard"
-        } else {
-            window.location.href = "/"
-        }
-
-        setIsLoading(false)
     }
 
     const cardBg = useColorModeValue("white", "gray.800")
@@ -132,10 +142,7 @@ const LoginPage = () => {
                                         color="white"
                                         _hover={{ bg: "#d63e1a" }}
                                         onClick={() => {
-                                            if (session.user.role === "student") window.location.href = "/app/dashboard";
-                                            else if (session.user.role === "staff") window.location.href = "/staff/dashboard";
-                                            else if (session.user.role === "kmuser") window.location.href = "/_km/dashboard";
-                                            else window.location.href = "/guest/dashboard";
+                                            window.location.href = getDashboardPathByRole(session.user.role)
                                         }}
                                     >
                                         ไปที่แดชบอร์ด

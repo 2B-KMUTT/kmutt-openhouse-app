@@ -1,13 +1,31 @@
 import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
 
+function getDashboardByRole(role?: string): string {
+  switch (role) {
+    case "student":
+      return "/app/dashboard";
+    case "guest":
+    case "parent":
+    case "teacher":
+      return "/guest/dashboard";
+    case "staff":
+      return "/staff/dashboard";
+    case "kmuser":
+      return "/_km/dashboard";
+    default:
+      return "/login";
+  }
+}
+
 export default withAuth(
   function middleware(req) {
     const token = req.nextauth.token;
+    const role = token?.role as string | undefined;
 
     if (req.nextUrl.pathname.startsWith("/app")) {
-      if (token?.role !== "student") {
-        return NextResponse.redirect(new URL("/login", req.url));
+      if (role !== "student") {
+        return NextResponse.redirect(new URL(getDashboardByRole(role), req.url));
       }
       if (req.nextUrl.pathname.startsWith("/app/e-certificate")) {
         return NextResponse.redirect(new URL("/app/dashboard", req.url));
@@ -15,32 +33,32 @@ export default withAuth(
     }
 
     if (req.nextUrl.pathname.startsWith("/staff")) {
-      if (token?.role !== "staff") {
-        return NextResponse.redirect(new URL("/login", req.url));
+      if (role !== "staff") {
+        return NextResponse.redirect(new URL(getDashboardByRole(role), req.url));
       }
     }
 
     if (req.nextUrl.pathname.startsWith("/_km")) {
-      if (token?.role !== "kmuser") {
-        return NextResponse.redirect(new URL("/login", req.url));
+      if (role !== "kmuser") {
+        return NextResponse.redirect(new URL(getDashboardByRole(role), req.url));
       }
     }
 
     if (req.nextUrl.pathname.startsWith("/guest")) {
-      if (token?.role !== "guest" && token?.role !== "parent" && token?.role !== "teacher") {
-        return NextResponse.redirect(new URL("/login", req.url));
+      if (role !== "guest" && role !== "parent" && role !== "teacher") {
+        return NextResponse.redirect(new URL(getDashboardByRole(role), req.url));
       }
     }
 
     if (req.nextUrl.pathname.startsWith("/survey-report")) {
-      if (token?.role !== "kmuser") {
-        return NextResponse.redirect(new URL("/login", req.url));
+      if (role !== "kmuser") {
+        return NextResponse.redirect(new URL(getDashboardByRole(role), req.url));
       }
     }
   },
   {
     callbacks: {
-      authorized: ({ token }) => !!token, 
+      authorized: ({ token }) => !!token,
     },
   }
 );

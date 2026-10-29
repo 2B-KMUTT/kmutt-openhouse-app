@@ -80,9 +80,7 @@ const isValidCitizenId = (id: string) => {
 
 export function RegisterPage() {
     const toast = useToast()
-    const [form, setForm] = useState<Record<string, string>>({})
-    //set default role to student
-    if (!form.role) setForm({ ...form, role: "student" })
+    const [form, setForm] = useState<Record<string, string>>({ role: "student" })
 
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState("")
@@ -98,13 +96,13 @@ export function RegisterPage() {
 
 
         // Validation
-        if (!form.first_name || !form.last_name) {
+        if (!form.first_name?.trim() || !form.last_name?.trim()) {
             setError("กรุณากรอกชื่อ-นามสกุล")
             setIsLoading(false)
             return
         }
 
-        if (!form.school && (form.role == "student" || form.role == "teacher")) {
+        if (!form.school?.trim() && (form.role == "student" || form.role == "teacher")) {
             setError("กรุณากรอกโรงเรียน")
             setIsLoading(false)
             return
@@ -116,27 +114,32 @@ export function RegisterPage() {
             return
         }
 
-        if (!usePassport && form.role == "student") {
-            if (!form.citizen_id || !isValidCitizenId(form.citizen_id)) {
+        if (!usePassport) {
+            if (form.role == "student" && (!form.citizen_id || !isValidCitizenId(form.citizen_id.trim()))) {
+                setError("เลขบัตรประชาชนไม่ถูกต้อง")
+                setIsLoading(false)
+                return
+            }
+            if (form.role != "student" && form.citizen_id?.trim() && !isValidCitizenId(form.citizen_id.trim())) {
                 setError("เลขบัตรประชาชนไม่ถูกต้อง")
                 setIsLoading(false)
                 return
             }
         } else {
-            if (!form.passport_id && form.role == "student") {
+            if (!form.passport_id?.trim() && form.role == "student") {
                 setError("กรุณากรอก Passport ID")
                 setIsLoading(false)
                 return
             }
         }
 
-        if (!form.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+        if (!form.email?.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
             setError("อีเมลไม่ถูกต้อง")
             setIsLoading(false)
             return
         }
 
-        if (!form.phone || !/^[0-9]{10}$/.test(form.phone)) {
+        if (!form.phone?.trim() || !/^[0-9]{10}$/.test(form.phone.trim())) {
             setError("เบอร์โทรศัพท์ต้องมี 10 หลัก")
             setIsLoading(false)
             return

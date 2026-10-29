@@ -22,9 +22,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!email) return res.status(400).json({ message: "Email is required" });
 
   try {
-    // ตรวจสอบ email ใน Students
-    const student = await prisma.students.findUnique({ where: { email } });
-    if (!student) return res.status(404).json({ message: "Email not found" });
+    const trimmedEmail = String(email).trim();
+
+    // ตรวจสอบ email ใน Students, Staffs และ Admins
+    const student = await prisma.students.findUnique({ where: { email: trimmedEmail } });
+    const staff = !student ? await prisma.staffs.findUnique({ where: { email: trimmedEmail } }) : null;
+    const admin = !student && !staff ? await prisma.admins.findUnique({ where: { email: trimmedEmail } }) : null;
+
+    if (!student && !staff && !admin) {
+      return res.status(404).json({ message: "Email not found" });
+    }
+
+    const displayName = student ? student.first_name : (staff?.name || admin?.name || "ผู้ใช้งาน");
 
     // สร้าง token แบบสุ่ม
     const token = crypto.randomBytes(32).toString("hex");
@@ -32,19 +41,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // ใช้ upsert ป้องกัน unique constraint error
     await prisma.passwordResetToken.upsert({
-      where: { email },
+      where: { email: trimmedEmail },
       update: { token, expiresAt },
-      create: { email, token, expiresAt },
+      create: { email: trimmedEmail, token, expiresAt },
     });
 
     // ส่งอีเมล
-    const resetLink = `${process.env.NEXT_PUBLIC_BASE_URL}/reset-password?token=${token}&email=${email}`;
+    const resetLink = `${process.env.NEXT_PUBLIC_BASE_URL}/reset-password?token=${token}&email=${encodeURIComponent(trimmedEmail)}`;
     await transporter.sendMail({
       from: `"KMUTT Open House" <${process.env.SMTP_USER}>`,
-      to: email,
+      to: trimmedEmail,
       subject: "Reset your password",
       html: `
-        <p>สวัสดี ${student.first_name},</p>
+        <p>สวัสดี ${displayName},</p>
         <p>คุณขอรีเซ็ตรหัสผ่านสำหรับบัญชีของคุณ กรุณาคลิกลิงก์ด้านล่างเพื่อเปลี่ยนรหัสผ่าน (ใช้ได้ 1 ชั่วโมง)</p>
         <a href="${resetLink}" target="_blank">${resetLink}</a>
         <p>ถ้าไม่ได้ร้องขอ โปรดละเว้นอีเมลนี้</p>
