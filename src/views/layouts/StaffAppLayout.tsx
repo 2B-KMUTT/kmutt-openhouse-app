@@ -11,22 +11,24 @@ type StaffLayoutProps = {
 export default function StaffAppLayout({ children, navigation }: StaffLayoutProps) {
     const showSidebar = useBreakpointValue({ base: false, md: true })
     const cardBg = useColorModeValue("white", "gray.700")
-    const textColor = useColorModeValue("gray.800", "gray.100")
 
     return (
         <StaffLayout>
-            <Container maxW="7xl" px={4} py={6} mt="-10">
-                <Flex direction={{ base: "column", md: "row" }} gap={6}>
+            <Container maxW="7xl" px={{ base: 3, md: 4 }} py={6} mt="-10">
+                <Flex direction={{ base: "column", md: "row" }} gap={6} align="flex-start">
                     {/* Sidebar */}
                     {showSidebar && <StaffSidebar />}
 
-                    <Flex direction="column" flex="1" gap={6}>
+                    <Flex direction="column" flex="1" gap={6} minW={0} w="full">
                         <Box
                             bg={cardBg}
-                            p={6}
+                            p={{ base: 4, sm: 6 }}
                             rounded="2xl"
                             shadow="lg"
                             flex="1"
+                            minW={0}
+                            w="full"
+                            overflow="hidden"
                         >
                             <Text fontSize="lg" fontWeight="bold" mb={4}>
                                 Admin / {navigation}
