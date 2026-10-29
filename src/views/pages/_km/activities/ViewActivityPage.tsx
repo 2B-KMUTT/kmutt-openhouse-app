@@ -434,72 +434,34 @@ export const ViewActivityPage = () => {
                                 </HStack>
 
                                 {!activity.registrations?.length ? (
-                                    <Box py={8} textAlign="center" color="gray.500" border="1px dashed" borderColor={borderColor} rounded="xl">
+                                    <Box py={8} textAlign="center" color="gray.500">
                                         <Text fontSize="xs">ยังไม่มีผู้ลงทะเบียนในกิจกรรมนี้</Text>
                                     </Box>
                                 ) : (
-                                    <>
-                                        {/* Mobile Card List */}
-                                        <VStack spacing={2.5} align="stretch" display={{ base: "flex", md: "none" }}>
-                                            {activity.registrations.map((reg) => (
-                                                <Box
-                                                    key={reg.id}
-                                                    p={3}
-                                                    border="1px solid"
-                                                    borderColor={borderColor}
-                                                    rounded="xl"
-                                                    bg={headerBg}
-                                                    shadow="sm"
-                                                >
-                                                    <Text fontWeight="semibold" fontSize="sm" mb={1}>
-                                                        {reg.student.first_name} {reg.student.last_name}
-                                                    </Text>
-                                                    <VStack align="stretch" spacing={0.5} fontSize="xs" color="gray.600" _dark={{ color: "gray.300" }}>
-                                                        <Text wordBreak="break-all">📧 {reg.student.email}</Text>
-                                                        <Text>📞 {reg.student.phone || "-"}</Text>
-                                                        <Text color="gray.500">
-                                                            🕒 {new Date(reg.registered_at).toLocaleString("th-TH")}
-                                                        </Text>
-                                                    </VStack>
-                                                </Box>
-                                            ))}
-                                        </VStack>
-
-                                        {/* Desktop Table */}
-                                        <Box
-                                            display={{ base: "none", md: "block" }}
-                                            border="1px solid"
-                                            borderColor={borderColor}
-                                            rounded="xl"
-                                            overflow="hidden"
-                                            shadow="sm"
-                                        >
-                                            <TableContainer overflowX="auto">
-                                                <Table variant="simple" size="sm">
-                                                    <Thead bg={headerBg}>
-                                                        <Tr>
-                                                            <Th fontSize="xs" py={3} minW="160px">ชื่อ-สกุล</Th>
-                                                            <Th fontSize="xs" py={3} minW="180px">อีเมล</Th>
-                                                            <Th fontSize="xs" py={3} width="120px">เบอร์โทร</Th>
-                                                            <Th fontSize="xs" py={3} width="160px">เวลาลงทะเบียน</Th>
-                                                        </Tr>
-                                                    </Thead>
-                                                    <Tbody>
-                                                        {activity.registrations.map((reg) => (
-                                                            <Tr key={reg.id} _hover={{ bg: rowHoverBg }}>
-                                                                <Td fontWeight="medium" py={3}>{reg.student.first_name} {reg.student.last_name}</Td>
-                                                                <Td py={3}>{reg.student.email}</Td>
-                                                                <Td py={3}>{reg.student.phone}</Td>
-                                                                <Td color="gray.500" py={3} whiteSpace="nowrap">
-                                                                    {new Date(reg.registered_at).toLocaleString("th-TH")}
-                                                                </Td>
-                                                            </Tr>
-                                                        ))}
-                                                    </Tbody>
-                                                </Table>
-                                            </TableContainer>
-                                        </Box>
-                                    </>
+                                    <TableContainer overflowX="auto">
+                                        <Table variant="simple" size="sm">
+                                            <Thead bg={headerBg}>
+                                                <Tr>
+                                                    <Th fontSize="xs" py={3} minW="160px">ชื่อ-สกุล</Th>
+                                                    <Th fontSize="xs" py={3} minW="180px">อีเมล</Th>
+                                                    <Th fontSize="xs" py={3} width="120px">เบอร์โทร</Th>
+                                                    <Th fontSize="xs" py={3} width="160px">เวลาลงทะเบียน</Th>
+                                                </Tr>
+                                            </Thead>
+                                            <Tbody>
+                                                {activity.registrations.map((reg) => (
+                                                    <Tr key={reg.id} _hover={{ bg: rowHoverBg }}>
+                                                        <Td fontWeight="medium" py={3}>{reg.student.first_name} {reg.student.last_name}</Td>
+                                                        <Td py={3}>{reg.student.email}</Td>
+                                                        <Td py={3}>{reg.student.phone}</Td>
+                                                        <Td color="gray.500" py={3} whiteSpace="nowrap">
+                                                            {new Date(reg.registered_at).toLocaleString("th-TH")}
+                                                        </Td>
+                                                    </Tr>
+                                                ))}
+                                            </Tbody>
+                                        </Table>
+                                    </TableContainer>
                                 )}
                             </TabPanel>
 
@@ -525,101 +487,50 @@ export const ViewActivityPage = () => {
                                         <Spinner size="md" color="orange.500" />
                                     </HStack>
                                 ) : estamps.length === 0 ? (
-                                    <Box py={8} textAlign="center" color="gray.500" border="1px dashed" borderColor={borderColor} rounded="xl">
+                                    <Box py={8} textAlign="center" color="gray.500">
                                         <Text fontSize="xs">ยังไม่มีบันทึกการประทับตรา E-Stamp</Text>
                                     </Box>
                                 ) : (
-                                    <>
-                                        {/* Mobile E-Stamp Card List */}
-                                        <VStack spacing={2.5} align="stretch" display={{ base: "flex", md: "none" }}>
-                                            {estamps.map((e) => (
-                                                <Box
-                                                    key={e.id}
-                                                    p={3}
-                                                    border="1px solid"
-                                                    borderColor={borderColor}
-                                                    rounded="xl"
-                                                    bg={headerBg}
-                                                    shadow="sm"
-                                                >
-                                                    <Flex justify="space-between" align="center" mb={1}>
-                                                        <Text fontWeight="semibold" fontSize="sm">
-                                                            {e.studentName}
-                                                        </Text>
-                                                        {e.rating ? (
-                                                            <Badge colorScheme="orange" variant="solid" fontSize="2xs">
-                                                                ⭐ {e.rating}
-                                                            </Badge>
-                                                        ) : null}
-                                                    </Flex>
-                                                    <VStack align="stretch" spacing={0.5} fontSize="xs" color="gray.600" _dark={{ color: "gray.300" }}>
-                                                        <Text wordBreak="break-all">📧 {e.email}</Text>
-                                                        <Text>📞 {e.phone || "-"}</Text>
-                                                        <HStack justify="space-between">
-                                                            <Text color="gray.500">ผู้ประทับตรา:</Text>
-                                                            <Badge variant="subtle" colorScheme="gray" fontSize="2xs">
+                                    <TableContainer overflowX="auto">
+                                        <Table variant="simple" size="sm">
+                                            <Thead bg={headerBg}>
+                                                <Tr>
+                                                    <Th fontSize="xs" py={3} minW="150px">ชื่อ-สกุล</Th>
+                                                    <Th fontSize="xs" py={3} minW="160px">อีเมล</Th>
+                                                    <Th fontSize="xs" py={3} width="110px">เบอร์โทร</Th>
+                                                    <Th fontSize="xs" py={3} width="120px">ผู้ประทับตรา</Th>
+                                                    <Th fontSize="xs" py={3} width="150px">เวลาที่ประทับ</Th>
+                                                    <Th fontSize="xs" py={3} width="70px" textAlign="center">คะแนน</Th>
+                                                </Tr>
+                                            </Thead>
+                                            <Tbody>
+                                                {estamps.map((e) => (
+                                                    <Tr key={e.id} _hover={{ bg: rowHoverBg }}>
+                                                        <Td fontWeight="medium" py={3}>{e.studentName}</Td>
+                                                        <Td py={3}>{e.email}</Td>
+                                                        <Td py={3}>{e.phone}</Td>
+                                                        <Td py={3}>
+                                                            <Badge variant="subtle" colorScheme="gray" fontSize="xs">
                                                                 {e.stampedByName || e.stampBy}
                                                             </Badge>
-                                                        </HStack>
-                                                        <Text color="gray.500">
-                                                            🕒 {new Date(e.issued_at).toLocaleString("th-TH")}
-                                                        </Text>
-                                                    </VStack>
-                                                </Box>
-                                            ))}
-                                        </VStack>
-
-                                        {/* Desktop E-Stamp Table */}
-                                        <Box
-                                            display={{ base: "none", md: "block" }}
-                                            border="1px solid"
-                                            borderColor={borderColor}
-                                            rounded="xl"
-                                            overflow="hidden"
-                                            shadow="sm"
-                                        >
-                                            <TableContainer overflowX="auto">
-                                                <Table variant="simple" size="sm">
-                                                    <Thead bg={headerBg}>
-                                                        <Tr>
-                                                            <Th fontSize="xs" py={3} minW="150px">ชื่อ-สกุล</Th>
-                                                            <Th fontSize="xs" py={3} minW="160px">อีเมล</Th>
-                                                            <Th fontSize="xs" py={3} width="110px">เบอร์โทร</Th>
-                                                            <Th fontSize="xs" py={3} width="120px">ผู้ประทับตรา</Th>
-                                                            <Th fontSize="xs" py={3} width="150px">เวลาที่ประทับ</Th>
-                                                            <Th fontSize="xs" py={3} width="70px" textAlign="center">คะแนน</Th>
-                                                        </Tr>
-                                                    </Thead>
-                                                    <Tbody>
-                                                        {estamps.map((e) => (
-                                                            <Tr key={e.id} _hover={{ bg: rowHoverBg }}>
-                                                                <Td fontWeight="medium" py={3}>{e.studentName}</Td>
-                                                                <Td py={3}>{e.email}</Td>
-                                                                <Td py={3}>{e.phone}</Td>
-                                                                <Td py={3}>
-                                                                    <Badge variant="subtle" colorScheme="gray" fontSize="xs">
-                                                                        {e.stampedByName || e.stampBy}
-                                                                    </Badge>
-                                                                </Td>
-                                                                <Td color="gray.500" py={3} whiteSpace="nowrap">
-                                                                    {new Date(e.issued_at).toLocaleString("th-TH")}
-                                                                </Td>
-                                                                <Td textAlign="center" py={3}>
-                                                                    {e.rating ? (
-                                                                        <Badge colorScheme="orange" variant="solid" fontSize="xs">
-                                                                            ⭐ {e.rating}
-                                                                        </Badge>
-                                                                    ) : (
-                                                                        "—"
-                                                                    )}
-                                                                </Td>
-                                                            </Tr>
-                                                        ))}
-                                                    </Tbody>
-                                                </Table>
-                                            </TableContainer>
-                                        </Box>
-                                    </>
+                                                        </Td>
+                                                        <Td color="gray.500" py={3} whiteSpace="nowrap">
+                                                            {new Date(e.issued_at).toLocaleString("th-TH")}
+                                                        </Td>
+                                                        <Td textAlign="center" py={3}>
+                                                            {e.rating ? (
+                                                                <Badge colorScheme="orange" variant="solid" fontSize="xs">
+                                                                    ⭐ {e.rating}
+                                                                </Badge>
+                                                            ) : (
+                                                                "—"
+                                                            )}
+                                                        </Td>
+                                                    </Tr>
+                                                ))}
+                                            </Tbody>
+                                        </Table>
+                                    </TableContainer>
                                 )}
                             </TabPanel>
 

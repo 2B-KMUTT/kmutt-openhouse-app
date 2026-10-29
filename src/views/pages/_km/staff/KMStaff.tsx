@@ -344,115 +344,61 @@ const KMStaff = () => {
                         <Text fontSize="xs">ไม่พบรายชื่อ Staff</Text>
                     </Box>
                 ) : (
-                    <>
-                        {/* Mobile Card View */}
-                        <VStack spacing={3} align="stretch" display={{ base: "flex", md: "none" }}>
-                            {staffs.map((staff) => (
-                                <Box
-                                    key={staff.id}
-                                    p={3.5}
-                                    border="1px solid"
-                                    borderColor={borderColor}
-                                    rounded="xl"
-                                    bg={headerBg}
-                                    shadow="sm"
-                                >
-                                    <Flex justify="space-between" align="flex-start" mb={2}>
-                                        <Box>
-                                            <Text fontWeight="semibold" fontSize="sm">
-                                                {staff.name}
-                                            </Text>
-                                            <Text fontSize="xs" color="gray.500">
-                                                @{staff.username}
-                                            </Text>
-                                        </Box>
-                                        {isSuperAdmin && (
-                                            <Badge variant="subtle" colorScheme="orange" fontSize="2xs" px={2} py={0.5} rounded="md">
-                                                {staff.created_by?.name || "ส่วนกลาง"}
-                                            </Badge>
-                                        )}
-                                    </Flex>
-                                    <VStack align="stretch" spacing={1} fontSize="xs" color="gray.600" _dark={{ color: "gray.300" }} mb={3}>
-                                        <HStack justify="space-between">
-                                            <Text color="gray.500">อีเมล:</Text>
-                                            <Text wordBreak="break-all">{staff.email}</Text>
-                                        </HStack>
-                                        <HStack justify="space-between">
-                                            <Text color="gray.500">วันที่สร้าง:</Text>
-                                            <Text>{new Date(staff.created_at).toLocaleDateString("th-TH")}</Text>
-                                        </HStack>
-                                    </VStack>
-                                    <Button
-                                        size="sm"
-                                        w="full"
-                                        variant="outline"
-                                        colorScheme="orange"
-                                        onClick={() => handleOpenAssign(staff)}
-                                    >
-                                        มอบหมายกิจกรรม
-                                    </Button>
-                                </Box>
-                            ))}
-                        </VStack>
-
-                        {/* Desktop Table View */}
-                        <Box
-                            display={{ base: "none", md: "block" }}
-                            border="1px solid"
-                            borderColor={borderColor}
-                            rounded="xl"
-                            overflow="hidden"
-                            shadow="sm"
-                        >
-                            <TableContainer overflowX="auto">
-                                <Table variant="simple" size="sm">
-                                    <Thead bg={headerBg}>
-                                        <Tr>
-                                            <Th fontSize="xs" py={3} minW="160px">ชื่อ-สกุล</Th>
-                                            <Th fontSize="xs" py={3} minW="120px">Username</Th>
-                                            <Th fontSize="xs" py={3} minW="180px">อีเมล</Th>
-                                            {isSuperAdmin && <Th fontSize="xs" py={3} minW="130px">สังกัดคณะ</Th>}
-                                            <Th fontSize="xs" py={3} width="110px">วันที่สร้าง</Th>
-                                            <Th fontSize="xs" py={3} width="130px" textAlign="right">จัดการ</Th>
+                    <Box
+                        border="1px solid"
+                        borderColor={borderColor}
+                        rounded="xl"
+                        overflow="hidden"
+                        shadow="sm"
+                    >
+                        <TableContainer overflowX="auto">
+                            <Table variant="simple" size="sm">
+                                <Thead bg={headerBg}>
+                                    <Tr>
+                                        <Th fontSize="xs" py={3} minW="160px">ชื่อ-สกุล</Th>
+                                        <Th fontSize="xs" py={3} minW="120px">Username</Th>
+                                        <Th fontSize="xs" py={3} minW="180px">อีเมล</Th>
+                                        {isSuperAdmin && <Th fontSize="xs" py={3} minW="130px">สังกัดคณะ</Th>}
+                                        <Th fontSize="xs" py={3} width="110px">วันที่สร้าง</Th>
+                                        <Th fontSize="xs" py={3} width="130px" textAlign="right">จัดการ</Th>
+                                    </Tr>
+                                </Thead>
+                                <Tbody>
+                                    {staffs.map((staff) => (
+                                        <Tr
+                                            key={staff.id}
+                                            _hover={{ bg: rowHoverBg }}
+                                            transition="background 0.15s ease"
+                                        >
+                                            <Td fontWeight="medium" py={3} whiteSpace="normal">{staff.name}</Td>
+                                            <Td color="gray.600" _dark={{ color: "gray.300" }} py={3}>@{staff.username}</Td>
+                                            <Td py={3}>{staff.email}</Td>
+                                            {isSuperAdmin && (
+                                                <Td py={3}>
+                                                    <Badge variant="subtle" colorScheme="orange" fontSize="xs">
+                                                        {staff.created_by?.name || "ส่วนกลาง"}
+                                                    </Badge>
+                                                </Td>
+                                            )}
+                                            <Td color="gray.500" py={3} whiteSpace="nowrap">
+                                                {new Date(staff.created_at).toLocaleDateString("th-TH")}
+                                            </Td>
+                                            <Td textAlign="right" py={3} whiteSpace="nowrap">
+                                                <Button
+                                                    size="xs"
+                                                    variant="outline"
+                                                    colorScheme="orange"
+                                                    onClick={() => handleOpenAssign(staff)}
+                                                >
+                                                    มอบหมายกิจกรรม
+                                                </Button>
+                                            </Td>
                                         </Tr>
-                                    </Thead>
-                                    <Tbody>
-                                        {staffs.map((staff) => (
-                                            <Tr
-                                                key={staff.id}
-                                                _hover={{ bg: rowHoverBg }}
-                                                transition="background 0.15s ease"
-                                            >
-                                                <Td fontWeight="medium" py={3} whiteSpace="normal">{staff.name}</Td>
-                                                <Td color="gray.600" _dark={{ color: "gray.300" }} py={3}>@{staff.username}</Td>
-                                                <Td py={3}>{staff.email}</Td>
-                                                {isSuperAdmin && (
-                                                    <Td py={3}>
-                                                        <Badge variant="subtle" colorScheme="orange" fontSize="xs">
-                                                            {staff.created_by?.name || "ส่วนกลาง"}
-                                                        </Badge>
-                                                    </Td>
-                                                )}
-                                                <Td color="gray.500" py={3} whiteSpace="nowrap">
-                                                    {new Date(staff.created_at).toLocaleDateString("th-TH")}
-                                                </Td>
-                                                <Td textAlign="right" py={3} whiteSpace="nowrap">
-                                                    <Button
-                                                        size="xs"
-                                                        variant="outline"
-                                                        colorScheme="orange"
-                                                        onClick={() => handleOpenAssign(staff)}
-                                                    >
-                                                        มอบหมายกิจกรรม
-                                                    </Button>
-                                                </Td>
-                                            </Tr>
-                                        ))}
-                                    </Tbody>
-                                </Table>
-                            </TableContainer>
-                        </Box>
-                    </>
+                                    ))}
+                                </Tbody>
+                            </Table>
+                        </TableContainer>
+                    </Box>
                 )}
 
                 {/* Modal Assign Activities */}

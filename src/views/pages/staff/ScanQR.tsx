@@ -62,7 +62,6 @@ const ScanQRPage = () => {
     const cardBorder = useColorModeValue("gray.200", "gray.700")
     const tableHeaderBg = useColorModeValue("gray.50", "gray.800")
     const stampedBg = useColorModeValue("green.50", "green.900")
-    const defaultCardBg = useColorModeValue("gray.50", "gray.800")
     const rowHoverBg = useColorModeValue("gray.50", "whiteAlpha.50")
 
     const [scanning, setScanning] = useState(false)
@@ -247,83 +246,38 @@ const ScanQRPage = () => {
                                 <Box mt={5}>
                                     <Box mt={5}>
                                         {activity?.RegisterActivities?.length ? (
-                                            <>
-                                                {/* Mobile Card List */}
-                                                <VStack spacing={3} align="stretch" display={{ base: "flex", md: "none" }}>
-                                                    {activity.RegisterActivities.map((r, index) => (
-                                                        <Box
-                                                            key={r.id}
-                                                            p={3.5}
-                                                            border="1px solid"
-                                                            borderColor={cardBorder}
-                                                            rounded="xl"
-                                                            bg={r.stamped ? stampedBg : defaultCardBg}
-                                                            shadow="sm"
-                                                        >
-                                                            <Flex justify="space-between" align="center" mb={1.5}>
-                                                                <Text fontWeight="semibold" fontSize="sm">
-                                                                    #{index + 1} {r.student.first_name} {r.student.last_name}
-                                                                </Text>
-                                                                <Badge colorScheme={r.stamped ? "green" : "gray"} fontSize="2xs">
-                                                                    {r.stamped ? "ประทับตราแล้ว" : "ยังไม่ประทับตรา"}
-                                                                </Badge>
-                                                            </Flex>
-                                                            <VStack align="stretch" spacing={0.5} fontSize="xs" color="gray.600" _dark={{ color: "gray.300" }}>
-                                                                <Text wordBreak="break-all">📧 {r.student.email}</Text>
-                                                                <Text>📞 {r.student.phone || "-"}</Text>
-                                                                <Text color="gray.500">
-                                                                    🕒 {new Date(r.registered_at).toLocaleString("th-TH")}
-                                                                </Text>
-                                                            </VStack>
-                                                        </Box>
-                                                    ))}
-                                                </VStack>
-
-                                                {/* Desktop Table */}
-                                                <Box
-                                                    display={{ base: "none", md: "block" }}
-                                                    border="1px solid"
-                                                    borderColor={cardBorder}
-                                                    rounded="xl"
-                                                    overflow="hidden"
-                                                    shadow="sm"
-                                                >
-                                                    <TableContainer overflowX="auto">
-                                                        <Table variant="simple" size="sm">
-                                                            <Thead bg={tableHeaderBg}>
-                                                                <Tr>
-                                                                    <Th width="60px" textAlign="center" py={3}>ลำดับ</Th>
-                                                                    <Th minW="150px" py={3}>ชื่อ-นามสกุล</Th>
-                                                                    <Th minW="180px" py={3}>Email</Th>
-                                                                    <Th width="120px" py={3}>Phone</Th>
-                                                                    <Th width="160px" py={3}>วันที่ลงทะเบียน</Th>
-                                                                </Tr>
-                                                            </Thead>
-                                                            <Tbody>
-                                                                {activity.RegisterActivities.map((r, index) => (
-                                                                    <Tr
-                                                                        key={r.id}
-                                                                        bg={r.stamped ? stampedBg : undefined}
-                                                                        _hover={{ bg: rowHoverBg }}
-                                                                    >
-                                                                        <Td textAlign="center" py={3}>{index + 1}</Td>
-                                                                        <Td fontWeight="medium" py={3}>{r.student.first_name} {r.student.last_name}</Td>
-                                                                        <Td py={3}>{r.student.email}</Td>
-                                                                        <Td py={3}>{r.student.phone || "-"}</Td>
-                                                                        <Td color="gray.500" py={3} whiteSpace="nowrap">
-                                                                            {new Date(r.registered_at).toLocaleString("th-TH")}
-                                                                        </Td>
-                                                                    </Tr>
-                                                                ))}
-                                                            </Tbody>
-                                                        </Table>
-                                                    </TableContainer>
-                                                </Box>
-                                            </>
+                                            <TableContainer overflowX="auto">
+                                                <Table variant="simple" size="sm">
+                                                    <Thead bg={tableHeaderBg}>
+                                                        <Tr>
+                                                            <Th width="60px" textAlign="center" py={3}>ลำดับ</Th>
+                                                            <Th minW="150px" py={3}>ชื่อ-นามสกุล</Th>
+                                                            <Th minW="180px" py={3}>Email</Th>
+                                                            <Th width="120px" py={3}>Phone</Th>
+                                                            <Th width="160px" py={3}>วันที่ลงทะเบียน</Th>
+                                                        </Tr>
+                                                    </Thead>
+                                                    <Tbody>
+                                                        {activity.RegisterActivities.map((r, index) => (
+                                                            <Tr
+                                                                key={r.id}
+                                                                bg={r.stamped ? stampedBg : undefined}
+                                                                _hover={{ bg: rowHoverBg }}
+                                                            >
+                                                                <Td textAlign="center" py={3}>{index + 1}</Td>
+                                                                <Td fontWeight="medium" py={3}>{r.student.first_name} {r.student.last_name}</Td>
+                                                                <Td py={3}>{r.student.email}</Td>
+                                                                <Td py={3}>{r.student.phone || "-"}</Td>
+                                                                <Td color="gray.500" py={3} whiteSpace="nowrap">
+                                                                    {new Date(r.registered_at).toLocaleString("th-TH")}
+                                                                </Td>
+                                                            </Tr>
+                                                        ))}
+                                                    </Tbody>
+                                                </Table>
+                                            </TableContainer>
                                         ) : (
-                                            <Box py={8} textAlign="center" color="gray.500" border="1px dashed" borderColor={cardBorder} rounded="xl">
-                                                <Text fontSize="sm">ไม่มีผู้ลงทะเบียนไว้ก่อนหน้า</Text>
-                                            </Box>
+                                            <Text>ไม่มีผู้ลงทะเบียนไว้ก่อนหน้า</Text>
                                         )}
                                     </Box>
                                 </Box>

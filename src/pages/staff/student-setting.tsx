@@ -25,7 +25,6 @@ import {
     useDisclosure,
     Text,
     TableContainer,
-    Flex,
     useColorModeValue,
 } from "@chakra-ui/react"
 import StaffAppLayout from "@/views/layouts/StaffAppLayout"
@@ -124,92 +123,52 @@ const StudentSetting = () => {
                             🔍 ยังไม่มีผลลัพธ์การค้นหา
                         </Text>
                     ) : (
-                        <>
-                            {/* Mobile Cards */}
-                            <VStack spacing={3} align="stretch" display={{ base: "flex", md: "none" }}>
-                                {students.map((student) => (
-                                    <Box
-                                        key={student.id}
-                                        p={3.5}
-                                        border="1px solid"
-                                        borderColor={borderColor}
-                                        rounded="xl"
-                                        bg={tableHeaderBg}
-                                        shadow="sm"
-                                    >
-                                        <Flex justify="space-between" align="center" mb={2}>
-                                            <Box>
-                                                <Text fontWeight="semibold" fontSize="sm">
+                        <Box
+                            border="1px solid"
+                            borderColor={borderColor}
+                            rounded="xl"
+                            overflow="hidden"
+                            shadow="sm"
+                        >
+                            <TableContainer overflowX="auto">
+                                <Table variant="simple" size="sm">
+                                    <Thead bg={tableHeaderBg}>
+                                        <Tr>
+                                            <Th fontSize="xs" py={3}>ชื่อ-นามสกุล</Th>
+                                            <Th fontSize="xs" py={3}>อีเมล</Th>
+                                            <Th fontSize="xs" py={3} textAlign="right" width="130px">จัดการ</Th>
+                                        </Tr>
+                                    </Thead>
+                                    <Tbody>
+                                        {students.map((student) => (
+                                            <Tr
+                                                key={student.id}
+                                                _hover={{ bg: rowHoverBg }}
+                                                transition="background 0.15s ease"
+                                            >
+                                                <Td fontWeight="medium" py={3} fontSize="sm">
                                                     {student.first_name} {student.last_name}
-                                                </Text>
-                                                <Text fontSize="xs" color="gray.500" wordBreak="break-all">
+                                                </Td>
+                                                <Td fontSize="sm" color="gray.600" _dark={{ color: "gray.300" }} py={3}>
                                                     {student.email}
-                                                </Text>
-                                            </Box>
-                                        </Flex>
-                                        <Button
-                                            size="sm"
-                                            w="full"
-                                            colorScheme="orange"
-                                            variant="outline"
-                                            leftIcon={<SettingsIcon />}
-                                            onClick={() => handleResetClick(student)}
-                                        >
-                                            ตั้งรหัสผ่านใหม่
-                                        </Button>
-                                    </Box>
-                                ))}
-                            </VStack>
-
-                            {/* Desktop Table */}
-                            <Box
-                                display={{ base: "none", md: "block" }}
-                                border="1px solid"
-                                borderColor={borderColor}
-                                rounded="xl"
-                                overflow="hidden"
-                                shadow="sm"
-                            >
-                                <TableContainer overflowX="auto">
-                                    <Table variant="simple" size="sm">
-                                        <Thead bg={tableHeaderBg}>
-                                            <Tr>
-                                                <Th fontSize="xs" py={3}>ชื่อ-นามสกุล</Th>
-                                                <Th fontSize="xs" py={3}>อีเมล</Th>
-                                                <Th fontSize="xs" py={3} textAlign="right" width="130px">จัดการ</Th>
+                                                </Td>
+                                                <Td textAlign="right" py={3} whiteSpace="nowrap">
+                                                    <Button
+                                                        size="xs"
+                                                        colorScheme="orange"
+                                                        variant="outline"
+                                                        leftIcon={<SettingsIcon />}
+                                                        onClick={() => handleResetClick(student)}
+                                                    >
+                                                        ตั้งรหัสผ่าน
+                                                    </Button>
+                                                </Td>
                                             </Tr>
-                                        </Thead>
-                                        <Tbody>
-                                            {students.map((student) => (
-                                                <Tr
-                                                    key={student.id}
-                                                    _hover={{ bg: rowHoverBg }}
-                                                    transition="background 0.15s ease"
-                                                >
-                                                    <Td fontWeight="medium" py={3} fontSize="sm">
-                                                        {student.first_name} {student.last_name}
-                                                    </Td>
-                                                    <Td fontSize="sm" color="gray.600" _dark={{ color: "gray.300" }} py={3}>
-                                                        {student.email}
-                                                    </Td>
-                                                    <Td textAlign="right" py={3} whiteSpace="nowrap">
-                                                        <Button
-                                                            size="xs"
-                                                            colorScheme="orange"
-                                                            variant="outline"
-                                                            leftIcon={<SettingsIcon />}
-                                                            onClick={() => handleResetClick(student)}
-                                                        >
-                                                            ตั้งรหัสผ่าน
-                                                        </Button>
-                                                    </Td>
-                                                </Tr>
-                                            ))}
-                                        </Tbody>
-                                    </Table>
-                                </TableContainer>
-                            </Box>
-                        </>
+                                        ))}
+                                    </Tbody>
+                                </Table>
+                            </TableContainer>
+                        </Box>
                     )}
                 </VStack>
 
