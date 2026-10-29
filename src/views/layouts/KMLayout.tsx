@@ -3,7 +3,6 @@
 import {
     Box,
     Flex,
-    Heading,
     Text,
     Button,
     HStack,
@@ -12,14 +11,17 @@ import {
     Container,
     useColorMode,
     useColorModeValue,
+    Divider,
 } from "@chakra-ui/react";
 import Link from "next/link";
 import { Menu, X, Moon, Sun } from "lucide-react";
 import { ReactNode, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import { signOut } from "next-auth/react";
 import LogoutButton from "@/components/Auth/LogoutButton";
-
 import { PRIMARY, SECONDARY } from "@/constants/colors";
+import { KM_MENU_ITEMS } from "@/constants/kmNavigation";
 
 type KMLayoutProps = {
     children: ReactNode;
@@ -28,11 +30,13 @@ type KMLayoutProps = {
 export default function KMLayout({ children }: KMLayoutProps) {
     const [menuOpen, setMenuOpen] = useState(false);
     const { colorMode, toggleColorMode } = useColorMode();
+    const router = useRouter();
 
     const bg = useColorModeValue("white", "gray.900");
     const textColor = useColorModeValue("gray.800", "gray.100");
-    const navBg = useColorModeValue("whiteAlpha.85", "gray.800");
+    const navBg = useColorModeValue("whiteAlpha.90", "gray.800");
     const borderColor = useColorModeValue("orange.100", "gray.700");
+    const hoverBg = useColorModeValue("gray.100", "gray.700");
 
     const svgOpacity = colorMode === "light" ? 0.1 : 0.2;
 
@@ -51,6 +55,7 @@ export default function KMLayout({ children }: KMLayoutProps) {
                     <circle cx="50%" cy="50%" r="150" fill={`${PRIMARY}`} opacity={svgOpacity * 0.5} />
                 </svg>
             </Box>
+
             {/* ===== NAVBAR ===== */}
             <Box as="header" position="sticky" top="0" zIndex="50" w="full" px={0}>
                 <Container maxW="7xl" py={4}>
@@ -68,7 +73,6 @@ export default function KMLayout({ children }: KMLayoutProps) {
                     >
                         {/* Logo */}
                         <HStack spacing={3} flex="1">
-                            {/* <Box w={8} h={8} rounded="xl" bg={PRIMARY} /> */}
                             <Image src="/images/logo.jpg" style={{ borderRadius: "12px" }} alt="KMUTT Logo" width={32} height={32} />
                             <Link href="/" aria-label="KMUTT Open House">
                                 <Text fontWeight="bold" display={{ base: "block", md: "none" }} lineHeight={{ base: "20px" }} fontSize={{ base: "sm", md: "md" }} color={PRIMARY}>
@@ -90,7 +94,6 @@ export default function KMLayout({ children }: KMLayoutProps) {
                                 variant="ghost"
                             />
 
-                            {/* Desktop login */}
                             {/* Desktop logout */}
                             <Box display={{ base: "none", md: "block" }}>
                                 <LogoutButton
@@ -116,7 +119,7 @@ export default function KMLayout({ children }: KMLayoutProps) {
                         </HStack>
                     </Flex>
 
-                    {/* Mobile dropdown menu */}
+                    {/* Responsive Mobile dropdown menu (Mirrors KMSidebar exactly) */}
                     {menuOpen && (
                         <Box
                             mt={2}
@@ -124,38 +127,56 @@ export default function KMLayout({ children }: KMLayoutProps) {
                             border="1px solid"
                             borderColor={borderColor}
                             bg={bg}
-                            shadow="md"
-                            px={6}
-                            py={4}
+                            shadow="lg"
+                            p={3}
+                            maxH="calc(100vh - 120px)"
+                            overflowY="auto"
                         >
-                            <VStack align="stretch" spacing={4}>
-                                <Link href="#schedule" onClick={() => setMenuOpen(false)}>
-                                    กำหนดการ
-                                </Link>
-                                <Link href="#features" onClick={() => setMenuOpen(false)}>
-                                    ฟีเจอร์
-                                </Link>
-                                <Link href="#stats" onClick={() => setMenuOpen(false)}>
-                                    สถิติ
-                                </Link>
-                                <Link href="#testimonials" onClick={() => setMenuOpen(false)}>
-                                    เสียงจากผู้ใช้
-                                </Link>
-                                <LogoutButton
-                                    w="full"
-                                    bg={PRIMARY}
-                                    _hover={{ bg: "#E0380B" }}
-                                    color="white"
-                                    rounded="xl"
-                                >
-                                    ออกจากระบบ
-                                </LogoutButton>
+                            <VStack align="stretch" spacing={1}>
+                                {KM_MENU_ITEMS.map((item, index) => {
+                                    if (item.divider) {
+                                        return <Divider key={`divider-${index}`} my={1} />
+                                    }
+
+                                    const isActive = item.link && router.pathname === item.link
+                                    const IconComp = item.icon!
+
+                                    return (
+                                        <Button
+                                            key={item.label || index}
+                                            onClick={async () => {
+                                                setMenuOpen(false)
+                                                if (item.isLogout) {
+                                                    await signOut({ redirect: false })
+                                                    window.location.href = "/login"
+                                                } else if (item.link) {
+                                                    router.push(item.link)
+                                                }
+                                            }}
+                                            variant={isActive ? "solid" : "ghost"}
+                                            colorScheme={isActive ? "orange" : undefined}
+                                            bg={isActive ? PRIMARY : undefined}
+                                            color={isActive ? "white" : textColor}
+                                            justifyContent="start"
+                                            _hover={{ bg: isActive ? PRIMARY : hoverBg }}
+                                            leftIcon={<IconComp size={18} />}
+                                            fontWeight="medium"
+                                            size="sm"
+                                            rounded="lg"
+                                            h="38px"
+                                            fontSize="xs"
+                                        >
+                                            {item.label}
+                                        </Button>
+                                    )
+                                })}
                             </VStack>
                         </Box>
                     )}
                 </Container>
             </Box>
             {/* ===== END NAVBAR ===== */}
+
             {/* Main content */}
             <Box as="main" minH="80vh" py={10} position="relative" zIndex={1}>
                 {children}
