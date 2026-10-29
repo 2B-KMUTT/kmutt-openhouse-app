@@ -222,10 +222,10 @@ export default function LandingScheduleManager() {
 
             onClose();
             fetchItems();
-        } catch (error: any) {
+        } catch (error: unknown) {
             toast({
                 title: "เกิดข้อผิดพลาดในการบันทึก",
-                description: error.message || "โปรดลองใหม่อีกครั้ง",
+                description: error instanceof Error ? error.message : "โปรดลองใหม่อีกครั้ง",
                 status: "error",
                 duration: 3000,
                 isClosable: true,
@@ -284,7 +284,7 @@ export default function LandingScheduleManager() {
 
             onDeleteClose();
             fetchItems();
-        } catch (error) {
+        } catch {
             toast({
                 title: "เกิดข้อผิดพลาดในการลบ",
                 status: "error",
@@ -395,131 +395,58 @@ export default function LandingScheduleManager() {
                     </TabList>
                 </Tabs>
 
-                {/* Table Container */}
-                <Box
-                    bg={cardBg}
-                    border="1px solid"
-                    borderColor={borderColor}
-                    rounded="xl"
-                    shadow="sm"
-                    overflow="hidden"
-                >
-                    <TableContainer overflowX="auto">
-                        <Table variant="simple" size="sm">
-                            <Thead bg={headBg}>
-                                <Tr>
-                                    <Th width="70px" textAlign="center">ลำดับ</Th>
-                                    <Th width="160px">เวลา</Th>
-                                    <Th width="130px">หมวดหมู่</Th>
-                                    <Th>ชื่อกิจกรรมและรายละเอียด</Th>
-                                    <Th width="100px" textAlign="center">รอบ</Th>
-                                    <Th width="90px" textAlign="center">แสดงผล</Th>
-                                    <Th width="140px" textAlign="center">จัดการ</Th>
-                                </Tr>
-                            </Thead>
-                            <Tbody>
-                                {loading ? (
-                                    <Tr>
-                                        <Td colSpan={7} textAlign="center" py={8} color="gray.500">
-                                            กำลังโหลดข้อมูลกำหนดการ...
-                                        </Td>
-                                    </Tr>
-                                ) : filteredItems.length === 0 ? (
-                                    <Tr>
-                                        <Td colSpan={7} textAlign="center" py={8} color="gray.500">
-                                            ไม่พบรายการในหมวดนี้ คลิกปุ่ม &quot;+ เพิ่มกำหนดการ&quot; เพื่อสร้างรายการใหม่
-                                        </Td>
-                                    </Tr>
-                                ) : (
-                                    filteredItems.map((item, idx) => (
-                                        <Tr
-                                            key={item.id}
-                                            _hover={{ bg: rowHoverBg }}
-                                            opacity={item.display ? 1 : 0.6}
-                                        >
-                                            {/* Reorder Buttons */}
-                                            <Td textAlign="center">
-                                                <HStack spacing={1} justify="center">
-                                                    <IconButton
-                                                        aria-label="Move Up"
-                                                        icon={<ArrowUpIcon />}
-                                                        size="xs"
-                                                        variant="ghost"
-                                                        isDisabled={idx === 0}
-                                                        onClick={() => handleMove(idx, "up")}
-                                                    />
-                                                    <IconButton
-                                                        aria-label="Move Down"
-                                                        icon={<ArrowDownIcon />}
-                                                        size="xs"
-                                                        variant="ghost"
-                                                        isDisabled={idx === filteredItems.length - 1}
-                                                        onClick={() => handleMove(idx, "down")}
-                                                    />
-                                                </HStack>
-                                            </Td>
-
-                                            {/* Time */}
-                                            <Td fontWeight="bold" color={PRIMARY} whiteSpace="nowrap">
-                                                {item.time}
-                                            </Td>
-
-                                            {/* Category */}
-                                            <Td>
+                {/* Empty State */}
+                {!loading && filteredItems.length === 0 ? (
+                    <Box
+                        p={8}
+                        bg={cardBg}
+                        border="1px dashed"
+                        borderColor={borderColor}
+                        rounded="xl"
+                        textAlign="center"
+                    >
+                        <Text color="gray.500" mb={4} fontSize="sm">
+                            ไม่พบรายการในหมวดนี้ คลิกปุ่ม &quot;+ เพิ่มกำหนดการ&quot; เพื่อสร้างรายการใหม่
+                        </Text>
+                        <Button size="sm" colorScheme="orange" leftIcon={<AddIcon />} onClick={handleOpenAdd}>
+                            เพิ่มกำหนดการ
+                        </Button>
+                    </Box>
+                ) : (
+                    <>
+                        {/* Mobile Card View */}
+                        <VStack spacing={3} align="stretch" display={{ base: "flex", md: "none" }}>
+                            {loading ? (
+                                <Box py={8} textAlign="center" color="gray.500">
+                                    <Text fontSize="sm">กำลังโหลดข้อมูลกำหนดการ...</Text>
+                                </Box>
+                            ) : (
+                                filteredItems.map((item, idx) => (
+                                    <Box
+                                        key={item.id}
+                                        p={4}
+                                        bg={cardBg}
+                                        border="1px solid"
+                                        borderColor={borderColor}
+                                        rounded="xl"
+                                        shadow="sm"
+                                        opacity={item.display ? 1 : 0.6}
+                                    >
+                                        {/* Card Top: Badges & Display Switch */}
+                                        <Flex justify="space-between" align="center" mb={2}>
+                                            <HStack spacing={2} wrap="wrap">
                                                 <Badge
                                                     colorScheme={item.categoryColor || "orange"}
                                                     rounded="md"
                                                     px={2}
                                                     py={0.5}
+                                                    fontSize="2xs"
                                                 >
                                                     {item.category}
                                                 </Badge>
-                                            </Td>
-
-                                            {/* Activity Details */}
-                                            <Td>
-                                                <VStack align="flex-start" spacing={1}>
-                                                    <Text fontWeight="semibold" color={textColor}>
-                                                        {item.title}
-                                                    </Text>
-
-                                                    {item.details && item.details.length > 0 && (
-                                                        <VStack align="flex-start" spacing={0.5} pl={2}>
-                                                            {item.details.map((d, dIdx) => (
-                                                                <Text key={dIdx} fontSize="xs" color="gray.500">
-                                                                    • {d}
-                                                                </Text>
-                                                            ))}
-                                                        </VStack>
-                                                    )}
-
-                                                    {item.subSectionTitle && (
-                                                        <Box
-                                                            mt={1}
-                                                            p={2}
-                                                            bg={subSectionBg}
-                                                            rounded="md"
-                                                            border="1px dashed"
-                                                            borderColor={subSectionBorderColor}
-                                                            w="full"
-                                                        >
-                                                            <Text fontSize="xs" fontWeight="bold" color={PRIMARY}>
-                                                                {item.subSectionTitle}
-                                                            </Text>
-                                                            {item.subSectionItems?.map((zone, zIdx) => (
-                                                                <Text key={zIdx} fontSize="xs" color="gray.600" pl={2}>
-                                                                    - {zone}
-                                                                </Text>
-                                                            ))}
-                                                        </Box>
-                                                    )}
-                                                </VStack>
-                                            </Td>
-
-                                            {/* Session */}
-                                            <Td textAlign="center">
                                                 <Badge
                                                     variant="outline"
+                                                    fontSize="2xs"
                                                     colorScheme={
                                                         item.session === "morning"
                                                             ? "blue"
@@ -529,55 +456,303 @@ export default function LandingScheduleManager() {
                                                     }
                                                 >
                                                     {item.session === "morning"
-                                                        ? "เช้า"
+                                                        ? "รอบเช้า"
                                                         : item.session === "afternoon"
-                                                        ? "บ่าย"
+                                                        ? "รอบบ่าย"
                                                         : item.session === "break"
                                                         ? "เบรก"
                                                         : "ตลอดวัน"}
                                                 </Badge>
-                                            </Td>
-
-                                            {/* Display Switch */}
-                                            <Td textAlign="center">
+                                            </HStack>
+                                            <HStack spacing={2}>
+                                                <Text fontSize="xs" color="gray.500">
+                                                    {item.display ? "แสดง" : "ซ่อน"}
+                                                </Text>
                                                 <Switch
+                                                    size="sm"
                                                     colorScheme="orange"
                                                     isChecked={item.display}
                                                     onChange={() => handleToggleDisplay(item)}
                                                 />
-                                            </Td>
+                                            </HStack>
+                                        </Flex>
 
-                                            {/* Action Buttons */}
-                                            <Td textAlign="center">
-                                                <HStack spacing={2} justify="center">
-                                                    <IconButton
-                                                        aria-label="Edit"
-                                                        icon={<EditIcon />}
-                                                        size="sm"
-                                                        colorScheme="orange"
-                                                        variant="ghost"
-                                                        onClick={() => handleOpenEdit(item)}
-                                                    />
-                                                    <IconButton
-                                                        aria-label="Delete"
-                                                        icon={<DeleteIcon />}
-                                                        size="sm"
-                                                        colorScheme="red"
-                                                        variant="ghost"
-                                                        onClick={() => {
-                                                            setItemToDelete(item);
-                                                            onDeleteOpen();
-                                                        }}
-                                                    />
-                                                </HStack>
-                                            </Td>
+                                        {/* Card Time */}
+                                        <Text fontWeight="bold" fontSize="xs" color={PRIMARY} mb={1}>
+                                            ⏰ {item.time}
+                                        </Text>
+
+                                        {/* Card Title & Details */}
+                                        <Text fontWeight="semibold" fontSize="sm" color={textColor} mb={1} wordBreak="break-word">
+                                            {item.title}
+                                        </Text>
+
+                                        {item.details && item.details.length > 0 && (
+                                            <VStack align="flex-start" spacing={0.5} pl={2} mb={2}>
+                                                {item.details.map((d, dIdx) => (
+                                                    <Text key={dIdx} fontSize="xs" color="gray.500" wordBreak="break-word">
+                                                        • {d}
+                                                    </Text>
+                                                ))}
+                                            </VStack>
+                                        )}
+
+                                        {item.subSectionTitle && (
+                                            <Box
+                                                mt={1}
+                                                mb={2}
+                                                p={2}
+                                                bg={subSectionBg}
+                                                rounded="md"
+                                                border="1px dashed"
+                                                borderColor={subSectionBorderColor}
+                                                w="full"
+                                            >
+                                                <Text fontSize="xs" fontWeight="bold" color={PRIMARY} wordBreak="break-word">
+                                                    {item.subSectionTitle}
+                                                </Text>
+                                                {item.subSectionItems?.map((zone, zIdx) => (
+                                                    <Text key={zIdx} fontSize="xs" color="gray.600" pl={2} wordBreak="break-word">
+                                                        - {zone}
+                                                    </Text>
+                                                ))}
+                                            </Box>
+                                        )}
+
+                                        <Divider my={2} />
+
+                                        {/* Card Bottom: Move and Actions */}
+                                        <Flex justify="space-between" align="center">
+                                            <HStack spacing={1}>
+                                                <IconButton
+                                                    aria-label="Move Up"
+                                                    icon={<ArrowUpIcon />}
+                                                    size="xs"
+                                                    variant="outline"
+                                                    isDisabled={idx === 0}
+                                                    onClick={() => handleMove(idx, "up")}
+                                                />
+                                                <IconButton
+                                                    aria-label="Move Down"
+                                                    icon={<ArrowDownIcon />}
+                                                    size="xs"
+                                                    variant="outline"
+                                                    isDisabled={idx === filteredItems.length - 1}
+                                                    onClick={() => handleMove(idx, "down")}
+                                                />
+                                                <Text fontSize="2xs" color="gray.400" ml={1}>
+                                                    #{idx + 1}
+                                                </Text>
+                                            </HStack>
+
+                                            <HStack spacing={1}>
+                                                <IconButton
+                                                    aria-label="Edit"
+                                                    icon={<EditIcon />}
+                                                    size="xs"
+                                                    colorScheme="orange"
+                                                    variant="ghost"
+                                                    onClick={() => handleOpenEdit(item)}
+                                                />
+                                                <IconButton
+                                                    aria-label="Delete"
+                                                    icon={<DeleteIcon />}
+                                                    size="xs"
+                                                    colorScheme="red"
+                                                    variant="ghost"
+                                                    onClick={() => {
+                                                        setItemToDelete(item);
+                                                        onDeleteOpen();
+                                                    }}
+                                                />
+                                            </HStack>
+                                        </Flex>
+                                    </Box>
+                                ))
+                            )}
+                        </VStack>
+
+                        {/* Desktop Table View */}
+                        <Box
+                            display={{ base: "none", md: "block" }}
+                            bg={cardBg}
+                            border="1px solid"
+                            borderColor={borderColor}
+                            rounded="xl"
+                            shadow="sm"
+                            overflow="hidden"
+                        >
+                            <TableContainer overflowX="auto">
+                                <Table variant="simple" size="sm">
+                                    <Thead bg={headBg}>
+                                        <Tr>
+                                            <Th width="60px" textAlign="center" py={3}>ลำดับ</Th>
+                                            <Th width="120px" py={3}>เวลา</Th>
+                                            <Th width="120px" py={3}>หมวดหมู่</Th>
+                                            <Th minW="220px" py={3}>ชื่อกิจกรรมและรายละเอียด</Th>
+                                            <Th width="80px" textAlign="center" py={3}>รอบ</Th>
+                                            <Th width="80px" textAlign="center" py={3}>แสดงผล</Th>
+                                            <Th width="100px" textAlign="center" py={3}>จัดการ</Th>
                                         </Tr>
-                                    ))
-                                )}
-                            </Tbody>
-                        </Table>
-                    </TableContainer>
-                </Box>
+                                    </Thead>
+                                    <Tbody>
+                                        {loading ? (
+                                            <Tr>
+                                                <Td colSpan={7} textAlign="center" py={8} color="gray.500">
+                                                    กำลังโหลดข้อมูลกำหนดการ...
+                                                </Td>
+                                            </Tr>
+                                        ) : (
+                                            filteredItems.map((item, idx) => (
+                                                <Tr
+                                                    key={item.id}
+                                                    _hover={{ bg: rowHoverBg }}
+                                                    opacity={item.display ? 1 : 0.6}
+                                                    transition="background 0.15s ease"
+                                                >
+                                                    {/* Reorder Buttons */}
+                                                    <Td textAlign="center" py={3}>
+                                                        <HStack spacing={1} justify="center">
+                                                            <IconButton
+                                                                aria-label="Move Up"
+                                                                icon={<ArrowUpIcon />}
+                                                                size="xs"
+                                                                variant="ghost"
+                                                                isDisabled={idx === 0}
+                                                                onClick={() => handleMove(idx, "up")}
+                                                            />
+                                                            <IconButton
+                                                                aria-label="Move Down"
+                                                                icon={<ArrowDownIcon />}
+                                                                size="xs"
+                                                                variant="ghost"
+                                                                isDisabled={idx === filteredItems.length - 1}
+                                                                onClick={() => handleMove(idx, "down")}
+                                                            />
+                                                        </HStack>
+                                                    </Td>
+
+                                                    {/* Time */}
+                                                    <Td fontWeight="bold" color={PRIMARY} whiteSpace="nowrap" py={3}>
+                                                        {item.time}
+                                                    </Td>
+
+                                                    {/* Category */}
+                                                    <Td py={3}>
+                                                        <Badge
+                                                            colorScheme={item.categoryColor || "orange"}
+                                                            rounded="md"
+                                                            px={2}
+                                                            py={0.5}
+                                                        >
+                                                            {item.category}
+                                                        </Badge>
+                                                    </Td>
+
+                                                    {/* Activity Details */}
+                                                    <Td whiteSpace="normal" minW="220px" py={3}>
+                                                        <VStack align="flex-start" spacing={1}>
+                                                            <Text fontWeight="semibold" color={textColor} wordBreak="break-word">
+                                                                {item.title}
+                                                            </Text>
+
+                                                            {item.details && item.details.length > 0 && (
+                                                                <VStack align="flex-start" spacing={0.5} pl={2}>
+                                                                    {item.details.map((d, dIdx) => (
+                                                                        <Text key={dIdx} fontSize="xs" color="gray.500" wordBreak="break-word">
+                                                                            • {d}
+                                                                        </Text>
+                                                                    ))}
+                                                                </VStack>
+                                                            )}
+
+                                                            {item.subSectionTitle && (
+                                                                <Box
+                                                                    mt={1}
+                                                                    p={2}
+                                                                    bg={subSectionBg}
+                                                                    rounded="md"
+                                                                    border="1px dashed"
+                                                                    borderColor={subSectionBorderColor}
+                                                                    w="full"
+                                                                >
+                                                                    <Text fontSize="xs" fontWeight="bold" color={PRIMARY} wordBreak="break-word">
+                                                                        {item.subSectionTitle}
+                                                                    </Text>
+                                                                    {item.subSectionItems?.map((zone, zIdx) => (
+                                                                        <Text key={zIdx} fontSize="xs" color="gray.600" pl={2} wordBreak="break-word">
+                                                                            - {zone}
+                                                                        </Text>
+                                                                    ))}
+                                                                </Box>
+                                                            )}
+                                                        </VStack>
+                                                    </Td>
+
+                                                    {/* Session */}
+                                                    <Td textAlign="center" py={3}>
+                                                        <Badge
+                                                            variant="outline"
+                                                            colorScheme={
+                                                                item.session === "morning"
+                                                                    ? "blue"
+                                                                    : item.session === "afternoon"
+                                                                    ? "orange"
+                                                                    : "gray"
+                                                            }
+                                                        >
+                                                            {item.session === "morning"
+                                                                ? "เช้า"
+                                                                : item.session === "afternoon"
+                                                                ? "บ่าย"
+                                                                : item.session === "break"
+                                                                ? "เบรก"
+                                                                : "ตลอดวัน"}
+                                                        </Badge>
+                                                    </Td>
+
+                                                    {/* Display Switch */}
+                                                    <Td textAlign="center" py={3}>
+                                                        <Switch
+                                                            colorScheme="orange"
+                                                            isChecked={item.display}
+                                                            onChange={() => handleToggleDisplay(item)}
+                                                        />
+                                                    </Td>
+
+                                                    {/* Action Buttons */}
+                                                    <Td textAlign="center" py={3}>
+                                                        <HStack spacing={1} justify="center">
+                                                            <IconButton
+                                                                aria-label="Edit"
+                                                                icon={<EditIcon />}
+                                                                size="sm"
+                                                                colorScheme="orange"
+                                                                variant="ghost"
+                                                                onClick={() => handleOpenEdit(item)}
+                                                            />
+                                                            <IconButton
+                                                                aria-label="Delete"
+                                                                icon={<DeleteIcon />}
+                                                                size="sm"
+                                                                colorScheme="red"
+                                                                variant="ghost"
+                                                                onClick={() => {
+                                                                    setItemToDelete(item);
+                                                                    onDeleteOpen();
+                                                                }}
+                                                            />
+                                                        </HStack>
+                                                    </Td>
+                                                </Tr>
+                                            ))
+                                        )}
+                                    </Tbody>
+                                </Table>
+                            </TableContainer>
+                        </Box>
+                    </>
+                )}
 
                 {/* Add / Edit Modal */}
                 <Modal isOpen={isOpen} onClose={onClose} size="xl" scrollBehavior="inside">
