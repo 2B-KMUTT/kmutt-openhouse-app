@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import {
@@ -13,6 +15,7 @@ import {
     Tr,
     Th,
     Td,
+    TableContainer,
     Modal,
     ModalOverlay,
     ModalContent,
@@ -25,9 +28,18 @@ import {
     useToast,
     Spinner,
     HStack,
+    VStack,
     Text,
     Badge,
+    Card,
+    CardBody,
+    CardHeader,
+    SimpleGrid,
+    Flex,
+    useColorModeValue,
+    Divider,
 } from "@chakra-ui/react";
+import { AddIcon } from "@chakra-ui/icons";
 import KMAppLayout from "@/views/layouts/KMAppLayout";
 
 type Staff = {
@@ -54,11 +66,15 @@ const KMStaff = () => {
     const { data: session } = useSession();
     const isSuperAdmin = session?.user?.adminRole === "SUPER_ADMIN";
 
+    const borderColor = useColorModeValue("gray.200", "gray.600");
+    const headerBg = useColorModeValue("gray.50", "gray.800");
+    const cardBg = useColorModeValue("white", "gray.750");
+
     const [staffs, setStaffs] = useState<Staff[]>([]);
     const [activities, setActivities] = useState<Activity[]>([]);
     const [selectedStaff, setSelectedStaff] = useState<Staff | null>(null);
     const [selectedActivities, setSelectedActivities] = useState<number[]>([]);
-    const [adminOwners, setAdminOwners] = useState<{ id: number, name: string, username: string }[]>([]);
+    const [adminOwners, setAdminOwners] = useState<{ id: number; name: string; username: string }[]>([]);
     const [selectedAdminFilter, setSelectedAdminFilter] = useState<number | "">("");
 
     const [form, setForm] = useState({
@@ -69,6 +85,7 @@ const KMStaff = () => {
         adminId: "" as number | "",
     });
     const [loadingMapping, setLoadingMapping] = useState(false);
+    const [isCreating, setIsCreating] = useState(false);
 
     const { isOpen, onOpen, onClose } = useDisclosure();
     const toast = useToast();
@@ -92,7 +109,7 @@ const KMStaff = () => {
         if (isSuperAdmin) {
             fetch("/api/km/admin-owners")
                 .then((res) => res.json())
-                .then((data) => setAdminOwners(data))
+                .then((data) => setAdminOwners(Array.isArray(data) ? data : []))
                 .catch(() => {});
         }
     }, [isSuperAdmin]);
@@ -111,33 +128,41 @@ const KMStaff = () => {
     // ฟอร์มสร้าง staff
     const handleCreateStaff = async () => {
         if (!form.username || !form.password || !form.name || !form.email) {
-            toast({ status: "warning", title: "กรอกข้อมูลให้ครบก่อน" });
+            toast({ status: "warning", title: "กรุณากรอกข้อมูลให้ครบทุกช่อง" });
             return;
         }
 
         const body: Record<string, any> = {
-            username: form.username,
+            username: form.username.trim(),
             password: form.password,
-            name: form.name,
-            email: form.email,
+            name: form.name.trim(),
+            email: form.email.trim(),
         };
 
         if (isSuperAdmin && form.adminId) {
             body.adminId = Number(form.adminId);
         }
 
-        const res = await fetch("/api/km/staff", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(body),
-        });
+        setIsCreating(true);
+        try {
+            const res = await fetch("/api/km/staff", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body),
+            });
 
-        if (res.ok) {
-            toast({ status: "success", title: "สร้าง Staff สำเร็จ" });
-            setForm({ username: "", password: "", name: "", email: "", adminId: "" });
-            fetchStaffs(selectedAdminFilter);
-        } else {
-            toast({ status: "error", title: "ไม่สามารถสร้าง Staff ได้" });
+            if (res.ok) {
+                toast({ status: "success", title: "สร้างบัญชี Staff สำเร็จ" });
+                setForm({ username: "", password: "", name: "", email: "", adminId: "" });
+                fetchStaffs(selectedAdminFilter);
+            } else {
+                const data = await res.json().catch(() => null);
+                toast({ status: "error", title: data?.message || "ไม่สามารถสร้าง Staff ได้" });
+            }
+        } catch (err) {
+            toast({ status: "error", title: "เกิดข้อผิดพลาดในการเชื่อมต่อ" });
+        } finally {
+            setIsCreating(false);
         }
     };
 
@@ -150,10 +175,10 @@ const KMStaff = () => {
         try {
             const res = await fetch(`/api/km/staff/mapping?staffId=${staff.id}`);
             const data: number[] = await res.json();
-            setSelectedActivities(data);
+            setSelectedActivities(Array.isArray(data) ? data : []);
         } catch (err) {
             console.error(err);
-            toast({ status: "error", title: "โหลดกิจกรรมไม่สำเร็จ" });
+            toast({ status: "error", title: "โหลดรายการกิจกรรมไม่สำเร็จ" });
         } finally {
             setLoadingMapping(false);
         }
@@ -170,183 +195,293 @@ const KMStaff = () => {
         });
 
         if (res.ok) {
-            toast({ status: "success", title: "บันทึกกิจกรรมให้ Staff แล้ว" });
+            toast({ status: "success", title: "บันทึกการมอบหมายกิจกรรมเรียบร้อยแล้ว" });
             onClose();
             setSelectedActivities([]);
         } else {
-            toast({ status: "error", title: "บันทึกไม่สำเร็จ" });
+            toast({ status: "error", title: "บันทึกข้อมูลไม่สำเร็จ" });
         }
     };
 
     return (
         <KMAppLayout navigation="Staff Management">
-            <Box bg="white" p={4} rounded="xl" shadow="md">
-                <HStack spacing={3} wrap="wrap">
-                    <Input
-                        placeholder="Username"
-                        value={form.username}
-                        onChange={(e) => setForm({ ...form, username: e.target.value })}
-                        size="sm"
-                        flex="1"
-                    />
-                    <Input
-                        type="password"
-                        placeholder="Password"
-                        value={form.password}
-                        onChange={(e) => setForm({ ...form, password: e.target.value })}
-                        size="sm"
-                        flex="1"
-                    />
-                    <Input
-                        placeholder="Name"
-                        value={form.name}
-                        onChange={(e) => setForm({ ...form, name: e.target.value })}
-                        size="sm"
-                        flex="1"
-                    />
-                    <Input
-                        type="email"
-                        placeholder="Email"
-                        value={form.email}
-                        onChange={(e) => setForm({ ...form, email: e.target.value })}
-                        size="sm"
-                        flex="1"
-                    />
-                    {isSuperAdmin && (
-                        <Select
-                            placeholder="เลือกคณะ/สังกัด"
-                            value={form.adminId}
-                            onChange={(e) => setForm({ ...form, adminId: e.target.value ? Number(e.target.value) : "" })}
-                            size="sm"
-                            flex="1.5"
-                        >
-                            {adminOwners.map((admin) => (
-                                <option key={admin.id} value={admin.id}>
-                                    {admin.name} ({admin.username})
-                                </option>
-                            ))}
-                        </Select>
-                    )}
-                    <Button colorScheme="orange" onClick={handleCreateStaff} size="sm">
-                        Create
-                    </Button>
-                </HStack>
-            </Box>
-
-            {isSuperAdmin && (
-                <Box mt={6} p={3} bg="orange.50" rounded="xl" borderWidth="1px" borderColor="orange.200">
-                    <HStack justify="space-between" align="center" mb={1}>
-                        <Text fontSize="xs" fontWeight="bold" color="orange.800">
-                            👑 กรองรายชื่อ Staff ตามคณะ/หน่วยงาน (Super Admin Mode)
-                        </Text>
-                        {selectedAdminFilter && (
-                            <Button size="xs" variant="ghost" colorScheme="orange" onClick={() => handleAdminFilterChange("")}>
-                                ล้างตัวกรอง
-                            </Button>
-                        )}
-                    </HStack>
-                    <Select
-                        size="sm"
-                        bg="white"
-                        value={selectedAdminFilter}
-                        onChange={(e) => handleAdminFilterChange(e.target.value)}
-                    >
-                        <option value="">-- แสดง Staff ของทุกคณะ (ทั้งหมด) --</option>
-                        {adminOwners.map((admin) => (
-                            <option key={admin.id} value={admin.id}>
-                                {admin.name} ({admin.username})
-                            </option>
-                        ))}
-                    </Select>
-                </Box>
-            )}
-
-            <Box mt={isSuperAdmin ? 4 : 8}>
-                <Table variant="simple" bg="white" shadow="sm" rounded="xl">
-                    <Thead bg="orange.500">
-                        <Tr>
-                            <Th color="white">Name</Th>
-                            <Th color="white">Username</Th>
-                            <Th color="white">Email</Th>
-                            {isSuperAdmin && <Th color="white">สังกัด (Faculty)</Th>}
-                            <Th color="white">Created</Th>
-                            <Th color="white">Actions</Th>
-                        </Tr>
-                    </Thead>
-                    <Tbody>
-                        {staffs.map((staff) => (
-                            <Tr key={staff.id}>
-                                <Td>{staff.name}</Td>
-                                <Td>{staff.username}</Td>
-                                <Td>{staff.email}</Td>
-                                {isSuperAdmin && (
-                                    <Td>
-                                        <Badge colorScheme="purple">
-                                            {staff.created_by?.name || "ส่วนกลาง"}
-                                        </Badge>
-                                    </Td>
-                                )}
-                                <Td>{new Date(staff.created_at).toLocaleDateString()}</Td>
-                                <Td>
-                                    <Button
+            <VStack spacing={6} align="stretch">
+                {/* Create Staff Card */}
+                <Card variant="outline" borderColor={borderColor} bg={cardBg}>
+                    <CardHeader pb={2}>
+                        <HStack justify="space-between">
+                            <Text fontSize="sm" fontWeight="bold">
+                                เพิ่มบัญชีผู้ดูแลกิจกรรม (Staff Account)
+                            </Text>
+                            {isSuperAdmin && (
+                                <Badge colorScheme="orange" variant="subtle" fontSize="xs">
+                                    Super Admin Control
+                                </Badge>
+                            )}
+                        </HStack>
+                    </CardHeader>
+                    <CardBody pt={2}>
+                        <SimpleGrid columns={{ base: 1, sm: 2, lg: isSuperAdmin ? 5 : 4 }} spacing={3}>
+                            <FormControl isRequired>
+                                <Input
+                                    placeholder="Username"
+                                    value={form.username}
+                                    onChange={(e) => setForm({ ...form, username: e.target.value })}
+                                    size="sm"
+                                    rounded="lg"
+                                    focusBorderColor="orange.500"
+                                />
+                            </FormControl>
+                            <FormControl isRequired>
+                                <Input
+                                    type="password"
+                                    placeholder="Password"
+                                    value={form.password}
+                                    onChange={(e) => setForm({ ...form, password: e.target.value })}
+                                    size="sm"
+                                    rounded="lg"
+                                    focusBorderColor="orange.500"
+                                />
+                            </FormControl>
+                            <FormControl isRequired>
+                                <Input
+                                    placeholder="ชื่อ-นามสกุล"
+                                    value={form.name}
+                                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                                    size="sm"
+                                    rounded="lg"
+                                    focusBorderColor="orange.500"
+                                />
+                            </FormControl>
+                            <FormControl isRequired>
+                                <Input
+                                    type="email"
+                                    placeholder="อีเมล"
+                                    value={form.email}
+                                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                                    size="sm"
+                                    rounded="lg"
+                                    focusBorderColor="orange.500"
+                                />
+                            </FormControl>
+                            {isSuperAdmin && (
+                                <FormControl>
+                                    <Select
+                                        placeholder="สังกัดคณะ (เป็นตัวเอง)"
+                                        value={form.adminId}
+                                        onChange={(e) =>
+                                            setForm({
+                                                ...form,
+                                                adminId: e.target.value ? Number(e.target.value) : "",
+                                            })
+                                        }
                                         size="sm"
-                                        colorScheme="teal"
-                                        onClick={() => handleOpenAssign(staff)}
+                                        rounded="lg"
+                                        focusBorderColor="orange.500"
                                     >
-                                        Assign Activities
-                                    </Button>
-                                </Td>
-                            </Tr>
-                        ))}
-                    </Tbody>
-                </Table>
-            </Box>
+                                        {adminOwners.map((admin) => (
+                                            <option key={admin.id} value={admin.id}>
+                                                {admin.name} ({admin.username})
+                                            </option>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            )}
+                        </SimpleGrid>
 
-            {/* Modal Assign */}
-            {/* Modal Assign */}
-            <Modal isOpen={isOpen} onClose={onClose} size="5xl">
-                <ModalOverlay />
-                <ModalContent>
-                    <ModalHeader>
-                        Assign Activities to {selectedStaff?.name}
-                    </ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
-                        {activities.map((act) => {
-                            const id = Number(act.id); // cast เป็น number
-                            const isChecked = selectedActivities.includes(id); // now it's safe
+                        <HStack justify="flex-end" mt={3}>
+                            <Button
+                                colorScheme="orange"
+                                size="sm"
+                                leftIcon={<AddIcon />}
+                                onClick={handleCreateStaff}
+                                isLoading={isCreating}
+                                loadingText="กำลังสร้าง..."
+                            >
+                                สร้าง Staff
+                            </Button>
+                        </HStack>
+                    </CardBody>
+                </Card>
 
-                            return (
-                                <Box key={id}>
-                                    <Checkbox
-                                        isChecked={isChecked}
-                                        onChange={(e) => {
-                                            if (e.target.checked) {
-                                                setSelectedActivities((prev) => [...prev, id]);
-                                            } else {
-                                                setSelectedActivities((prev) =>
-                                                    prev.filter((x) => x !== id)
-                                                );
-                                            }
-                                        }}
+                {/* Staff List & Filter Card */}
+                <Card variant="outline" borderColor={borderColor} bg={cardBg}>
+                    <CardHeader pb={3}>
+                        <Flex
+                            direction={{ base: "column", sm: "row" }}
+                            justify="space-between"
+                            align={{ base: "flex-start", sm: "center" }}
+                            gap={3}
+                        >
+                            <Box>
+                                <Text fontSize="sm" fontWeight="bold">
+                                    รายชื่อ Staff ทั้งหมด ({staffs.length} คน)
+                                </Text>
+                                <Text fontSize="xs" color="gray.500">
+                                    บัญชีผู้ใช้งานสำหรับสแกน E-Stamp และดูแลกิจกรรมแต่ละคณะ
+                                </Text>
+                            </Box>
+
+                            {isSuperAdmin && (
+                                <HStack spacing={2} align="center">
+                                    <Text fontSize="xs" fontWeight="semibold" color="gray.500" whiteSpace="nowrap">
+                                        กรองคณะ:
+                                    </Text>
+                                    <Select
+                                        size="sm"
+                                        rounded="lg"
+                                        focusBorderColor="orange.500"
+                                        maxW="240px"
+                                        value={selectedAdminFilter}
+                                        onChange={(e) => handleAdminFilterChange(e.target.value)}
                                     >
-                                        {act.title} ({new Date(act.date).toLocaleDateString()} {act.start_time})
-                                    </Checkbox>
-                                </Box>
-                            );
-                        })}
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button colorScheme="orange" mr={3} onClick={handleAssign}>
-                            Save
-                        </Button>
-                        <Button variant="ghost" onClick={onClose}>
-                            Cancel
-                        </Button>
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
+                                        <option value="">ทุกคณะ (ทั้งหมด)</option>
+                                        {adminOwners.map((admin) => (
+                                            <option key={admin.id} value={admin.id}>
+                                                {admin.name} ({admin.username})
+                                            </option>
+                                        ))}
+                                    </Select>
+                                    {selectedAdminFilter && (
+                                        <Button
+                                            size="xs"
+                                            variant="ghost"
+                                            colorScheme="orange"
+                                            onClick={() => handleAdminFilterChange("")}
+                                        >
+                                            ล้าง
+                                        </Button>
+                                    )}
+                                </HStack>
+                            )}
+                        </Flex>
+                    </CardHeader>
 
+                    <CardBody p={0}>
+                        {staffs.length === 0 ? (
+                            <Box py={10} textAlign="center" color="gray.500">
+                                <Text fontSize="xs">ไม่พบรายชื่อ Staff ตามตัวกรองที่เลือก</Text>
+                            </Box>
+                        ) : (
+                            <TableContainer>
+                                <Table variant="simple" size="sm">
+                                    <Thead bg={headerBg}>
+                                        <Tr>
+                                            <Th fontSize="xs">ชื่อ-สกุล</Th>
+                                            <Th fontSize="xs">Username</Th>
+                                            <Th fontSize="xs">อีเมล</Th>
+                                            {isSuperAdmin && <Th fontSize="xs">สังกัดคณะ / ส่วนงาน</Th>}
+                                            <Th fontSize="xs">วันที่สร้าง</Th>
+                                            <Th fontSize="xs" textAlign="right">การจัดการ</Th>
+                                        </Tr>
+                                    </Thead>
+                                    <Tbody>
+                                        {staffs.map((staff) => (
+                                            <Tr key={staff.id}>
+                                                <Td fontWeight="medium">{staff.name}</Td>
+                                                <Td color="gray.600" _dark={{ color: "gray.300" }}>{staff.username}</Td>
+                                                <Td>{staff.email}</Td>
+                                                {isSuperAdmin && (
+                                                    <Td>
+                                                        <Badge variant="subtle" colorScheme="orange" fontSize="xs">
+                                                            {staff.created_by?.name || "ส่วนกลาง"}
+                                                        </Badge>
+                                                    </Td>
+                                                )}
+                                                <Td color="gray.500">
+                                                    {new Date(staff.created_at).toLocaleDateString("th-TH")}
+                                                </Td>
+                                                <Td textAlign="right">
+                                                    <Button
+                                                        size="xs"
+                                                        variant="outline"
+                                                        colorScheme="orange"
+                                                        onClick={() => handleOpenAssign(staff)}
+                                                    >
+                                                        มอบหมายกิจกรรม
+                                                    </Button>
+                                                </Td>
+                                            </Tr>
+                                        ))}
+                                    </Tbody>
+                                </Table>
+                            </TableContainer>
+                        )}
+                    </CardBody>
+                </Card>
+
+                {/* Modal Assign Activities */}
+                <Modal isOpen={isOpen} onClose={onClose} size="lg">
+                    <ModalOverlay />
+                    <ModalContent>
+                        <ModalHeader fontSize="md">
+                            มอบหมายกิจกรรมให้ {selectedStaff?.name}
+                        </ModalHeader>
+                        <ModalCloseButton />
+                        <ModalBody maxH="60vh" overflowY="auto">
+                            {loadingMapping ? (
+                                <HStack justify="center" py={8}>
+                                    <Spinner size="md" color="orange.500" />
+                                </HStack>
+                            ) : activities.length === 0 ? (
+                                <Text fontSize="xs" color="gray.500">
+                                    ไม่มีกิจกรรมในระบบ
+                                </Text>
+                            ) : (
+                                <VStack align="stretch" spacing={2}>
+                                    {activities.map((act) => {
+                                        const id = Number(act.id);
+                                        const isChecked = selectedActivities.includes(id);
+
+                                        return (
+                                            <Box
+                                                key={id}
+                                                p={3}
+                                                border="1px solid"
+                                                borderColor={isChecked ? "orange.300" : borderColor}
+                                                bg={isChecked ? useColorModeValue("orange.50", "whiteAlpha.50") : "transparent"}
+                                                rounded="lg"
+                                                transition="all 0.15s ease"
+                                            >
+                                                <Checkbox
+                                                    colorScheme="orange"
+                                                    isChecked={isChecked}
+                                                    onChange={(e) => {
+                                                        if (e.target.checked) {
+                                                            setSelectedActivities((prev) => [...prev, id]);
+                                                        } else {
+                                                            setSelectedActivities((prev) =>
+                                                                prev.filter((x) => x !== id)
+                                                            );
+                                                        }
+                                                    }}
+                                                >
+                                                    <Box ml={1}>
+                                                        <Text fontSize="xs" fontWeight="semibold">
+                                                            #{act.id} {act.title}
+                                                        </Text>
+                                                        <Text fontSize="xs" color="gray.500">
+                                                            📅 {act.date} • ⏰ {act.start_time}
+                                                        </Text>
+                                                    </Box>
+                                                </Checkbox>
+                                            </Box>
+                                        );
+                                    })}
+                                </VStack>
+                            )}
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button variant="outline" size="sm" mr={3} onClick={onClose}>
+                                ยกเลิก
+                            </Button>
+                            <Button colorScheme="orange" size="sm" onClick={handleAssign}>
+                                บันทึกการมอบหมาย
+                            </Button>
+                        </ModalFooter>
+                    </ModalContent>
+                </Modal>
+            </VStack>
         </KMAppLayout>
     );
 };
