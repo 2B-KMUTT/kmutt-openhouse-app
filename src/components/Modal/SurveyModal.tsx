@@ -30,14 +30,42 @@ export const SurveyModal: React.FC<SurveyModalProps> = ({ forceOpen = false }) =
         // Allows developers/admins to test or preview via query parameter ?previewSurveyModal=true
         const isPreview = router.query.previewSurveyModal === "true" || forceOpen
 
-        if (!isPreview && !isSurveyModalActive()) {
-            return
+        if (isPreview) {
+            const timer = setTimeout(onOpen, 600)
+            return () => clearTimeout(timer)
         }
 
         const doneSurvey = localStorage.getItem(SURVEY_STORAGE_KEY)
-        if (!doneSurvey || isPreview) {
-            const timer = setTimeout(onOpen, 1000)
-            return () => clearTimeout(timer)
+        if (doneSurvey) {
+            return
+        }
+
+        // Consult server-side real-world time evaluation & status config
+        let isCancelled = false
+        fetch("/api/survey/config")
+            .then((res) => {
+                if (!res.ok) throw new Error("Failed to fetch")
+                return res.json()
+            })
+            .then((data) => {
+                if (isCancelled) return
+                // Check if survey is open (real-world time between Oct 30 and Nov 6, or forced open)
+                if (data?.isOpen) {
+                    const timer = setTimeout(onOpen, 1000)
+                    return () => clearTimeout(timer)
+                }
+            })
+            .catch(() => {
+                if (isCancelled) return
+                // Fallback to client-side clock check
+                if (isSurveyModalActive()) {
+                    const timer = setTimeout(onOpen, 1000)
+                    return () => clearTimeout(timer)
+                }
+            })
+
+        return () => {
+            isCancelled = true
         }
     }, [router.query.previewSurveyModal, forceOpen, onOpen])
 
@@ -47,7 +75,11 @@ export const SurveyModal: React.FC<SurveyModalProps> = ({ forceOpen = false }) =
     }
 
     const handleDoneSurvey = () => {
-        localStorage.setItem(SURVEY_STORAGE_KEY, "true")
+        try {
+            localStorage.setItem(SURVEY_STORAGE_KEY, "true")
+        } catch (e) {
+            console.error("localStorage error", e)
+        }
         onClose()
     }
 

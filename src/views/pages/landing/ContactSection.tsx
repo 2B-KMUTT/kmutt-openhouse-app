@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Box, Text, Button, HStack, useColorModeValue } from "@chakra-ui/react";
 import { FaLine } from "react-icons/fa";
 
@@ -6,6 +7,28 @@ const SECONDARY = "#FFC233"; // KMUTT Yellow
 
 const ContactSection = () => {
     const text = useColorModeValue("gray.800", "gray.200");
+
+    const [coordinatorName, setCoordinatorName] = useState("นางสาวสุวะรักษ์ ศิริวรรณ์");
+    const [coordinatorPhone, setCoordinatorPhone] = useState("0 2470 8471");
+    const [coordinatorEmail, setCoordinatorEmail] = useState("admission@kmutt.ac.th");
+    const [openChatLink, setOpenChatLink] = useState("https://kmutt.me/OpenChatOPH2025");
+
+    useEffect(() => {
+        fetch("/api/landing/config")
+            .then((res) => {
+                if (!res.ok) throw new Error("Failed to load config");
+                return res.json();
+            })
+            .then((data) => {
+                if (data.coordinatorName) setCoordinatorName(data.coordinatorName);
+                if (data.coordinatorPhone) setCoordinatorPhone(data.coordinatorPhone);
+                if (data.coordinatorEmail) setCoordinatorEmail(data.coordinatorEmail);
+                if (data.openChatLink) setOpenChatLink(data.openChatLink);
+            })
+            .catch((err) => {
+                console.error("Using default contact info due to fetch error:", err);
+            });
+    }, []);
 
     return (
         <Box id="contact" position="relative" overflow="hidden" py={{ base: 10, md: 16 }} px={{ base: 4, md: 12 }}>
@@ -35,32 +58,16 @@ const ContactSection = () => {
                 </Text>
 
                 <Text fontSize={{ base: "md", md: "lg" }} mb={2} maxW="700px" mx="auto" color={text}>
-                    ผู้ประสานงาน: นางสาวสุวะรักษ์ ศิริวรรณ์
+                    ผู้ประสานงาน: {coordinatorName}
                 </Text>
                 <Text fontSize={{ base: "sm", md: "md" }} mb={6} color={text}>
-                    โทร. 0 2470 8471 | อีเมล: admission@kmutt.ac.th
+                    โทร. {coordinatorPhone} | อีเมล: {coordinatorEmail}
                 </Text>
 
                 <HStack justify="center" spacing={4} wrap="wrap">
-                    {/* <Button
-                        as="a"
-                        href="https://kmutt.me/oph_RoiEt"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        size="lg"
-                        colorScheme="orange"
-                        px={8}
-                        py={6}
-                        borderRadius="full"
-                        fontSize="md"
-                        fontWeight="bold"
-                        _hover={{ transform: "scale(1.05)", boxShadow: "xl" }}
-                    >
-                        แบบตอบรับเข้าร่วมงาน (kmutt.me/oph_RoiEt)
-                    </Button> */}
                     <Button
                         as="a"
-                        href="https://kmutt.me/OpenChatOPH2025"
+                        href={openChatLink}
                         target="_blank"
                         rel="noopener noreferrer"
                         size="lg"

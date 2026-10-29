@@ -34,8 +34,17 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
           })
         )
       );
+    } else if (type === "banner") {
+      await prisma.$transaction(
+        items.map((item: { id: number; orderIndex: number }) =>
+          prisma.landingBanner.update({
+            where: { id: Number(item.id) },
+            data: { orderIndex: Number(item.orderIndex) },
+          })
+        )
+      );
     } else {
-      return res.status(400).json({ message: "Invalid type: must be schedule or booth" });
+      return res.status(400).json({ message: "Invalid type: must be schedule, booth, or banner" });
     }
 
     return res.status(200).json({ message: "Reordered successfully" });

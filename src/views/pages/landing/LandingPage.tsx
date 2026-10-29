@@ -43,6 +43,36 @@ const LandingPage = () => {
     const borderColor = useColorModeValue("orange.100", "gray.700");
     const { data: session, status } = useSession();
 
+    const [heroConfig, setHeroConfig] = useState({
+        heroTitle: "KMUTT OPEN HOUSE",
+        heroSubtitle: "เปิดเฮือน มจธ. (มดอีสาน)",
+        eventDateTh: "วันที่ 30 ตุลาคม 2569 เวลา 09.00 – 17.00 น.",
+        eventLocationTh: "ณ โรงแรมเพชรรัชต์การ์เด้น อ.เมือง จ.ร้อยเอ็ด",
+        eventDateEn: "October 30, 2026, from 09:00 a.m. to 5:00 p.m.",
+        eventLocationEn: "at Petcharat Garden Hotel, Mueang, Roi Et",
+    });
+
+    useEffect(() => {
+        fetch("/api/landing/config")
+            .then((res) => {
+                if (!res.ok) throw new Error("Failed to load config");
+                return res.json();
+            })
+            .then((data) => {
+                setHeroConfig((prev) => ({
+                    heroTitle: data.heroTitle || prev.heroTitle,
+                    heroSubtitle: data.heroSubtitle || prev.heroSubtitle,
+                    eventDateTh: data.eventDateTh || prev.eventDateTh,
+                    eventLocationTh: data.eventLocationTh || prev.eventLocationTh,
+                    eventDateEn: data.eventDateEn || prev.eventDateEn,
+                    eventLocationEn: data.eventLocationEn || prev.eventLocationEn,
+                }));
+            })
+            .catch((err) => {
+                console.error("Using default hero config due to fetch error:", err);
+            });
+    }, []);
+
     const getDashboardUrl = (role?: string) => {
         switch (role) {
             case "staff":
@@ -298,18 +328,18 @@ const LandingPage = () => {
                     <VStack zIndex={1} mt="20" textAlign="center" spacing={6} px={6} maxW="4xl">
                         <Heading size={{ base: "md", md: "4xl" }} fontWeight="extrabold" color={textColor}>
                             <Text as="span" color={PRIMARY}>
-                                KMUTT OPEN HOUSE <br />
+                                {heroConfig.heroTitle} <br />
                             </Text> {" "}
-                            เปิดเฮือน มจธ. (มดอีสาน)
+                            {heroConfig.heroSubtitle}
                         </Heading>
                         <Text px={6} fontSize={{ base: "md", md: "lg" }} lineHeight={{ base: "25px", md: "32px" }} color={textColor}>
-                            วันที่ 30 ตุลาคม 2569 เวลา 09.00 – 16.00 น. <br />
-                            ณ โรงแรมเพชรรัชต์การ์เด้น อ.เมือง จ.ร้อยเอ็ด
+                            {heroConfig.eventDateTh} <br />
+                            {heroConfig.eventLocationTh}
                         </Text>
 
                         <Text px={6} fontSize={{ base: "sm", md: "md" }} lineHeight={{ base: "25px", md: "32px" }} color={textColor}>
-                            October 30, 2026, from 09:00 a.m. to 4:00 p.m. <br />
-                            at Petcharat Garden Hotel, Mueang, Roi Et
+                            {heroConfig.eventDateEn} <br />
+                            {heroConfig.eventLocationEn}
                         </Text>
 
 

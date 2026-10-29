@@ -66,6 +66,7 @@ type SurveyRecord = {
     recommendIntent?: number | null
     overallSatisfaction?: number | null
     feedbackNote?: string | null
+    confusionRanking?: any
     createdAt: string
 }
 
@@ -225,6 +226,32 @@ export default function SurveyReportPage() {
         return sortDesc(Object.entries(map).map(([name, value]) => ({ name, value })))
     }, [studentSurveys])
 
+    const threeJomFirstRankData = useMemo(() => {
+        const map: Record<string, number> = {}
+        studentSurveys.forEach((s) => {
+            if (!s.confusionRanking) return
+            let r1 = ""
+            if (typeof s.confusionRanking === "object") {
+                r1 =
+                    s.confusionRanking.rank1 ||
+                    (Array.isArray(s.confusionRanking.ranking) && s.confusionRanking.ranking[0]) ||
+                    ""
+            } else if (typeof s.confusionRanking === "string") {
+                try {
+                    const parsed = JSON.parse(s.confusionRanking)
+                    r1 = parsed.rank1 || (Array.isArray(parsed.ranking) && parsed.ranking[0]) || ""
+                } catch {
+                    r1 = s.confusionRanking
+                }
+            }
+            if (r1) {
+                const shortName = r1.split(" - ")[0] || r1
+                map[shortName] = (map[shortName] || 0) + 1
+            }
+        })
+        return sortDesc(Object.entries(map).map(([name, value]) => ({ name, value })))
+    }, [studentSurveys])
+
     // Parent segment
     const parentSurveys = useMemo(
         () => surveys.filter((s) => s.role === "ผู้ปกครอง"),
@@ -341,6 +368,14 @@ export default function SurveyReportPage() {
             คณะที่สนใจ: parseArray(s.interestedFaculty).join(", ") || "-",
             ปัจจัยเลือกมหาวิทยาลัย: parseArray(s.decisionFactors).join(", ") || "-",
             ความกังวลนักเรียน: s.worryPoints || "-",
+            อันดับ1_3พระจอม:
+                (typeof s.confusionRanking === "object"
+                    ? s.confusionRanking?.rank1 || (Array.isArray(s.confusionRanking?.ranking) && s.confusionRanking.ranking[0])
+                    : s.confusionRanking) || "-",
+            การจัดอันดับ_3พระจอม:
+                typeof s.confusionRanking === "object"
+                    ? JSON.stringify(s.confusionRanking)
+                    : s.confusionRanking || "-",
             ระดับชั้นบุตรหลาน_ผู้ปกครอง: s.parentGrade || "-",
             ความกังวลผู้ปกครอง: parseArray(s.parentWorries).join(", ") || "-",
             ข้อมูลที่ต้องการเพิ่ม: s.parentInfoNeeded || "-",
@@ -718,6 +753,32 @@ export default function SurveyReportPage() {
                                             </Box>
                                         </CardBody>
                                     </Card>
+
+                                    {/* 3 พระจอม Ranking #1 Distribution */}
+                                    {threeJomFirstRankData.length > 0 && (
+                                        <Card p={5} rounded="xl" shadow="sm" borderWidth="1px" borderColor={borderColor}>
+                                            <CardHeader p={0} mb={4}>
+                                                <Heading size="sm">ความสนใจกลุ่ม 3 พระจอม (อันดับ 1 ที่เลือก)</Heading>
+                                            </CardHeader>
+                                            <CardBody p={0}>
+                                                <Box h="280px">
+                                                    <ResponsiveContainer width="100%" height="100%">
+                                                        <BarChart data={threeJomFirstRankData}>
+                                                            <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
+                                                            <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+                                                            <YAxis allowDecimals={false} />
+                                                            <Tooltip />
+                                                            <Bar
+                                                                dataKey="value"
+                                                                fill="#FF8042"
+                                                                radius={[4, 4, 0, 0]}
+                                                            />
+                                                        </BarChart>
+                                                    </ResponsiveContainer>
+                                                </Box>
+                                            </CardBody>
+                                        </Card>
+                                    )}
                                 </SimpleGrid>
                             </Box>
                         )}

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import {
     Box,
     Text,
@@ -18,13 +18,16 @@ import {
     Badge,
     Flex,
     Icon,
+    Spinner,
+    Card,
+    CardBody,
 } from "@chakra-ui/react"
 import { useRouter } from "next/router"
 import Head from "next/head"
-import { CheckCircle2, AlertCircle } from "lucide-react"
+import { CheckCircle2, AlertCircle, Clock, Lock, RotateCcw, Award } from "lucide-react"
 
-// Options constants
-const PROVINCES = [
+// Default Options constants
+const DEFAULT_PROVINCES = [
     "ร้อยเอ็ด",
     "มหาสารคาม",
     "กาฬสินธุ์",
@@ -38,7 +41,7 @@ const PROVINCES = [
     "อื่น ๆ",
 ]
 
-const SOURCE_CHANNELS = [
+const DEFAULT_SOURCE_CHANNELS = [
     "ครูที่โรงเรียน",
     "Facebook",
     "TikTok",
@@ -48,9 +51,9 @@ const SOURCE_CHANNELS = [
     "อื่น ๆ",
 ]
 
-const STUDENT_GRADES = ["ม.4", "ม.5", "ม.6", "ปวช.", "อื่น ๆ"]
-const STUDENT_STREAMS = ["วิทย์–คณิต", "ศิลป์–คำนวณ", "ศิลป์–ภาษา", "สายอาชีพ"]
-const STUDENT_FACULTIES = [
+const DEFAULT_STUDENT_GRADES = ["ม.4", "ม.5", "ม.6", "ปวช.", "อื่น ๆ"]
+const DEFAULT_STUDENT_STREAMS = ["วิทย์–คณิต", "ศิลป์–คำนวณ", "ศิลป์–ภาษา", "สายอาชีพ"]
+const DEFAULT_STUDENT_FACULTIES = [
     "วิศวกรรม",
     "วิทยาศาสตร์",
     "คอมพิวเตอร์ / IT",
@@ -58,7 +61,7 @@ const STUDENT_FACULTIES = [
     "ครุศาสตร์อุตสาหกรรม",
     "ยังไม่แน่ใจ",
 ]
-const STUDENT_FACTORS = [
+const DEFAULT_STUDENT_FACTORS = [
     "ชื่อเสียง / Ranking",
     "จบแล้วมีงานทำ",
     "มีสาขาที่อยากเรียน",
@@ -68,7 +71,7 @@ const STUDENT_FACTORS = [
     "ใกล้บ้าน",
     "ครู / พ่อแม่แนะนำ",
 ]
-const STUDENT_WORRIES = [
+const DEFAULT_STUDENT_WORRIES = [
     "ค่าใช้จ่าย / ค่าครองชีพ",
     "ไกลบ้าน",
     "กลัวเรียนไม่ไหว",
@@ -76,18 +79,18 @@ const STUDENT_WORRIES = [
     "ไม่กังวล",
 ]
 
-const PARENT_GRADES = ["ม.4", "ม.5", "ม.6", "ปวช.", "อื่น ๆ"]
-const PARENT_WORRIES = [
+const DEFAULT_PARENT_GRADES = ["ม.4", "ม.5", "ม.6", "ปวช.", "อื่น ๆ"]
+const DEFAULT_PARENT_WORRIES = [
     "ค่าเทอม / ค่าครองชีพ",
     "หอพัก / ความปลอดภัย",
     "การเดินทางไกล",
     "งานหลังเรียนจบ",
     "การดูแลจากมหาวิทยาลัย",
 ]
-const PARENT_INFO_NEEDED = ["ทุน / กู้ยืม กยศ.", "หอพัก", "รอบการรับสมัคร", "อัตราการได้งาน"]
-const PARENT_CHANNELS = ["LINE", "Facebook", "ผ่านครูที่โรงเรียน", "โทรศัพท์ / SMS"]
+const DEFAULT_PARENT_INFO_NEEDED = ["ทุน / กู้ยืม กยศ.", "หอพัก", "รอบการรับสมัคร", "อัตราการได้งาน"]
+const DEFAULT_PARENT_CHANNELS = ["LINE", "Facebook", "ผ่านครูที่โรงเรียน", "โทรศัพท์ / SMS"]
 
-const TEACHER_NEEDS = [
+const DEFAULT_TEACHER_NEEDS = [
     "Roadshow ที่โรงเรียน",
     "ค่ายวิชาการ",
     "ข้อมูลทุน / โรงเรียนเครือข่าย",
@@ -100,10 +103,13 @@ export const PublicSurvey = () => {
     const toast = useToast()
 
     const cardBg = useColorModeValue("white", "gray.800")
-    const sectionBg = useColorModeValue("orange.50", "orange.950")
     const borderColor = useColorModeValue("gray.200", "gray.700")
     const textColor = useColorModeValue("gray.800", "gray.100")
     const mutedColor = useColorModeValue("gray.500", "gray.400")
+
+    // Dynamic config state
+    const [configData, setConfigData] = useState<any>(null)
+    const [isLoadingConfig, setIsLoadingConfig] = useState<boolean>(true)
 
     // State: Common
     const [role, setRole] = useState<string>("นักเรียน")
@@ -116,6 +122,9 @@ export const PublicSurvey = () => {
     const [interestedFaculty, setInterestedFaculty] = useState<string[]>([])
     const [decisionFactors, setDecisionFactors] = useState<string[]>([])
     const [worryPoints, setWorryPoints] = useState<string>("")
+
+    // State: 3 พระจอม ranking (for นักเรียน or anyone)
+    const [threeJomRanking, setThreeJomRanking] = useState<string[]>([])
 
     // State: ผู้ปกครอง
     const [parentGrade, setParentGrade] = useState<string>("")
@@ -134,6 +143,72 @@ export const PublicSurvey = () => {
     const [feedbackNote, setFeedbackNote] = useState<string>("")
 
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+
+    // Fetch survey status & config
+    useEffect(() => {
+        fetch("/api/survey/config")
+            .then((res) => {
+                if (!res.ok) throw new Error("Failed to load config")
+                return res.json()
+            })
+            .then((data) => {
+                setConfigData(data)
+            })
+            .catch((err) => {
+                console.error("Error loading survey config:", err)
+            })
+            .finally(() => {
+                setIsLoadingConfig(false)
+            })
+    }, [])
+
+    const isPreview = router.query.preview === "true"
+
+    // Derive active option sets from dynamic config or defaults
+    const provinces = configData?.surveyConfig?.provinces || DEFAULT_PROVINCES
+    const sourceChannelsList = configData?.surveyConfig?.sourceChannels || DEFAULT_SOURCE_CHANNELS
+    const studentGrades = configData?.surveyConfig?.studentGrades || DEFAULT_STUDENT_GRADES
+    const studentStreams = configData?.surveyConfig?.studentStreams || DEFAULT_STUDENT_STREAMS
+    const studentFaculties = configData?.surveyConfig?.studentFaculties || DEFAULT_STUDENT_FACULTIES
+    const studentFactors = configData?.surveyConfig?.studentFactors || DEFAULT_STUDENT_FACTORS
+    const studentWorries = configData?.surveyConfig?.studentWorries || DEFAULT_STUDENT_WORRIES
+    const parentGrades = configData?.surveyConfig?.parentGrades || DEFAULT_PARENT_GRADES
+    const parentWorriesList = configData?.surveyConfig?.parentWorries || DEFAULT_PARENT_WORRIES
+    const parentInfoList = configData?.surveyConfig?.parentInfoNeeded || DEFAULT_PARENT_INFO_NEEDED
+    const parentChannelsList = configData?.surveyConfig?.parentChannels || DEFAULT_PARENT_CHANNELS
+    const teacherNeedsList = configData?.surveyConfig?.teacherNeeds || DEFAULT_TEACHER_NEEDS
+
+    const threeJomConfig = configData?.surveyConfig?.threeJomQuestion || {
+        enabled: true,
+        title: "ความสนใจในกลุ่ม 3 พระจอม (เรียงลำดับความสนใจที่ท่านชื่นชอบ 1-3)",
+        options: [
+            "มจธ. - มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าธนบุรี (บางมด)",
+            "สจล. - สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง",
+            "มจพ. - มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ",
+        ],
+    }
+
+    // Handle 3 พระจอม Ranking Toggle
+    const handleToggleThreeJom = (option: string) => {
+        if (threeJomRanking.includes(option)) {
+            setThreeJomRanking(threeJomRanking.filter((item) => item !== option))
+        } else {
+            if (threeJomRanking.length >= threeJomConfig.options.length) {
+                toast({
+                    title: `จัดอันดับครบ ${threeJomConfig.options.length} ลำดับแล้ว`,
+                    status: "info",
+                    duration: 2000,
+                    isClosable: true,
+                })
+                return
+            }
+            setThreeJomRanking([...threeJomRanking, option])
+        }
+    }
+
+    const handleResetThreeJom = () => {
+        setThreeJomRanking([])
+    }
 
     // Helper for multi-select chips with max limit
     const toggleMultiSelect = (
@@ -176,6 +251,10 @@ export const PublicSurvey = () => {
             if (interestedFaculty.length > 0) answered++
             if (decisionFactors.length > 0) answered++
             if (worryPoints) answered++
+            if (threeJomConfig.enabled) {
+                totalRequired += 1
+                if (threeJomRanking.length === threeJomConfig.options.length) answered++
+            }
         } else if (role === "ผู้ปกครอง") {
             totalRequired += 4
             if (parentGrade) answered++
@@ -188,7 +267,7 @@ export const PublicSurvey = () => {
             if (teacherCreditTransferInterest !== null) answered++
         }
 
-        return Math.round((answered / totalRequired) * 100)
+        return Math.min(100, Math.round((answered / totalRequired) * 100))
     }, [
         role,
         province,
@@ -198,6 +277,8 @@ export const PublicSurvey = () => {
         interestedFaculty,
         decisionFactors,
         worryPoints,
+        threeJomRanking,
+        threeJomConfig,
         parentGrade,
         parentWorries,
         parentInfoNeeded,
@@ -244,6 +325,13 @@ export const PublicSurvey = () => {
                 toast({ title: "กรุณาเลือกเรื่องที่กังวลที่สุดหากมาเรียน มจธ.", status: "error" })
                 return
             }
+            if (threeJomConfig.enabled && threeJomRanking.length > 0 && threeJomRanking.length < threeJomConfig.options.length) {
+                toast({
+                    title: `กรุณาจัดอันดับ 3 พระจอมให้ครบทั้ง ${threeJomConfig.options.length} ลำดับ`,
+                    status: "warning",
+                })
+                return
+            }
         } else if (role === "ผู้ปกครอง") {
             if (!parentGrade) {
                 toast({ title: "กรุณาเลือกระดับชั้นของบุตรหลาน", status: "error" })
@@ -283,6 +371,17 @@ export const PublicSurvey = () => {
 
         setIsSubmitting(true)
         try {
+            // Build confusionRanking format
+            let confusionPayload: any = null
+            if (threeJomRanking.length > 0) {
+                confusionPayload = {
+                    ranking: threeJomRanking,
+                    rank1: threeJomRanking[0] || null,
+                    rank2: threeJomRanking[1] || null,
+                    rank3: threeJomRanking[2] || null,
+                }
+            }
+
             const payload = {
                 role,
                 province,
@@ -303,6 +402,7 @@ export const PublicSurvey = () => {
                 recommendIntent,
                 overallSatisfaction,
                 feedbackNote,
+                confusionRanking: confusionPayload,
             }
 
             const res = await fetch("/api/survey", {
@@ -345,6 +445,126 @@ export const PublicSurvey = () => {
         }
     }
 
+    if (isLoadingConfig) {
+        return (
+            <Box minH="100vh" py={20} px={4} bg={useColorModeValue("gray.50", "gray.900")}>
+                <Center flexDirection="column">
+                    <Spinner size="xl" color="orange.500" thickness="4px" speed="0.65s" mb={4} />
+                    <Text color={mutedColor} fontSize="md">กำลังตรวจสอบสถานะแบบประเมิน...</Text>
+                </Center>
+            </Box>
+        )
+    }
+
+    // Locked Screen: Survey Not Started Yet
+    if (!isPreview && configData?.status === "not_started") {
+        return (
+            <Box minH="100vh" py={{ base: 12, md: 20 }} px={4} bg={useColorModeValue("gray.50", "gray.900")}>
+                <Head>
+                    <title>แบบประเมินยังไม่เปิดให้บริการ · KMUTT Open House</title>
+                </Head>
+                <Center>
+                    <Card maxW="560px" w="100%" rounded="3xl" shadow="xl" border="1px solid" borderColor={borderColor}>
+                        <CardBody p={{ base: 8, md: 10 }} textAlign="center">
+                            <Center
+                                w="80px"
+                                h="80px"
+                                rounded="full"
+                                bg="orange.100"
+                                color="orange.600"
+                                mx="auto"
+                                mb={6}
+                            >
+                                <Icon as={Clock} w={10} h={10} />
+                            </Center>
+                            <Badge colorScheme="orange" px={3} py={1} rounded="full" fontSize="sm" mb={3}>
+                                ยังไม่ถึงเวลาเปิดให้ประเมิน
+                            </Badge>
+                            <Heading fontSize={{ base: "xl", md: "2xl" }} color="gray.800" mb={3}>
+                                แบบประเมินยังไม่เปิดให้บริการ
+                            </Heading>
+                            <Text color="gray.600" fontSize="md" mb={6} lineHeight="tall">
+                                แบบสอบถามความพึงพอใจจะเปิดให้ร่วมตอบความคิดเห็นอัตโนมัติในวันกิจกรรม <br />
+                                <strong>วันศุกร์ที่ 30 ตุลาคม 2569 เวลา 00:00 น. เป็นต้นไป</strong>
+                            </Text>
+                            <Box
+                                p={4}
+                                rounded="2xl"
+                                bg={useColorModeValue("orange.50", "whiteAlpha.100")}
+                                border="1px dashed"
+                                borderColor="orange.300"
+                                mb={8}
+                            >
+                                <HStack justify="center" spacing={2} color="orange.800">
+                                    <Icon as={Lock} w={4} h={4} />
+                                    <Text fontSize="sm" fontWeight="medium">
+                                        ระบบจะเปิดรับคำตอบและแจ้งเตือนให้ทำประเมินระหว่างช่วงจัดงาน
+                                    </Text>
+                                </HStack>
+                            </Box>
+                            <Button
+                                colorScheme="orange"
+                                size="lg"
+                                rounded="xl"
+                                w="100%"
+                                onClick={() => router.push("/")}
+                            >
+                                กลับหน้าหลัก
+                            </Button>
+                        </CardBody>
+                    </Card>
+                </Center>
+            </Box>
+        )
+    }
+
+    // Locked Screen: Survey Ended or Force Closed
+    if (!isPreview && (configData?.status === "ended" || configData?.status === "closed")) {
+        return (
+            <Box minH="100vh" py={{ base: 12, md: 20 }} px={4} bg={useColorModeValue("gray.50", "gray.900")}>
+                <Head>
+                    <title>แบบประเมินปิดรับคำตอบแล้ว · KMUTT Open House</title>
+                </Head>
+                <Center>
+                    <Card maxW="560px" w="100%" rounded="3xl" shadow="xl" border="1px solid" borderColor={borderColor}>
+                        <CardBody p={{ base: 8, md: 10 }} textAlign="center">
+                            <Center
+                                w="80px"
+                                h="80px"
+                                rounded="full"
+                                bg="gray.100"
+                                color="gray.600"
+                                mx="auto"
+                                mb={6}
+                            >
+                                <Icon as={CheckCircle2} w={10} h={10} />
+                            </Center>
+                            <Badge colorScheme="gray" px={3} py={1} rounded="full" fontSize="sm" mb={3}>
+                                สิ้นสุดระยะเวลารับฟังความคิดเห็น
+                            </Badge>
+                            <Heading fontSize={{ base: "xl", md: "2xl" }} color="gray.800" mb={3}>
+                                แบบประเมินปิดรับคำตอบแล้ว
+                            </Heading>
+                            <Text color="gray.600" fontSize="md" mb={6} lineHeight="tall">
+                                ทางคณะผู้จัดงานขอขอบพระคุณทุกท่านที่ได้เข้าร่วมงาน KMUTT Open House <br />
+                                และได้สละเวลาร่วมตอบแบบประเมินเพื่อนำไปพัฒนาการจัดงานในครั้งต่อไป
+                            </Text>
+                            <Button
+                                colorScheme="orange"
+                                size="lg"
+                                rounded="xl"
+                                w="100%"
+                                onClick={() => router.push("/")}
+                            >
+                                กลับหน้าหลัก
+                            </Button>
+                        </CardBody>
+                    </Card>
+                </Center>
+            </Box>
+        )
+    }
+
     return (
         <Box
             minH="100vh"
@@ -368,9 +588,16 @@ export const PublicSurvey = () => {
                     borderColor={borderColor}
                     mb={6}
                 >
-                    <Badge colorScheme="orange" px={2.5} py={0.5} rounded="md" mb={2}>
-                        KMUTT Open House · ร้อยเอ็ด
-                    </Badge>
+                    <HStack justify="space-between" align="center" mb={2}>
+                        <Badge colorScheme="orange" px={2.5} py={0.5} rounded="md">
+                            KMUTT Open House · ร้อยเอ็ด
+                        </Badge>
+                        {isPreview && (
+                            <Badge colorScheme="purple" px={2} py={0.5} rounded="md">
+                                โหมดพรีวิว (Admin Preview)
+                            </Badge>
+                        )}
+                    </HStack>
                     <Heading fontSize={{ base: "xl", md: "2xl" }} color="orange.600" mb={2}>
                         แบบสอบถาม เปิดเฮือน มจธ.
                     </Heading>
@@ -449,7 +676,7 @@ export const PublicSurvey = () => {
                                     2. มาจากจังหวัด <Text as="span" color="red.500">*</Text>
                                 </Text>
                                 <Flex wrap="wrap" gap={2}>
-                                    {PROVINCES.map((p) => {
+                                    {provinces.map((p: string) => {
                                         const isSelected = province === p
                                         return (
                                             <Button
@@ -476,7 +703,7 @@ export const PublicSurvey = () => {
                                     (เลือกได้หลายข้อ)
                                 </Text>
                                 <Flex wrap="wrap" gap={2}>
-                                    {SOURCE_CHANNELS.map((src) => {
+                                    {sourceChannelsList.map((src: string) => {
                                         const isSelected = sourceChannels.includes(src)
                                         return (
                                             <Button
@@ -512,7 +739,7 @@ export const PublicSurvey = () => {
                                         4. กำลังเรียนชั้น <Text as="span" color="red.500">*</Text>
                                     </Text>
                                     <Flex wrap="wrap" gap={2}>
-                                        {STUDENT_GRADES.map((g) => (
+                                        {studentGrades.map((g: string) => (
                                             <Button
                                                 key={g}
                                                 size="sm"
@@ -533,7 +760,7 @@ export const PublicSurvey = () => {
                                         5. แผนการเรียน <Text as="span" color="red.500">*</Text>
                                     </Text>
                                     <Flex wrap="wrap" gap={2}>
-                                        {STUDENT_STREAMS.map((st) => (
+                                        {studentStreams.map((st: string) => (
                                             <Button
                                                 key={st}
                                                 size="sm"
@@ -557,7 +784,7 @@ export const PublicSurvey = () => {
                                         (เลือกได้ไม่เกิน 2 ข้อ · เลือกแล้ว {interestedFaculty.length}/2)
                                     </Text>
                                     <Flex wrap="wrap" gap={2}>
-                                        {STUDENT_FACULTIES.map((fac) => {
+                                        {studentFaculties.map((fac: string) => {
                                             const isSelected = interestedFaculty.includes(fac)
                                             return (
                                                 <Button
@@ -591,7 +818,7 @@ export const PublicSurvey = () => {
                                         (เลือกได้ไม่เกิน 3 ข้อ · เลือกแล้ว {decisionFactors.length}/3)
                                     </Text>
                                     <Flex wrap="wrap" gap={2}>
-                                        {STUDENT_FACTORS.map((fact) => {
+                                        {studentFactors.map((fact: string) => {
                                             const isSelected = decisionFactors.includes(fact)
                                             return (
                                                 <Button
@@ -617,12 +844,12 @@ export const PublicSurvey = () => {
                                 </Box>
 
                                 {/* Q8: Worry */}
-                                <Box>
+                                <Box mb={6}>
                                     <Text fontWeight="semibold" fontSize="md" mb={3} color={textColor}>
                                         8. ถ้าจะมาเรียน มจธ. กังวลเรื่องใดที่สุด <Text as="span" color="red.500">*</Text>
                                     </Text>
                                     <Flex wrap="wrap" gap={2}>
-                                        {STUDENT_WORRIES.map((w) => (
+                                        {studentWorries.map((w: string) => (
                                             <Button
                                                 key={w}
                                                 size="sm"
@@ -636,6 +863,103 @@ export const PublicSurvey = () => {
                                         ))}
                                     </Flex>
                                 </Box>
+
+                                {/* Q9: 3 พระจอม Ranking Question (Dynamic) */}
+                                {threeJomConfig.enabled && (
+                                    <Box
+                                        p={{ base: 4, md: 5 }}
+                                        rounded="2xl"
+                                        bg={useColorModeValue("orange.50", "whiteAlpha.100")}
+                                        border="1px solid"
+                                        borderColor={useColorModeValue("orange.200", "orange.700")}
+                                        mb={2}
+                                    >
+                                        <HStack justify="space-between" align="center" mb={1}>
+                                            <HStack spacing={2}>
+                                                <Icon as={Award} color="orange.500" />
+                                                <Text fontWeight="bold" fontSize="md" color={textColor}>
+                                                    9. {threeJomConfig.title || "ความสนใจในกลุ่ม 3 พระจอม (เรียงลำดับ 1-3)"}
+                                                </Text>
+                                            </HStack>
+                                            {threeJomRanking.length > 0 && (
+                                                <Button
+                                                    size="xs"
+                                                    variant="ghost"
+                                                    leftIcon={<Icon as={RotateCcw} />}
+                                                    onClick={handleResetThreeJom}
+                                                    colorScheme="orange"
+                                                >
+                                                    รีเซ็ต
+                                                </Button>
+                                            )}
+                                        </HStack>
+                                        <Text fontSize="xs" color={mutedColor} mb={4}>
+                                            แตะที่สถาบันตามลำดับที่ท่านชื่นชอบมากที่สุดไปน้อยที่สุด (อันดับ 1 ➔ อันดับ 2 ➔ อันดับ 3)
+                                        </Text>
+
+                                        <VStack spacing={2.5} align="stretch">
+                                            {threeJomConfig.options.map((opt: string) => {
+                                                const rankIndex = threeJomRanking.indexOf(opt)
+                                                const isRanked = rankIndex !== -1
+                                                const rankBadges = ["🥇 อันดับ 1", "🥈 อันดับ 2", "🥉 อันดับ 3"]
+
+                                                return (
+                                                    <Box
+                                                        key={opt}
+                                                        p={3.5}
+                                                        rounded="xl"
+                                                        border="2px solid"
+                                                        borderColor={isRanked ? "orange.400" : borderColor}
+                                                        bg={isRanked ? useColorModeValue("white", "gray.800") : useColorModeValue("whiteAlpha.700", "gray.750")}
+                                                        cursor="pointer"
+                                                        onClick={() => handleToggleThreeJom(opt)}
+                                                        transition="all 0.2s"
+                                                        _hover={{ borderColor: "orange.300", transform: "translateY(-1px)" }}
+                                                    >
+                                                        <Flex justify="space-between" align="center">
+                                                            <Text
+                                                                fontSize="sm"
+                                                                fontWeight={isRanked ? "bold" : "medium"}
+                                                                color={isRanked ? "orange.600" : textColor}
+                                                            >
+                                                                {opt}
+                                                            </Text>
+                                                            {isRanked ? (
+                                                                <Badge
+                                                                    colorScheme={rankIndex === 0 ? "orange" : rankIndex === 1 ? "blue" : "purple"}
+                                                                    fontSize="xs"
+                                                                    px={2.5}
+                                                                    py={1}
+                                                                    rounded="full"
+                                                                >
+                                                                    {rankBadges[rankIndex] || `อันดับ ${rankIndex + 1}`}
+                                                                </Badge>
+                                                            ) : (
+                                                                <Badge variant="outline" colorScheme="gray" fontSize="2xs" px={2} py={0.5} rounded="md">
+                                                                    แตะเพื่อเลือก
+                                                                </Badge>
+                                                            )}
+                                                        </Flex>
+                                                    </Box>
+                                                )
+                                            })}
+                                        </VStack>
+
+                                        {threeJomRanking.length > 0 && (
+                                            <Box mt={3} pt={2} borderTop="1px dashed" borderColor="orange.200">
+                                                <Text fontSize="xs" color="gray.600">
+                                                    ลำดับที่คุณเลือก:{" "}
+                                                    {threeJomRanking.map((r, i) => (
+                                                        <strong key={r}>
+                                                            {i > 0 && " ➔ "}
+                                                            {i + 1}. {r.split(" - ")[0]}
+                                                        </strong>
+                                                    ))}
+                                                </Text>
+                                            </Box>
+                                        )}
+                                    </Box>
+                                )}
                             </Box>
                         )}
 
@@ -652,7 +976,7 @@ export const PublicSurvey = () => {
                                         4. บุตรหลานกำลังเรียนชั้น <Text as="span" color="red.500">*</Text>
                                     </Text>
                                     <Flex wrap="wrap" gap={2}>
-                                        {PARENT_GRADES.map((g) => (
+                                        {parentGrades.map((g: string) => (
                                             <Button
                                                 key={g}
                                                 size="sm"
@@ -676,7 +1000,7 @@ export const PublicSurvey = () => {
                                         (เลือกได้ไม่เกิน 2 ข้อ · เลือกแล้ว {parentWorries.length}/2)
                                     </Text>
                                     <Flex wrap="wrap" gap={2}>
-                                        {PARENT_WORRIES.map((pw) => {
+                                        {parentWorriesList.map((pw: string) => {
                                             const isSelected = parentWorries.includes(pw)
                                             return (
                                                 <Button
@@ -707,7 +1031,7 @@ export const PublicSurvey = () => {
                                         6. อยากได้ข้อมูลเรื่องใดเพิ่ม <Text as="span" color="red.500">*</Text>
                                     </Text>
                                     <Flex wrap="wrap" gap={2}>
-                                        {PARENT_INFO_NEEDED.map((info) => (
+                                        {parentInfoList.map((info: string) => (
                                             <Button
                                                 key={info}
                                                 size="sm"
@@ -728,7 +1052,7 @@ export const PublicSurvey = () => {
                                         7. สะดวกรับข่าวทางใด <Text as="span" color="red.500">*</Text>
                                     </Text>
                                     <Flex wrap="wrap" gap={2}>
-                                        {PARENT_CHANNELS.map((ch) => (
+                                        {parentChannelsList.map((ch: string) => (
                                             <Button
                                                 key={ch}
                                                 size="sm"
@@ -761,7 +1085,7 @@ export const PublicSurvey = () => {
                                         (เลือกได้ไม่เกิน 2 ข้อ · เลือกแล้ว {teacherNeeds.length}/2)
                                     </Text>
                                     <Flex wrap="wrap" gap={2}>
-                                        {TEACHER_NEEDS.map((tn) => {
+                                        {teacherNeedsList.map((tn: string) => {
                                             const isSelected = teacherNeeds.includes(tn)
                                             return (
                                                 <Button

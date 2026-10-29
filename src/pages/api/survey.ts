@@ -8,6 +8,38 @@ const secret = process.env.NEXTAUTH_SECRET
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
     try {
+      // Check if survey is open
+      const surveyConfigs = await prisma.landingConfig.findMany({
+        where: {
+          key: { in: ["surveyStatus", "surveyStartDate", "surveyEndDate"] },
+        },
+      });
+      const cfg: Record<string, string> = {};
+      surveyConfigs.forEach((c) => {
+        cfg[c.key] = c.value;
+      });
+
+      const surveyStatus = cfg.surveyStatus || "auto";
+      const startDate = new Date(cfg.surveyStartDate || "2026-10-30T00:00:00+07:00");
+      const endDate = new Date(cfg.surveyEndDate || "2026-11-06T23:59:59+07:00");
+      const now = new Date();
+
+      if (surveyStatus === "closed") {
+        return res.status(403).json({ error: "แบบสอบถามปิดรับคำตอบแล้ว" });
+      }
+      if (surveyStatus === "auto") {
+        if (now < startDate) {
+          return res.status(403).json({
+            error: "แบบสอบถามยังไม่เปิดให้ทำ (จะเปิดในวันกิจกรรม 30 ตุลาคม 2569)",
+          });
+        }
+        if (now > endDate) {
+          return res.status(403).json({
+            error: "แบบสอบถามปิดรับคำตอบแล้ว (สิ้นสุดระยะเวลาการประเมิน 1 สัปดาห์หลังกิจกรรม)",
+          });
+        }
+      }
+
       const {
         role,
         province,
@@ -31,6 +63,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         recommendIntent,
         overallSatisfaction,
         feedbackNote,
+        confusionRanking,
       } = req.body
 
       if (!role || !province) {
@@ -61,6 +94,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           recommendIntent: recommendIntent ? Number(recommendIntent) : null,
           overallSatisfaction: overallSatisfaction ? Number(overallSatisfaction) : null,
           feedbackNote: feedbackNote ? String(feedbackNote) : null,
+          confusionRanking: confusionRanking ? confusionRanking : undefined,
         },
       })
 

@@ -208,6 +208,7 @@ model PublicSurvey {
   recommendIntent               Int?     // อยากสมัคร/แนะนำแค่ไหน (1-5)
   overallSatisfaction           Int?     // ความพึงพอใจต่องาน (1-5)
   feedbackNote                  String?  @db.Text
+  confusionRanking              Json?    // 3 อันดับพระจอม
 
   createdAt                     DateTime @default(now())
 }
@@ -281,4 +282,22 @@ model LandingBooth {
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) @updatedAt
 }
+
+model LandingBanner {
+  id         Int      @id @default(autoincrement())
+  imageUrl   String   @db.VarChar(1000)
+  altText    String?  @db.VarChar(500)
+  linkUrl    String?  @db.VarChar(1000)
+  orderIndex Int      @default(0)
+  display    Boolean  @default(true)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+}
+
+model LandingConfig {
+  key        String   @id @db.VarChar(100)
+  value      String   @db.Text
+  updated_at DateTime @default(now()) @updatedAt
+}
+
 

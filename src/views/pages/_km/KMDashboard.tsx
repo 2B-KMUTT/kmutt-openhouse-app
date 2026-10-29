@@ -123,31 +123,55 @@ const KMDashboardPage = () => {
                         <Box>
                             <HStack spacing={2} mb={1}>
                                 <Badge colorScheme="orange" fontSize="xs" px={2} py={0.5} rounded="md">
-                                    ระบบจัดการหน้าแรก
+                                    ระบบจัดการหน้าแรก & แบบสอบถาม
                                 </Badge>
                                 <Text fontWeight="bold" fontSize={{ base: "sm", md: "md" }} color="#F04E23">
-                                    จัดการกำหนดการ & บูทกิจกรรมหน้าแรก (Landing Content)
+                                    ศูนย์ควบคุมข้อมูลหน้าแรก & แบบสอบถาม (Landing & Survey Control Center)
                                 </Text>
                             </HStack>
                             <Text fontSize="xs" color="gray.500">
-                                เพิ่ม แก้ไข ลบ กำหนดการจัดกิจกรรม (เวลา) และ บูทแนะนำหลักสูตร (โซน 1, โซน 2, โซน 3)
+                                จัดการ Banner (รูปเดียว/สไลด์), ข้อความหน้าแรก, กำหนดการ, บูทโซน 1-3 และแบบสอบถาม 3 พระจอม
                             </Text>
                         </Box>
-                        <HStack spacing={3} wrap="wrap">
+                        <HStack spacing={2} wrap="wrap">
                             <Button
-                                size="sm"
+                                size="xs"
+                                colorScheme="orange"
+                                variant="outline"
+                                onClick={() => router.push("/_km/landing-banner")}
+                            >
+                                🖼️ จัดการ Banner (สไลด์)
+                            </Button>
+                            <Button
+                                size="xs"
+                                colorScheme="orange"
+                                variant="outline"
+                                onClick={() => router.push("/_km/landing-settings")}
+                            >
+                                ⚙️ ข้อความหน้าแรก
+                            </Button>
+                            <Button
+                                size="xs"
                                 colorScheme="orange"
                                 variant="outline"
                                 onClick={() => router.push("/_km/landing-schedule")}
                             >
-                                จัดการกำหนดการ (Schedule)
+                                📅 กำหนดการ
                             </Button>
                             <Button
-                                size="sm"
+                                size="xs"
                                 colorScheme="orange"
+                                variant="outline"
                                 onClick={() => router.push("/_km/landing-booth")}
                             >
-                                จัดการบูท & โซน (Booths)
+                                🎪 บูท & โซน
+                            </Button>
+                            <Button
+                                size="xs"
+                                colorScheme="orange"
+                                onClick={() => router.push("/_km/survey-settings")}
+                            >
+                                📊 ตั้งค่าแบบสอบถาม (3 จอม)
                             </Button>
                         </HStack>
                     </Flex>
