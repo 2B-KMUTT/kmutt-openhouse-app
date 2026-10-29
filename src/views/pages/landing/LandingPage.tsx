@@ -30,8 +30,7 @@ import { useSession } from "next-auth/react";
 import FAQSection from "./FAQSection";
 import LogoutButton from "@/components/Auth/LogoutButton";
 
-const PRIMARY = "#FA4616"; // KMUTT Orange Red
-const SECONDARY = "#FFC233"; // KMUTT Yellow
+import { PRIMARY, SECONDARY } from "@/constants/colors";
 
 const LandingPage = () => {
     const [menuOpen, setMenuOpen] = useState(false);

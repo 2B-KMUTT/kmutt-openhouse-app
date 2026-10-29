@@ -43,6 +43,7 @@ import {
     ResponsiveContainer,
 } from "recharts"
 import Head from "next/head"
+import { PRIMARY } from "@/constants/colors"
 import * as XLSX from "xlsx"
 import { Download, RefreshCw, Users, ThumbsUp, HeartHandshake, School } from "lucide-react"
 
@@ -494,7 +495,7 @@ export default function SurveyReportPage() {
                             <Card p={5} rounded="xl" shadow="sm" borderWidth="1px" borderColor={borderColor}>
                                 <Stat>
                                     <Flex align="center" gap={2} mb={1}>
-                                        <Users size={18} color="#FA4616" />
+                                        <Users size={18} color={PRIMARY} />
                                         <StatLabel color={mutedColor} fontSize="sm">
                                             ผู้ตอบแบบสอบถามทั้งหมด
                                         </StatLabel>
@@ -603,7 +604,7 @@ export default function SurveyReportPage() {
                                                 />
                                                 <YAxis allowDecimals={false} />
                                                 <Tooltip />
-                                                <Bar dataKey="value" fill="#FA4616" radius={[4, 4, 0, 0]} />
+                                                <Bar dataKey="value" fill={PRIMARY} radius={[4, 4, 0, 0]} />
                                             </BarChart>
                                         </ResponsiveContainer>
                                     </Box>

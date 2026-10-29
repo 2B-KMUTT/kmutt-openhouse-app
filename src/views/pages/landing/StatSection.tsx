@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Box, Flex, Text, Spinner, useColorModeValue } from "@chakra-ui/react";
 
-const PRIMARY = "#FA4616"; // KMUTT Orange Red
+import { PRIMARY } from "@/constants/colors";
 
 type StatsResponse = {
     activitiesCount: number;

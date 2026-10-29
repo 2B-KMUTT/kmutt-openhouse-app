@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import { Box, Text, Button, HStack, useColorModeValue } from "@chakra-ui/react";
 import { FaLine } from "react-icons/fa";
 
-const PRIMARY = "#FA4616"; // KMUTT Orange Red
-const SECONDARY = "#FFC233"; // KMUTT Yellow
+import { PRIMARY, SECONDARY } from "@/constants/colors";
 
 const ContactSection = () => {
     const text = useColorModeValue("gray.800", "gray.200");

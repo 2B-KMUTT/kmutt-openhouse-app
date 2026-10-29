@@ -18,8 +18,7 @@ import { Menu, X, Moon, Sun } from "lucide-react";
 import { ReactNode, useState } from "react";
 import LogoutButton from "@/components/Auth/LogoutButton";
 
-const PRIMARY = "#FA4616"; // KMUTT Orange Red
-const SECONDARY = "#FFC233"; // KMUTT Yellow
+import { PRIMARY, SECONDARY } from "@/constants/colors";
 
 type StudentLayoutProps = {
     children: ReactNode

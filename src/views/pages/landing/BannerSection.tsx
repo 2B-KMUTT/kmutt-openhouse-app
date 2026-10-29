@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import { LandingBannerItem } from "@/interfaces/LandingContent";
+import { KMUTT_CI } from "@/constants/colors";
 
 const defaultBanner: LandingBannerItem = {
     id: 1,
@@ -27,7 +28,7 @@ const BannerSection = () => {
     const [isHovered, setIsHovered] = useState(false);
     const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-    const activeDotColor = useColorModeValue("#FA4616", "#FFC233");
+    const activeDotColor = useColorModeValue(KMUTT_CI.orange, KMUTT_CI.yellow);
     const inactiveDotColor = useColorModeValue("blackAlpha.400", "whiteAlpha.400");
 
     useEffect(() => {

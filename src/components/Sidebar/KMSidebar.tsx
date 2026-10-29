@@ -21,9 +21,9 @@ import {
 } from "react-icons/md"
 import { useRouter } from "next/router"
 import { signOut } from "next-auth/react"
+import { PRIMARY } from "@/constants/colors"
 
 const KMSidebar = () => {
-    const PRIMARY = "#FA4616"
     const bgColor = useColorModeValue("white", "gray.700")
     const hoverBg = useColorModeValue("gray.200", "gray.700")
     const textColor = useColorModeValue("gray.800", "gray.100")

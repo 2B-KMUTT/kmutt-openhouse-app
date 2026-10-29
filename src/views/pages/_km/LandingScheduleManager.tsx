@@ -56,7 +56,7 @@ import KMAppLayout from "@/views/layouts/KMAppLayout";
 import { LandingScheduleItem } from "@/interfaces/LandingContent";
 import Link from "next/link";
 
-const PRIMARY = "#FA4616";
+import { PRIMARY } from "@/constants/colors";
 
 const categoryColorOptions = [
     { label: "ส้ม (Orange)", value: "orange" },
@@ -456,7 +456,7 @@ export default function LandingScheduleManager() {
                                             </Td>
 
                                             {/* Time */}
-                                            <Td fontWeight="bold" color="#FA4616" whiteSpace="nowrap">
+                                            <Td fontWeight="bold" color={PRIMARY} whiteSpace="nowrap">
                                                 {item.time}
                                             </Td>
 
@@ -499,7 +499,7 @@ export default function LandingScheduleManager() {
                                                             borderColor={useColorModeValue("orange.200", "orange.700")}
                                                             w="full"
                                                         >
-                                                            <Text fontSize="xs" fontWeight="bold" color="#FA4616">
+                                                            <Text fontSize="xs" fontWeight="bold" color={PRIMARY}>
                                                                 {item.subSectionTitle}
                                                             </Text>
                                                             {item.subSectionItems?.map((zone, zIdx) => (

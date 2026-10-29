@@ -43,7 +43,7 @@ import KMAppLayout from "@/views/layouts/KMAppLayout";
 import Link from "next/link";
 import { DEFAULT_SURVEY_CONFIG } from "@/pages/api/survey/config";
 
-const PRIMARY = "#FA4616";
+import { PRIMARY } from "@/constants/colors";
 
 export default function SurveySettingsManager() {
     const cardBg = useColorModeValue("white", "gray.700");

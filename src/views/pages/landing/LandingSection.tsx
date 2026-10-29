@@ -15,9 +15,7 @@ import { Users, QrCode, BarChart3, GraduationCap } from "lucide-react";
 import Link from "next/link";
 import BoothSection from "./BoothSection";
 
-// KMUTT Colors
-const PRIMARY = "#FA4616"; // Orange Red
-const SECONDARY = "#FFC233"; // Yellow
+import { PRIMARY, SECONDARY } from "@/constants/colors";
 
 export function LandingSections() {
     const cardBg = useColorModeValue("whiteAlpha.800", "gray.800");

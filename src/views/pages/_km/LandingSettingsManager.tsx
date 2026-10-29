@@ -29,7 +29,7 @@ import KMAppLayout from "@/views/layouts/KMAppLayout";
 import Link from "next/link";
 import { DEFAULT_LANDING_CONFIG } from "@/interfaces/LandingContent";
 
-const PRIMARY = "#FA4616";
+import { PRIMARY } from "@/constants/colors";
 
 export default function LandingSettingsManager() {
     const cardBg = useColorModeValue("white", "gray.700");

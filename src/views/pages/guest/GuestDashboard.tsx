@@ -24,8 +24,7 @@ import { FaClipboardList } from "react-icons/fa"
 import { useRouter } from "next/router"
 import SurveyModal from "@/components/Modal/SurveyModal"
 
-const PRIMARY = "#FA4616"
-const SECONDARY = "#FFC233"
+import { PRIMARY, SECONDARY } from "@/constants/colors"
 
 type CheckIn = {
     facultyName: string

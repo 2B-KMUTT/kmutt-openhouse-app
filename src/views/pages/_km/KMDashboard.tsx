@@ -26,6 +26,7 @@ import { KMProfile } from "@/interfaces/KMProfile"
 import { Activity } from "@/interfaces/Activities"
 import { EditIcon } from "@chakra-ui/icons"
 import { useRouter } from "next/router"
+import { PRIMARY } from "@/constants/colors"
 
 const ITEMS_PER_PAGE = 5
 
@@ -125,7 +126,7 @@ const KMDashboardPage = () => {
                                 <Badge colorScheme="orange" fontSize="xs" px={2} py={0.5} rounded="md">
                                     ระบบจัดการหน้าแรก & แบบสอบถาม
                                 </Badge>
-                                <Text fontWeight="bold" fontSize={{ base: "sm", md: "md" }} color="#FA4616">
+                                <Text fontWeight="bold" fontSize={{ base: "sm", md: "md" }} color={PRIMARY}>
                                     ศูนย์ควบคุมข้อมูลหน้าแรก & แบบสอบถาม (Landing & Survey Control Center)
                                 </Text>
                             </HStack>

@@ -20,9 +20,7 @@ import Head from "next/head"
 import { LockIcon, CheckCircleIcon, ArrowBackIcon } from "@chakra-ui/icons"
 import Link from "next/link"
 
-// KMUTT Colors
-const PRIMARY = "#FA4616"
-const SECONDARY = "#FFC233"
+import { PRIMARY, SECONDARY } from "@/constants/colors"
 
 const ResetPasswordPage = () => {
     const router = useRouter()

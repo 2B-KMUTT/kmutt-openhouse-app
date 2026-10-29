@@ -26,9 +26,9 @@ import { FaClipboardList } from "react-icons/fa"
 
 import { GrCertificate, GrSearch, GrWorkshop } from "react-icons/gr";
 import { useRouter } from "next/router";
+import { PRIMARY } from "@/constants/colors";
 
 const StudentSidebar = () => {
-    const PRIMARY = "#FA4616"
     const bgColor = useColorModeValue("white", "gray.700")
     const hoverBg = useColorModeValue("gray.200", "gray.700")
     const textColor = useColorModeValue("gray.800", "gray.100")

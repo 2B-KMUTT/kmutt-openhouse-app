@@ -50,7 +50,7 @@ import KMAppLayout from "@/views/layouts/KMAppLayout";
 import { LandingBannerItem } from "@/interfaces/LandingContent";
 import Link from "next/link";
 
-const PRIMARY = "#FA4616";
+import { PRIMARY } from "@/constants/colors";
 
 export default function LandingBannerManager() {
     const cardBg = useColorModeValue("white", "gray.700");

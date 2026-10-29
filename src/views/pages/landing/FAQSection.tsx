@@ -12,6 +12,7 @@ import {
     Card,
     CardBody,
 } from "@chakra-ui/react";
+import { PRIMARY } from "@/constants/colors";
 
 type FAQ = {
     id: number;
@@ -99,7 +100,7 @@ e-Stamp: ตราประทับอิเล็กทรอนิกส์�
 const FAQSection = () => {
     return (
         <Box py={12} px={6} maxW="900px" mx="auto">
-            <Heading mb={8} textAlign="center" color="#FA4616">
+            <Heading mb={8} textAlign="center" color={PRIMARY}>
                 คำถามที่พบบ่อย
             </Heading>
 

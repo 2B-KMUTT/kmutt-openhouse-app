@@ -25,6 +25,79 @@ import {
 import { useRouter } from "next/router"
 import Head from "next/head"
 import { CheckCircle2, AlertCircle, Clock, Lock } from "lucide-react"
+import { KMUTT_CI, PRIMARY } from "@/constants/colors"
+
+// Sub-component for perfectly aligned Rating Scales (1 - 5)
+const RatingScale = ({
+    value,
+    onChange,
+    labels = { 1: "น้อย", 3: "กลาง", 5: "มาก" },
+}: {
+    value: number | null
+    onChange: (val: number) => void
+    labels?: Record<number, string>
+}) => {
+    const borderColor = useColorModeValue("gray.200", "gray.600")
+    const textColor = useColorModeValue("gray.800", "gray.100")
+    const hoverBg = useColorModeValue("orange.50", "whiteAlpha.100")
+
+    return (
+        <HStack spacing={{ base: 2, md: 3 }} justify="space-between" w="100%">
+            {[1, 2, 3, 4, 5].map((val) => {
+                const isSelected = value === val
+                const labelText = labels[val] || "\u00A0"
+
+                return (
+                    <Button
+                        key={val}
+                        flex={1}
+                        h={{ base: "54px", md: "58px" }}
+                        variant={isSelected ? "solid" : "outline"}
+                        bg={isSelected ? KMUTT_CI.orange : "transparent"}
+                        color={isSelected ? "white" : textColor}
+                        borderColor={isSelected ? KMUTT_CI.orange : borderColor}
+                        _hover={{
+                            bg: isSelected ? KMUTT_CI.orangeHover : hoverBg,
+                            borderColor: KMUTT_CI.orange,
+                            transform: "translateY(-1px)",
+                        }}
+                        rounded="xl"
+                        onClick={() => onChange(val)}
+                        p={0}
+                        transition="all 0.15s ease"
+                    >
+                        <Flex
+                            direction="column"
+                            align="center"
+                            justify="center"
+                            w="100%"
+                            h="100%"
+                            py={1}
+                        >
+                            <Text
+                                fontWeight="bold"
+                                fontSize={{ base: "md", md: "lg" }}
+                                lineHeight="1"
+                                mb={1.5}
+                            >
+                                {val}
+                            </Text>
+                            <Text
+                                fontSize="2xs"
+                                lineHeight="1.2"
+                                minH="14px"
+                                opacity={isSelected ? 0.95 : 0.6}
+                                fontWeight={isSelected ? "semibold" : "normal"}
+                            >
+                                {labelText}
+                            </Text>
+                        </Flex>
+                    </Button>
+                )
+            })}
+        </HStack>
+    )
+}
 
 // Default Options constants
 const DEFAULT_PROVINCES = [
@@ -961,31 +1034,10 @@ export const PublicSurvey = () => {
                                     <Text fontSize="xs" color={mutedColor} mb={3}>
                                         (สเกล 1 = น้อยที่สุด, 5 = มากที่สุด)
                                     </Text>
-                                    <HStack spacing={{ base: 2, md: 4 }} justify="space-between">
-                                        {[1, 2, 3, 4, 5].map((val) => {
-                                            const isSelected = teacherCreditTransferInterest === val
-                                            return (
-                                                <Button
-                                                    key={val}
-                                                    flex={1}
-                                                    h={{ base: "48px", md: "52px" }}
-                                                    variant={isSelected ? "solid" : "outline"}
-                                                    colorScheme="orange"
-                                                    rounded="xl"
-                                                    onClick={() => setTeacherCreditTransferInterest(val)}
-                                                >
-                                                    <VStack spacing={0}>
-                                                        <Text fontWeight="bold" fontSize="md">
-                                                            {val}
-                                                        </Text>
-                                                        <Text fontSize="2xs" opacity={0.8}>
-                                                            {val === 1 ? "น้อย" : val === 3 ? "กลาง" : val === 5 ? "มาก" : ""}
-                                                        </Text>
-                                                    </VStack>
-                                                </Button>
-                                            )
-                                        })}
-                                    </HStack>
+                                    <RatingScale
+                                        value={teacherCreditTransferInterest}
+                                        onChange={setTeacherCreditTransferInterest}
+                                    />
                                 </Box>
 
                                 {/* Q6: School Contact */}
@@ -1026,31 +1078,10 @@ export const PublicSurvey = () => {
                                 <Text fontSize="xs" color={mutedColor} mb={3}>
                                     (1 = น้อยที่สุด, 5 = มากที่สุด)
                                 </Text>
-                                <HStack spacing={{ base: 2, md: 4 }} justify="space-between">
-                                    {[1, 2, 3, 4, 5].map((val) => {
-                                        const isSelected = recommendIntent === val
-                                        return (
-                                            <Button
-                                                key={val}
-                                                flex={1}
-                                                h={{ base: "48px", md: "52px" }}
-                                                variant={isSelected ? "solid" : "outline"}
-                                                colorScheme="orange"
-                                                rounded="xl"
-                                                onClick={() => setRecommendIntent(val)}
-                                            >
-                                                <VStack spacing={0}>
-                                                    <Text fontWeight="bold" fontSize="md">
-                                                        {val}
-                                                    </Text>
-                                                    <Text fontSize="2xs" opacity={0.8}>
-                                                        {val === 1 ? "น้อย" : val === 3 ? "กลาง" : val === 5 ? "มาก" : ""}
-                                                    </Text>
-                                                </VStack>
-                                            </Button>
-                                        )
-                                    })}
-                                </HStack>
+                                <RatingScale
+                                    value={recommendIntent}
+                                    onChange={setRecommendIntent}
+                                />
                             </Box>
 
                             {/* Satisfaction */}
@@ -1061,31 +1092,10 @@ export const PublicSurvey = () => {
                                 <Text fontSize="xs" color={mutedColor} mb={3}>
                                     (1 = น้อยที่สุด, 5 = มากที่สุด)
                                 </Text>
-                                <HStack spacing={{ base: 2, md: 4 }} justify="space-between">
-                                    {[1, 2, 3, 4, 5].map((val) => {
-                                        const isSelected = overallSatisfaction === val
-                                        return (
-                                            <Button
-                                                key={val}
-                                                flex={1}
-                                                h={{ base: "48px", md: "52px" }}
-                                                variant={isSelected ? "solid" : "outline"}
-                                                colorScheme="orange"
-                                                rounded="xl"
-                                                onClick={() => setOverallSatisfaction(val)}
-                                            >
-                                                <VStack spacing={0}>
-                                                    <Text fontWeight="bold" fontSize="md">
-                                                        {val}
-                                                    </Text>
-                                                    <Text fontSize="2xs" opacity={0.8}>
-                                                        {val === 1 ? "น้อย" : val === 3 ? "กลาง" : val === 5 ? "มาก" : ""}
-                                                    </Text>
-                                                </VStack>
-                                            </Button>
-                                        )
-                                    })}
-                                </HStack>
+                                <RatingScale
+                                    value={overallSatisfaction}
+                                    onChange={setOverallSatisfaction}
+                                />
                             </Box>
 
                             {/* Feedback Note */}

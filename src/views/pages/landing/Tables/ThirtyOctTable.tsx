@@ -19,6 +19,7 @@ import {
 } from "@chakra-ui/react";
 import { Clock, CheckCircle2, Coffee } from "lucide-react";
 import { LandingScheduleItem } from "@/interfaces/LandingContent";
+import { PRIMARY } from "@/constants/colors";
 
 const defaultScheduleData: LandingScheduleItem[] = [
     {
@@ -184,7 +185,7 @@ const ThirtyOctTable: React.FC<ThirtyOctTableProps> = ({ filter = "all" }) => {
                     <Thead bg={headBg}>
                         <Tr>
                             <Th
-                                color="#FA4616"
+                                color={PRIMARY}
                                 fontSize="sm"
                                 py={4}
                                 width={{ base: "40%", sm: "30%", md: "25%" }}
@@ -197,7 +198,7 @@ const ThirtyOctTable: React.FC<ThirtyOctTableProps> = ({ filter = "all" }) => {
                                 </HStack>
                             </Th>
                             <Th
-                                color="#FA4616"
+                                color={PRIMARY}
                                 fontSize="sm"
                                 py={4}
                                 textTransform="none"
@@ -225,7 +226,7 @@ const ThirtyOctTable: React.FC<ThirtyOctTableProps> = ({ filter = "all" }) => {
                                         <Text
                                             fontWeight="bold"
                                             fontSize={{ base: "xs", sm: "sm", md: "md" }}
-                                            color="#FA4616"
+                                            color={PRIMARY}
                                             whiteSpace={{ base: "normal", sm: "nowrap" }}
                                             lineHeight="1.4"
                                         >
@@ -282,7 +283,7 @@ const ThirtyOctTable: React.FC<ThirtyOctTableProps> = ({ filter = "all" }) => {
                                                         >
                                                             <ListIcon
                                                                 as={CheckCircle2}
-                                                                color="#FA4616"
+                                                                color={PRIMARY}
                                                                 mt="3px"
                                                                 boxSize="14px"
                                                                 flexShrink={0}
@@ -307,7 +308,7 @@ const ThirtyOctTable: React.FC<ThirtyOctTableProps> = ({ filter = "all" }) => {
                                                         <Text
                                                             fontWeight="semibold"
                                                             fontSize={{ base: "xs", sm: "sm" }}
-                                                            color="#FA4616"
+                                                            color={PRIMARY}
                                                             mb={2}
                                                         >
                                                             {item.subSectionTitle}
@@ -324,7 +325,7 @@ const ThirtyOctTable: React.FC<ThirtyOctTableProps> = ({ filter = "all" }) => {
                                                                     color={subTextColor}
                                                                     lineHeight="1.5"
                                                                 >
-                                                                    <Text mr={2} color="#FA4616" fontWeight="bold">
+                                                                    <Text mr={2} color={PRIMARY} fontWeight="bold">
                                                                         •
                                                                     </Text>
                                                                     <Text wordBreak="break-word">{zone}</Text>

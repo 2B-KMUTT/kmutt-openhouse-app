@@ -47,7 +47,7 @@ import KMAppLayout from "@/views/layouts/KMAppLayout";
 import { LandingBoothItem } from "@/interfaces/LandingContent";
 import Link from "next/link";
 
-const PRIMARY = "#FA4616";
+import { PRIMARY } from "@/constants/colors";
 
 export default function LandingBoothManager() {
     const cardBg = useColorModeValue("white", "gray.700");

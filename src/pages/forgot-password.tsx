@@ -20,9 +20,7 @@ import Link from "next/link"
 import { ArrowBackIcon, EmailIcon } from "@chakra-ui/icons"
 import Head from "next/head"
 
-// KMUTT Colors
-const PRIMARY = "#FA4616"
-const SECONDARY = "#FFC233"
+import { PRIMARY, SECONDARY } from "@/constants/colors"
 
 export default function ForgotPasswordPage() {
     const [email, setEmail] = useState("")

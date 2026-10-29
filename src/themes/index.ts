@@ -1,5 +1,6 @@
 import { extendTheme, ThemeConfig } from "@chakra-ui/react";
 import { mode, StyleFunctionProps } from "@chakra-ui/theme-tools";
+import { KMUTT_CI } from "@/constants/colors";
 
 const breakpoints = {
   sm: "23.5em",
@@ -61,19 +62,40 @@ const theme = extendTheme({
       900: "#07184A",
     },
     primary: {
-      50: "#EEF2FF",
+      50: KMUTT_CI.orangeLight,
       100: "#FFCABE",
       200: "#FFA592",
       300: "#FF8165",
       400: "#F35836",
-      500: "#D14323",
-      600: "#AF3014",
+      500: KMUTT_CI.orange,
+      600: KMUTT_CI.orangeHover,
       700: "#8D2109",
       800: "#6B1401",
       900: "#490D00",
     },
-    kmutt:{
-      100: "#FA4616",
+    kmutt: {
+      50: KMUTT_CI.orangeLight,
+      100: "#FFD5C8",
+      200: "#FFAA91",
+      300: "#FF805B",
+      400: "#FA5B2D",
+      500: KMUTT_CI.orange,
+      600: KMUTT_CI.orangeHover,
+      700: "#B82A05",
+      800: "#8A1C00",
+      900: "#5C1100",
+    },
+    orange: {
+      50: KMUTT_CI.orangeLight,
+      100: "#FFD5C8",
+      200: "#FFAA91",
+      300: "#FF805B",
+      400: "#FA5B2D",
+      500: KMUTT_CI.orange,
+      600: KMUTT_CI.orangeHover,
+      700: "#B82A05",
+      800: "#8A1C00",
+      900: "#5C1100",
     },
     grayScale: {
       50: "#EDF2F7",

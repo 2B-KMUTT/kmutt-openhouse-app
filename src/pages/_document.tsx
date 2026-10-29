@@ -1,4 +1,5 @@
 import { Html, Head, Main, NextScript } from "next/document";
+import { KMUTT_CI } from "@/constants/colors";
 
 export default function Document() {
   return (
@@ -21,7 +22,7 @@ export default function Document() {
         <link rel="icon" href="/favicon.ico" />
 
         {/* Theme color */}
-        <meta name="theme-color" content="#FA4616" />
+        <meta name="theme-color" content={KMUTT_CI.orange} />
 
         {/* Open Graph / Facebook */}
         <meta property="og:title" content="KMUTT Open House 2025 - A Journey of Discovery" />

@@ -19,8 +19,7 @@ import { ReactNode, useState } from "react";
 import Image from "next/image";
 import LogoutButton from "@/components/Auth/LogoutButton";
 
-const PRIMARY = "#FA4616"; // KMUTT Orange Red
-const SECONDARY = "#FFC233"; // KMUTT Yellow
+import { PRIMARY, SECONDARY } from "@/constants/colors";
 
 type StaffLayoutProps = {
     children: ReactNode;

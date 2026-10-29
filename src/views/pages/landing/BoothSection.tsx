@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { Container, Box, Heading, SimpleGrid, Text, VStack, Stack, Badge, useColorModeValue } from "@chakra-ui/react";
 import { LandingBoothItem } from "@/interfaces/LandingContent";
 
-const PRIMARY = "#FA4616"; // KMUTT Orange Red
-const SECONDARY = "#FFC233"; // KMUTT Yellow
+import { PRIMARY, SECONDARY } from "@/constants/colors";
 
 const defaultBoothData: LandingBoothItem[] = [
     {

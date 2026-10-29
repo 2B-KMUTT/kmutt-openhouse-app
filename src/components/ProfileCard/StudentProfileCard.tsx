@@ -10,7 +10,7 @@ import {
     useColorModeValue,
 } from "@chakra-ui/react"
 
-const PRIMARY = "#FA4616"
+import { PRIMARY } from "@/constants/colors"
 import { StudentProfile } from "@/interfaces/KMProfile"
 
 const StudentProfileCard = ({ data }: { data: StudentProfile }) => {
