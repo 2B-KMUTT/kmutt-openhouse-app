@@ -13,7 +13,7 @@
   - `Students` table stores `"student"` (`/app/dashboard`) and `"parent" | "teacher" | "guest"` (`/guest/dashboard`).
 - **Non-unique identifier lookup**: In the `Students` table, only `email` and `uuid` are unique (`phone`, `citizen_id`, and `passport_id` may be shared across family members or null). Always use `findMany` and verify `bcrypt.compare` across all matched rows rather than `findFirst`.
 - **Input sanitization**: Always `.trim()` user-supplied login/registration identifiers (`email`, `username`, `phone`, `citizen_id`, `passport_id`) before querying or persisting.
-- **PrismaClient singleton**: Reuse `globalThis.prisma` in Next.js API routes to prevent connection pool exhaustion during hot reloads and concurrent requests.
+- **PrismaClient singleton**: Reuse `globalThis.prisma` in Next.js API routes or import the singleton from `@/libs/prisma` to prevent connection pool exhaustion during hot reloads and concurrent requests. Never instantiate `new PrismaClient()` directly in API route handlers.
 
 ## Landing CMS & Config Key Rules
 

@@ -38,7 +38,6 @@ export function getS3Config(): S3Config {
 let _moduleS3ClientInstance: S3Client | undefined;
 
 declare global {
-  // eslint-disable-next-line no-var
   var _s3ClientInstance: S3Client | undefined;
 }
 
@@ -97,14 +96,16 @@ export async function ensureBucketExists(bucketName?: string): Promise<string> {
 
   try {
     await s3.send(new HeadBucketCommand({ Bucket: targetBucket }));
-  } catch (err: any) {
-    if (err.name === "NotFound" || err.$metadata?.httpStatusCode === 404) {
+  } catch (err: unknown) {
+    const errorObj = err as { name?: string; $metadata?: { httpStatusCode?: number } };
+    if (errorObj?.name === "NotFound" || errorObj?.$metadata?.httpStatusCode === 404) {
       await s3.send(new CreateBucketCommand({ Bucket: targetBucket }));
     } else {
       try {
         await s3.send(new CreateBucketCommand({ Bucket: targetBucket }));
-      } catch (createErr: any) {
-        if (createErr.name !== "BucketAlreadyOwnedByYou" && createErr.name !== "BucketAlreadyExists") {
+      } catch (createErr: unknown) {
+        const createErrObj = createErr as { name?: string };
+        if (createErrObj?.name !== "BucketAlreadyOwnedByYou" && createErrObj?.name !== "BucketAlreadyExists") {
           throw createErr;
         }
       }
