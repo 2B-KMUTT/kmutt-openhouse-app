@@ -11,6 +11,7 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test:auth": "node scripts/verify-auth-roles.js",
+    "test:superadmin": "node scripts/verify-superadmin-activities.js",
     "seed": "node prisma/seed.js",
     "seed:force": "node prisma/seed.js --force",
     "seed:admins": "node prisma/seed.js --admins-only",

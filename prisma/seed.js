@@ -309,6 +309,7 @@ async function generateAdminAccounts(options = {}) {
   const csvRecords = [];
 
   for (const admin of combinedAdmins) {
+    const role = (admin.username === "KM_admin" || admin.username === "superadmin") ? "SUPER_ADMIN" : "ADMIN";
     const existing = await prisma.admins.findFirst({
       where: {
         OR: [
@@ -331,10 +332,11 @@ async function generateAdminAccounts(options = {}) {
             email: admin.email,
             name: admin.name,
             password_hash: hashedPassword,
+            role,
           },
         });
         passwordForCsv = password;
-        console.log(`[PASSWORD RESET] ${admin.username} (${admin.name})`);
+        console.log(`[PASSWORD RESET] ${admin.username} (${admin.name}) [Role: ${role}]`);
       } else {
         await prisma.admins.update({
           where: { id: existing.id },
@@ -342,10 +344,11 @@ async function generateAdminAccounts(options = {}) {
             username: admin.username,
             email: admin.email,
             name: admin.name,
+            role,
           },
         });
         passwordForCsv = "[PRESERVED - UNCHANGED]";
-        console.log(`[PRESERVED] ${admin.username} (${admin.name}) - existing credentials kept`);
+        console.log(`[PRESERVED] ${admin.username} (${admin.name}) [Role: ${role}] - existing credentials kept`);
       }
     } else {
       const password = generateOpenSSLPassword(32);
@@ -356,6 +359,7 @@ async function generateAdminAccounts(options = {}) {
           email: admin.email,
           name: admin.name,
           password_hash: hashedPassword,
+          role,
         },
       });
       passwordForCsv = password;
@@ -406,15 +410,17 @@ async function resolveAdminId(adminUsername, fallbackName, fallbackEmail) {
   if (!admin) {
     const adminPassword = generateOpenSSLPassword(32);
     const hashedPassword = await bcrypt.hash(adminPassword, 10);
+    const role = (adminUsername === "KM_admin" || adminUsername === "superadmin") ? "SUPER_ADMIN" : "ADMIN";
     admin = await prisma.admins.create({
       data: {
         username: adminUsername,
         email: fallbackEmail,
         name: fallbackName,
         password_hash: hashedPassword,
+        role,
       },
     });
-    console.log(`[+] Auto-created missing Admin record: ${adminUsername} (ID: ${admin.id})`);
+    console.log(`[+] Auto-created missing Admin record: ${adminUsername} (ID: ${admin.id}) [Role: ${role}]`);
   }
 
   return admin.id;

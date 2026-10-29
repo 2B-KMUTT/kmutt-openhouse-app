@@ -1,0 +1,10 @@
+node_modules
+.next/cache
+mysql-data
+mysql-data-prod
+nginx_logs
+.git
+.env*
+public/images/*.old.*
+*.log
+.DS_Store

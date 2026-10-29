@@ -52,12 +52,18 @@ model TakePicture {
   student Students @relation(fields: [studentId], references: [id])
 }
 
+enum AdminRole {
+  SUPER_ADMIN
+  ADMIN
+}
+
 model Admins {
   id            Int          @id @default(autoincrement())
   username      String       @unique
   password_hash String
   email         String       @unique
   name          String
+  role          AdminRole    @default(ADMIN)
   created_at    DateTime     @default(now())
   Activities    Activities[]
   Staffs        Staffs[]

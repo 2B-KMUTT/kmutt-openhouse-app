@@ -2,7 +2,8 @@
   {
     "username": "superadmin",
     "email": "superadmin@openhouse.kmutt.ac.th",
-    "name": "ผู้ดูแลระบบส่วนกลาง (Super Admin)"
+    "name": "ผู้ดูแลระบบส่วนกลาง (Super Admin)",
+    "role": "SUPER_ADMIN"
   },
   {
     "username": "KM_cpe",
@@ -207,7 +208,8 @@
   {
     "username": "KM_admin",
     "email": "admin@openhouse.kmutt.ac.th",
-    "name": "admin"
+    "name": "admin",
+    "role": "SUPER_ADMIN"
   },
   {
     "username": "KM_lisa",

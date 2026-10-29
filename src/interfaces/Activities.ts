@@ -16,6 +16,12 @@ export interface Activity {
   round: number;
   activity_type: string;
   created_at: string;     // วันที่สร้างกิจกรรม
+  ownerId?: number;
+  owner?: {
+    id: number;
+    username: string;
+    name: string;
+  } | null;
   department: {
     id: number;
     name_th: string;
