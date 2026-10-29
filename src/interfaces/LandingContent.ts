@@ -54,6 +54,27 @@ export const DEFAULT_LANDING_CONFIG = {
   coordinatorEmail: "admission@kmutt.ac.th",
 };
 
+export type KnownLandingConfigKey =
+  | "heroTitle"
+  | "heroSubtitle"
+  | "heroDateText"
+  | "heroLocationText"
+  | "eventDateTh"
+  | "eventLocationTh"
+  | "eventDateEn"
+  | "eventLocationEn"
+  | "regisDeadlineText"
+  | "regisLink"
+  | "mapUrl"
+  | "coordinatorName"
+  | "coordinatorPhone"
+  | "coordinatorEmail"
+  | "openChatLink"
+  | "surveyStatus"
+  | "surveyStartDate"
+  | "surveyEndDate"
+  | "surveyConfig";
+
 export interface LandingConfigMap {
   heroTitle?: string;
   heroSubtitle?: string;

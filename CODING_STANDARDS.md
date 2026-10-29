@@ -14,3 +14,13 @@
 - **Non-unique identifier lookup**: In the `Students` table, only `email` and `uuid` are unique (`phone`, `citizen_id`, and `passport_id` may be shared across family members or null). Always use `findMany` and verify `bcrypt.compare` across all matched rows rather than `findFirst`.
 - **Input sanitization**: Always `.trim()` user-supplied login/registration identifiers (`email`, `username`, `phone`, `citizen_id`, `passport_id`) before querying or persisting.
 - **PrismaClient singleton**: Reuse `globalThis.prisma` in Next.js API routes to prevent connection pool exhaustion during hot reloads and concurrent requests.
+
+## Landing CMS & Config Key Rules
+
+- **Bidirectional key synchronization**: To prevent key mismatches between back-office and front-end, always keep `heroLocationText` ⟷ `eventLocationTh` and `heroDateText` ⟷ `eventDateTh` synchronized in both `/api/km/landing/config` (PUT/GET) and `/api/landing/config` (GET).
+- **TypeScript typed keys**: Reference `KnownLandingConfigKey` in `src/interfaces/LandingContent.ts` when introducing or querying config entries.
+
+## Git & PR Workflow Rules
+
+- **Branch before coding**: Never accumulate multiple uncommitted features on local `main`. Always create a descriptive branch (`fix/<slug>` or `feat/<slug>`) branched from `origin/main` before implementing changes.
+- **Atomic commits**: Keep commits focused and granular following Conventional Commits (`fix:`, `feat:`, `chore:`, `docs:`, `ci:`, `test:`).

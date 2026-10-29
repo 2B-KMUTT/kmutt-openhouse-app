@@ -1,0 +1,9 @@
+# Search ignore file for ripgrep (rg), ag, and developer search tools
+.next/
+node_modules/
+build/
+coverage/
+.turbo/
+*.tsbuildinfo
+*.log
+.git/
