@@ -20,14 +20,10 @@ import {
     NumberDecrementStepper,
     useToast,
     Text,
-    Badge,
     SimpleGrid,
-    Card,
-    CardBody,
-    Divider,
-    Icon,
+    useColorModeValue,
 } from "@chakra-ui/react"
-import { AddIcon, ArrowBackIcon } from "@chakra-ui/icons"
+import { AddIcon } from "@chakra-ui/icons"
 import KMAppLayout from "@/views/layouts/KMAppLayout"
 import { useRouter } from "next/router"
 
@@ -38,6 +34,7 @@ const AddActivityPage = () => {
     const toast = useToast()
     const { data: session } = useSession()
     const isSuperAdmin = session?.user?.adminRole === "SUPER_ADMIN"
+    const borderColor = useColorModeValue("gray.200", "gray.600")
 
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
@@ -57,7 +54,6 @@ const AddActivityPage = () => {
     const [selectedOwnerId, setSelectedOwnerId] = useState<number | "">("")
     const [isSubmitting, setIsSubmitting] = useState(false)
 
-    // fetch departments for select dropdown
     useEffect(() => {
         fetch("/api/departments")
             .then(res => res.json())
@@ -87,7 +83,7 @@ const AddActivityPage = () => {
         if (missingFields.length > 0) {
             toast({
                 title: "กรอกข้อมูลไม่ครบ",
-                description: `กรุณากรอกหรือระบุ: ${missingFields.join(", ")}`,
+                description: `กรุณากรอก: ${missingFields.join(", ")}`,
                 status: "error",
                 duration: 4000,
                 isClosable: true,
@@ -155,259 +151,236 @@ const AddActivityPage = () => {
 
     return (
         <KMAppLayout navigation="เพิ่มกิจกรรม">
-            <VStack spacing={6} align="stretch">
-                {/* Header Actions */}
-                <HStack justify="space-between" align="center">
-                    <Box>
-                        <Text fontSize="lg" fontWeight="bold" color="gray.800" _dark={{ color: "gray.100" }}>
-                            สร้างกิจกรรมใหม่
-                        </Text>
-                        <Text fontSize="xs" color="gray.500">
-                            กรอกรายละเอียดกิจกรรมเพื่อเปิดให้ผู้เข้าร่วมงานลงทะเบียน
-                        </Text>
-                    </Box>
-                    <Button
-                        size="sm"
-                        variant="ghost"
-                        leftIcon={<ArrowBackIcon />}
-                        onClick={() => router.push("/_km/dashboard")}
-                    >
-                        ย้อนกลับ
-                    </Button>
-                </HStack>
-
-                {/* Super Admin Ownership Setting */}
+            <VStack spacing={4} align="stretch">
+                {/* Super Admin Ownership Field */}
                 {isSuperAdmin && (
-                    <Card variant="outline" borderColor="orange.200" bg="orange.50" _dark={{ bg: "whiteAlpha.50", borderColor: "orange.700" }}>
-                        <CardBody p={4}>
-                            <FormControl>
-                                <HStack justify="space-between" mb={2}>
-                                    <FormLabel mb={0} fontSize="sm" fontWeight="bold" color="gray.800" _dark={{ color: "gray.100" }}>
-                                        คณะ / ส่วนงานเจ้าของกิจกรรม
-                                    </FormLabel>
-                                    <Badge colorScheme="orange" variant="subtle" fontSize="xs">
-                                        Super Admin Control
-                                    </Badge>
-                                </HStack>
-                                <Select
-                                    bg="white"
-                                    _dark={{ bg: "gray.800" }}
-                                    rounded="lg"
-                                    focusBorderColor="orange.500"
-                                    value={selectedOwnerId}
-                                    onChange={e => setSelectedOwnerId(e.target.value ? Number(e.target.value) : "")}
-                                >
-                                    <option value="">-- กำหนดเป็นตัวเอง ({session?.user?.name || "Super Admin"}) --</option>
-                                    {adminOwners.map(admin => (
-                                        <option key={admin.id} value={admin.id}>
-                                            {admin.name} ({admin.username})
-                                        </option>
-                                    ))}
-                                </Select>
-                                <FormHelperText fontSize="xs" color="gray.600" _dark={{ color: "gray.400" }}>
-                                    กิจกรรมจะถูกบันทึกให้คณะที่เลือก และระบบจะมอบหมายงาน (Auto-assign) ให้ Staff ประจำคณะนั้นโดยอัตโนมัติ
-                                </FormHelperText>
-                            </FormControl>
-                        </CardBody>
-                    </Card>
+                    <FormControl>
+                        <FormLabel fontSize="xs" fontWeight="bold">
+                            สังกัดคณะ / เจ้าของกิจกรรม (Super Admin)
+                        </FormLabel>
+                        <Select
+                            size="sm"
+                            rounded="lg"
+                            focusBorderColor="orange.500"
+                            value={selectedOwnerId}
+                            onChange={e => setSelectedOwnerId(e.target.value ? Number(e.target.value) : "")}
+                        >
+                            <option value="">-- กำหนดเป็นตัวเอง ({session?.user?.name || "Super Admin"}) --</option>
+                            {adminOwners.map(admin => (
+                                <option key={admin.id} value={admin.id}>
+                                    {admin.name} ({admin.username})
+                                </option>
+                            ))}
+                        </Select>
+                        <FormHelperText fontSize="xs">
+                            กิจกรรมจะถูกบันทึกให้คณะที่เลือก และระบบจะมอบหมายให้ Staff ประจำคณะนั้นโดยอัตโนมัติ
+                        </FormHelperText>
+                    </FormControl>
                 )}
 
-                {/* Main Form Fields */}
-                <VStack spacing={5} align="stretch">
-                    {/* General Information */}
+                <FormControl isRequired>
+                    <FormLabel fontSize="xs" fontWeight="semibold">ชื่อกิจกรรม</FormLabel>
+                    <Input
+                        size="sm"
+                        rounded="lg"
+                        placeholder="ชื่อกิจกรรม"
+                        value={title}
+                        focusBorderColor="orange.500"
+                        onChange={e => setTitle(e.target.value)}
+                    />
+                </FormControl>
+
+                <FormControl isRequired>
+                    <FormLabel fontSize="xs" fontWeight="semibold">รายละเอียด</FormLabel>
+                    <Textarea
+                        size="sm"
+                        rounded="lg"
+                        placeholder="รายละเอียดกิจกรรม"
+                        value={description}
+                        focusBorderColor="orange.500"
+                        rows={3}
+                        onChange={e => setDescription(e.target.value)}
+                    />
+                </FormControl>
+
+                <SimpleGrid columns={{ base: 1, sm: 2 }} spacing={3}>
                     <FormControl isRequired>
-                        <FormLabel fontSize="sm" fontWeight="semibold">ชื่อกิจกรรม</FormLabel>
-                        <Input
-                            placeholder="เช่น แนะนำหลักสูตรวิศวกรรมคอมพิวเตอร์และสาธิตโครงงาน"
-                            value={title}
-                            focusBorderColor="orange.500"
+                        <FormLabel fontSize="xs" fontWeight="semibold">ประเภทกิจกรรม</FormLabel>
+                        <Select
+                            size="sm"
                             rounded="lg"
-                            onChange={e => setTitle(e.target.value)}
-                        />
+                            value={activityType}
+                            focusBorderColor="orange.500"
+                            onChange={e => setActivityType(e.target.value as ActivityType)}
+                        >
+                            <option value="workshop">Workshop</option>
+                            <option value="regis_activity">Regis Activity</option>
+                            <option value="non_regis_activity">Non Regis Activity</option>
+                        </Select>
                     </FormControl>
 
                     <FormControl isRequired>
-                        <FormLabel fontSize="sm" fontWeight="semibold">รายละเอียดกิจกรรม</FormLabel>
-                        <Textarea
-                            placeholder="รายละเอียด ข้อมูลกิจกรรม กำหนดการโดยย่อ หรือสิ่งที่ต้องเตรียมมา"
-                            value={description}
-                            focusBorderColor="orange.500"
+                        <FormLabel fontSize="xs" fontWeight="semibold">หน่วยงาน / ภาควิชา</FormLabel>
+                        <Select
+                            size="sm"
                             rounded="lg"
-                            rows={4}
-                            onChange={e => setDescription(e.target.value)}
-                        />
+                            value={departmentId}
+                            focusBorderColor="orange.500"
+                            onChange={e => setDepartmentId(Number(e.target.value))}
+                        >
+                            <option value={0}>-- เลือกหน่วยงาน / ภาควิชา --</option>
+                            {departments.map(dep => (
+                                <option key={dep.id} value={dep.id}>{dep.name_th}</option>
+                            ))}
+                        </Select>
                     </FormControl>
 
-                    <SimpleGrid columns={{ base: 1, md: 2 }} spacing={5}>
-                        <FormControl isRequired>
-                            <FormLabel fontSize="sm" fontWeight="semibold">ประเภทกิจกรรม</FormLabel>
-                            <Select
-                                value={activityType}
-                                focusBorderColor="orange.500"
-                                rounded="lg"
-                                onChange={e => setActivityType(e.target.value as ActivityType)}
-                            >
-                                <option value="workshop">Workshop (เชิงปฏิบัติการ)</option>
-                                <option value="regis_activity">Regis Activity (ต้องลงทะเบียนล่วงหน้า)</option>
-                                <option value="non_regis_activity">Non Regis Activity (เข้าร่วมได้ทันที)</option>
-                            </Select>
-                        </FormControl>
-
-                        <FormControl isRequired>
-                            <FormLabel fontSize="sm" fontWeight="semibold">หน่วยงาน / ภาควิชา</FormLabel>
-                            <Select
-                                value={departmentId}
-                                focusBorderColor="orange.500"
-                                rounded="lg"
-                                onChange={e => setDepartmentId(Number(e.target.value))}
-                            >
-                                <option value={0}>-- เลือกหน่วยงาน / ภาควิชา --</option>
-                                {departments.map(dep => (
-                                    <option key={dep.id} value={dep.id}>{dep.name_th}</option>
-                                ))}
-                            </Select>
-                        </FormControl>
-
-                        <FormControl isRequired>
-                            <FormLabel fontSize="sm" fontWeight="semibold">วันที่จัดกิจกรรม</FormLabel>
-                            <Select
-                                placeholder="-- เลือกวันที่ --"
-                                value={date}
-                                focusBorderColor="orange.500"
-                                rounded="lg"
-                                onChange={e => setDate(e.target.value)}
-                            >
-                                <option value="30/10/2026">30 ตุลาคม 2569 (วันจัดงาน)</option>
-                            </Select>
-                        </FormControl>
-
-                        <FormControl>
-                            <FormLabel fontSize="sm" fontWeight="semibold">รอบกิจกรรม</FormLabel>
-                            <NumberInput
-                                min={1}
-                                value={round}
-                                focusBorderColor="orange.500"
-                                onChange={(_, val) => setRound(val || 1)}
-                            >
-                                <NumberInputField rounded="lg" />
-                                <NumberInputStepper>
-                                    <NumberIncrementStepper />
-                                    <NumberDecrementStepper />
-                                </NumberInputStepper>
-                            </NumberInput>
-                        </FormControl>
-
-                        <FormControl isRequired>
-                            <FormLabel fontSize="sm" fontWeight="semibold">เวลาเริ่ม</FormLabel>
-                            <Input
-                                type="time"
-                                value={startTime}
-                                focusBorderColor="orange.500"
-                                rounded="lg"
-                                onChange={e => setStartTime(e.target.value)}
-                            />
-                        </FormControl>
-
-                        <FormControl isRequired>
-                            <FormLabel fontSize="sm" fontWeight="semibold">เวลาสิ้นสุด</FormLabel>
-                            <Input
-                                type="time"
-                                value={endTime}
-                                focusBorderColor="orange.500"
-                                rounded="lg"
-                                onChange={e => setEndTime(e.target.value)}
-                            />
-                        </FormControl>
-
-                        <FormControl isRequired>
-                            <FormLabel fontSize="sm" fontWeight="semibold">สถานที่จัดกิจกรรม</FormLabel>
-                            <Input
-                                placeholder="เช่น อาคารเรียนรวม 2 ชั้น 3 ห้อง 301"
-                                value={location}
-                                focusBorderColor="orange.500"
-                                rounded="lg"
-                                onChange={e => setLocation(e.target.value)}
-                            />
-                        </FormControl>
-
-                        <FormControl>
-                            <FormLabel fontSize="sm" fontWeight="semibold">คะแนนกิจกรรม (E-Stamp Points)</FormLabel>
-                            <NumberInput
-                                min={1}
-                                max={5}
-                                value={point}
-                                focusBorderColor="orange.500"
-                                onChange={(_, val) => setPoint(val || 1)}
-                            >
-                                <NumberInputField rounded="lg" />
-                                <NumberInputStepper>
-                                    <NumberIncrementStepper />
-                                    <NumberDecrementStepper />
-                                </NumberInputStepper>
-                            </NumberInput>
-                        </FormControl>
-
-                        <FormControl>
-                            <FormLabel fontSize="sm" fontWeight="semibold">จำนวนผู้เข้าร่วมสูงสุด (คน)</FormLabel>
-                            <NumberInput
-                                min={0}
-                                value={maxParticipants}
-                                focusBorderColor="orange.500"
-                                onChange={(_, val) => setMaxParticipants(val || 0)}
-                            >
-                                <NumberInputField rounded="lg" placeholder="0 = ไม่จำกัดจำนวน" />
-                                <NumberInputStepper>
-                                    <NumberIncrementStepper />
-                                    <NumberDecrementStepper />
-                                </NumberInputStepper>
-                            </NumberInput>
-                            <FormHelperText fontSize="xs">ใส่ 0 หากไม่มีการจำกัดจำนวนผู้เข้าร่วม</FormHelperText>
-                        </FormControl>
-
-                        <FormControl>
-                            <FormLabel fontSize="sm" fontWeight="semibold">ลิงก์ภาพกิจกรรม (Image URL)</FormLabel>
-                            <Input
-                                placeholder="https://example.com/banner.jpg"
-                                value={imageUrl}
-                                focusBorderColor="orange.500"
-                                rounded="lg"
-                                onChange={e => setImageUrl(e.target.value)}
-                            />
-                        </FormControl>
-                    </SimpleGrid>
+                    <FormControl isRequired>
+                        <FormLabel fontSize="xs" fontWeight="semibold">วันที่จัดกิจกรรม</FormLabel>
+                        <Select
+                            size="sm"
+                            rounded="lg"
+                            placeholder="-- เลือกวันที่ --"
+                            value={date}
+                            focusBorderColor="orange.500"
+                            onChange={e => setDate(e.target.value)}
+                        >
+                            <option value="30/10/2026">30 ตุลาคม 2569</option>
+                        </Select>
+                    </FormControl>
 
                     <FormControl>
-                        <FormLabel fontSize="sm" fontWeight="semibold">ลิงก์ฟอร์มแบบประเมินกิจกรรม (Google Forms / MS Forms)</FormLabel>
-                        <Input
-                            placeholder="https://forms.gle/..."
-                            value={formLink}
+                        <FormLabel fontSize="xs" fontWeight="semibold">รอบกิจกรรม</FormLabel>
+                        <NumberInput
+                            size="sm"
+                            min={1}
+                            value={round}
                             focusBorderColor="orange.500"
+                            onChange={(_, val) => setRound(val || 1)}
+                        >
+                            <NumberInputField rounded="lg" />
+                            <NumberInputStepper>
+                                <NumberIncrementStepper />
+                                <NumberDecrementStepper />
+                            </NumberInputStepper>
+                        </NumberInput>
+                    </FormControl>
+
+                    <FormControl isRequired>
+                        <FormLabel fontSize="xs" fontWeight="semibold">เวลาเริ่ม</FormLabel>
+                        <Input
+                            size="sm"
                             rounded="lg"
-                            onChange={e => setFormLink(e.target.value)}
+                            type="time"
+                            value={startTime}
+                            focusBorderColor="orange.500"
+                            onChange={e => setStartTime(e.target.value)}
                         />
                     </FormControl>
 
-                    <Divider my={2} />
+                    <FormControl isRequired>
+                        <FormLabel fontSize="xs" fontWeight="semibold">เวลาสิ้นสุด</FormLabel>
+                        <Input
+                            size="sm"
+                            rounded="lg"
+                            type="time"
+                            value={endTime}
+                            focusBorderColor="orange.500"
+                            onChange={e => setEndTime(e.target.value)}
+                        />
+                    </FormControl>
 
-                    {/* Action Buttons */}
-                    <HStack justify="flex-end" spacing={3}>
-                        <Button
-                            variant="outline"
-                            onClick={() => router.push("/_km/dashboard")}
+                    <FormControl isRequired>
+                        <FormLabel fontSize="xs" fontWeight="semibold">สถานที่จัดกิจกรรม</FormLabel>
+                        <Input
+                            size="sm"
+                            rounded="lg"
+                            placeholder="สถานที่จัดกิจกรรม"
+                            value={location}
+                            focusBorderColor="orange.500"
+                            onChange={e => setLocation(e.target.value)}
+                        />
+                    </FormControl>
+
+                    <FormControl>
+                        <FormLabel fontSize="xs" fontWeight="semibold">คะแนน (E-Stamp Points)</FormLabel>
+                        <NumberInput
+                            size="sm"
+                            min={1}
+                            max={5}
+                            value={point}
+                            focusBorderColor="orange.500"
+                            onChange={(_, val) => setPoint(val || 1)}
                         >
-                            ยกเลิก
-                        </Button>
-                        <Button
-                            colorScheme="orange"
-                            leftIcon={<AddIcon />}
-                            onClick={handleSubmit}
-                            isLoading={isSubmitting}
-                            loadingText="กำลังสร้าง..."
+                            <NumberInputField rounded="lg" />
+                            <NumberInputStepper>
+                                <NumberIncrementStepper />
+                                <NumberDecrementStepper />
+                            </NumberInputStepper>
+                        </NumberInput>
+                    </FormControl>
+
+                    <FormControl>
+                        <FormLabel fontSize="xs" fontWeight="semibold">จำนวนผู้เข้าร่วมสูงสุด (คน)</FormLabel>
+                        <NumberInput
+                            size="sm"
+                            min={0}
+                            value={maxParticipants}
+                            focusBorderColor="orange.500"
+                            onChange={(_, val) => setMaxParticipants(val || 0)}
                         >
-                            สร้างกิจกรรม
-                        </Button>
-                    </HStack>
-                </VStack>
+                            <NumberInputField rounded="lg" placeholder="0 = ไม่จำกัด" />
+                            <NumberInputStepper>
+                                <NumberIncrementStepper />
+                                <NumberDecrementStepper />
+                            </NumberInputStepper>
+                        </NumberInput>
+                    </FormControl>
+
+                    <FormControl>
+                        <FormLabel fontSize="xs" fontWeight="semibold">ลิงก์ภาพกิจกรรม (Image URL)</FormLabel>
+                        <Input
+                            size="sm"
+                            rounded="lg"
+                            placeholder="https://..."
+                            value={imageUrl}
+                            focusBorderColor="orange.500"
+                            onChange={e => setImageUrl(e.target.value)}
+                        />
+                    </FormControl>
+                </SimpleGrid>
+
+                <FormControl>
+                    <FormLabel fontSize="xs" fontWeight="semibold">ลิงก์แบบประเมิน (Form Link)</FormLabel>
+                    <Input
+                        size="sm"
+                        rounded="lg"
+                        placeholder="https://..."
+                        value={formLink}
+                        focusBorderColor="orange.500"
+                        onChange={e => setFormLink(e.target.value)}
+                    />
+                </FormControl>
+
+                <HStack justify="flex-end" spacing={3} pt={4} borderTop="1px solid" borderColor={borderColor}>
+                    <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => router.push("/_km/dashboard")}
+                    >
+                        ยกเลิก
+                    </Button>
+                    <Button
+                        size="sm"
+                        colorScheme="orange"
+                        leftIcon={<AddIcon />}
+                        onClick={handleSubmit}
+                        isLoading={isSubmitting}
+                        loadingText="กำลังบันทึก..."
+                    >
+                        สร้างกิจกรรม
+                    </Button>
+                </HStack>
             </VStack>
         </KMAppLayout>
     )

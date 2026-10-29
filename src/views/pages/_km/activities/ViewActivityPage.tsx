@@ -44,8 +44,6 @@ import {
     TabPanels,
     Tab,
     TabPanel,
-    Card,
-    CardBody,
     SimpleGrid,
     useColorModeValue,
     Alert,
@@ -102,7 +100,7 @@ export const ViewActivityPage = () => {
     const isSuperAdmin = session?.user?.adminRole === "SUPER_ADMIN";
 
     const borderColor = useColorModeValue("gray.200", "gray.600");
-    const cardBg = useColorModeValue("white", "gray.750");
+    const headerBg = useColorModeValue("gray.50", "gray.800");
 
     const [activity, setActivity] = useState<Activity | null>(null);
     const [loading, setLoading] = useState(true);
@@ -110,7 +108,6 @@ export const ViewActivityPage = () => {
     const [form, setForm] = useState<Partial<Activity>>({});
     const [adminOwners, setAdminOwners] = useState<{ id: number; name: string; username: string }[]>([]);
 
-    // Estamp + survey states
     const [estamps, setEstamps] = useState<Estamp[]>([]);
     const [surveySummary, setSurveySummary] = useState<SurveySummary | null>(null);
     const [loadingEstamps, setLoadingEstamps] = useState<boolean>(false);
@@ -224,7 +221,6 @@ export const ViewActivityPage = () => {
 
         const wb = XLSX.utils.book_new();
 
-        // --- ข้อมูลกิจกรรม ---
         const activityInfo = [
             { Key: "ชื่อกิจกรรม", Value: activity.title },
             { Key: "รายละเอียด", Value: activity.description },
@@ -261,7 +257,7 @@ export const ViewActivityPage = () => {
                 </HStack>
             ) : !activity ? (
                 <Box py={8} textAlign="center">
-                    <Text color="red.500" fontSize="md">
+                    <Text color="red.500" fontSize="sm">
                         ไม่พบข้อมูลกิจกรรม
                     </Text>
                     <Button
@@ -275,439 +271,401 @@ export const ViewActivityPage = () => {
                     </Button>
                 </Box>
             ) : (
-                <VStack spacing={6} align="stretch">
-                    {/* Activity Header Card */}
-                    <Card variant="outline" borderColor={borderColor} bg={cardBg}>
-                        <CardBody p={5}>
-                            {!activity.display && (
-                                <Alert status="warning" rounded="lg" mb={4} py={2}>
-                                    <AlertIcon />
-                                    <Text fontSize="xs">
-                                        กิจกรรมนี้ถูกซ่อนอยู่ — จะไม่แสดงให้นักเรียนเห็นในหน้าลงทะเบียน
-                                    </Text>
-                                </Alert>
-                            )}
-
-                            {/* Title & Actions */}
-                            <Flex
-                                direction={{ base: "column", md: "row" }}
-                                justify="space-between"
-                                align={{ base: "flex-start", md: "center" }}
-                                gap={3}
-                                mb={4}
-                            >
-                                <VStack align="flex-start" spacing={1}>
-                                    <HStack spacing={2} wrap="wrap">
-                                        <Text fontSize="md" fontWeight="bold">
-                                            #{activity.id} {activity.title}
-                                        </Text>
-                                        <Badge
-                                            variant="subtle"
-                                            colorScheme={
-                                                activity.activity_type === "workshop"
-                                                    ? "blue"
-                                                    : activity.activity_type === "regis_activity"
-                                                    ? "green"
-                                                    : "orange"
-                                            }
-                                            fontSize="xs"
-                                        >
-                                            {activity.activity_type.replace("_", " ")}
-                                        </Badge>
-                                        {activity.owner && isSuperAdmin && (
-                                            <Badge colorScheme="orange" variant="subtle" fontSize="xs">
-                                                สังกัด: {activity.owner.name} ({activity.owner.username})
-                                            </Badge>
-                                        )}
-                                    </HStack>
-                                    <Text fontSize="xs" color="gray.500">
-                                        สร้างเมื่อ: {new Date(activity.created_at).toLocaleString("th-TH")}
-                                    </Text>
-                                </VStack>
-
-                                <HStack spacing={2}>
-                                    <Button
-                                        size="sm"
-                                        colorScheme="orange"
-                                        leftIcon={<EditIcon />}
-                                        onClick={onOpen}
-                                    >
-                                        แก้ไข
-                                    </Button>
-                                    <Button
-                                        size="sm"
-                                        colorScheme="red"
-                                        variant="outline"
-                                        leftIcon={<DeleteIcon />}
-                                        onClick={handleDelete}
-                                    >
-                                        ลบ
-                                    </Button>
-                                    <Button
-                                        size="sm"
-                                        variant="ghost"
-                                        leftIcon={<ArrowBackIcon />}
-                                        onClick={() => router.push("/_km/dashboard")}
-                                    >
-                                        กลับ
-                                    </Button>
-                                </HStack>
-                            </Flex>
-
-                            <Text fontSize="sm" color="gray.600" _dark={{ color: "gray.300" }} mb={4}>
-                                {activity.description}
+                <VStack spacing={4} align="stretch">
+                    {!activity.display && (
+                        <Alert status="warning" rounded="md" py={2}>
+                            <AlertIcon />
+                            <Text fontSize="xs">
+                                กิจกรรมนี้ถูกซ่อนอยู่ — ไม่แสดงให้นักเรียนเห็นในหน้าลงทะเบียน
                             </Text>
+                        </Alert>
+                    )}
 
-                            {/* Meta Grid */}
-                            <SimpleGrid columns={{ base: 1, sm: 2, md: 4 }} spacing={4} pt={4} borderTop="1px solid" borderColor={borderColor}>
-                                <Box>
-                                    <Text fontSize="xs" color="gray.500">สถานที่จัดงาน</Text>
-                                    <Text fontSize="xs" fontWeight="semibold">📍 {activity.location}</Text>
-                                </Box>
-                                <Box>
-                                    <Text fontSize="xs" color="gray.500">คณะ / ภาควิชา</Text>
-                                    <Text fontSize="xs" fontWeight="semibold">
-                                        🏫 {activity.faculty?.name_th} - {activity.department?.name_th}
-                                    </Text>
-                                </Box>
-                                <Box>
-                                    <Text fontSize="xs" color="gray.500">วันและเวลา</Text>
-                                    <Text fontSize="xs" fontWeight="semibold">
-                                        📅 {activity.date} ({activity.start_time} - {activity.end_time})
-                                    </Text>
-                                </Box>
-                                <Box>
-                                    <Text fontSize="xs" color="gray.500">ผู้ลงทะเบียน / คะแนน</Text>
-                                    <Text fontSize="xs" fontWeight="semibold" color="orange.600">
-                                        👥 {activity.current_register_participants} / {activity.max_participants} คน • ⭐ {activity.point} แต้ม
-                                    </Text>
-                                </Box>
-                            </SimpleGrid>
+                    {/* Title & Action Buttons (Flat, directly on panel) */}
+                    <Flex
+                        direction={{ base: "column", sm: "row" }}
+                        justify="space-between"
+                        align={{ base: "flex-start", sm: "center" }}
+                        gap={3}
+                    >
+                        <VStack align="flex-start" spacing={1}>
+                            <HStack spacing={2} wrap="wrap">
+                                <Text fontSize="md" fontWeight="bold">
+                                    #{activity.id} {activity.title}
+                                </Text>
+                                <Badge
+                                    variant="subtle"
+                                    colorScheme={
+                                        activity.activity_type === "workshop"
+                                            ? "blue"
+                                            : activity.activity_type === "regis_activity"
+                                            ? "green"
+                                            : "orange"
+                                    }
+                                    fontSize="xs"
+                                >
+                                    {activity.activity_type.replace("_", " ")}
+                                </Badge>
+                                {activity.owner && isSuperAdmin && (
+                                    <Badge colorScheme="orange" variant="outline" fontSize="xs">
+                                        สังกัด: {activity.owner.name} ({activity.owner.username})
+                                    </Badge>
+                                )}
+                            </HStack>
+                            <Text fontSize="xs" color="gray.500">
+                                สร้างเมื่อ {new Date(activity.created_at).toLocaleString("th-TH")}
+                            </Text>
+                        </VStack>
 
-                            {activity.form_link && (
-                                <Box mt={3} pt={3} borderTop="1px solid" borderColor={borderColor}>
-                                    <Text fontSize="xs" color="gray.500">
-                                        ลิงก์แบบประเมิน:{" "}
-                                        <Text
-                                            as="a"
-                                            href={activity.form_link}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                            color="orange.500"
-                                            fontWeight="medium"
-                                            _hover={{ textDecoration: "underline" }}
-                                        >
-                                            {activity.form_link}
-                                        </Text>
-                                    </Text>
-                                </Box>
-                            )}
-                        </CardBody>
-                    </Card>
+                        <HStack spacing={2}>
+                            <Button
+                                size="sm"
+                                colorScheme="orange"
+                                leftIcon={<EditIcon />}
+                                onClick={onOpen}
+                            >
+                                แก้ไข
+                            </Button>
+                            <Button
+                                size="sm"
+                                colorScheme="red"
+                                variant="ghost"
+                                leftIcon={<DeleteIcon />}
+                                onClick={handleDelete}
+                            >
+                                ลบ
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant="ghost"
+                                leftIcon={<ArrowBackIcon />}
+                                onClick={() => router.push("/_km/dashboard")}
+                            >
+                                กลับ
+                            </Button>
+                        </HStack>
+                    </Flex>
 
-                    {/* Tabs Section: Participants, E-Stamp, Feedback */}
-                    <Tabs variant="enclosed" colorScheme="orange">
+                    <Text fontSize="xs" color="gray.600" _dark={{ color: "gray.300" }}>
+                        {activity.description}
+                    </Text>
+
+                    {/* Flat Meta Grid */}
+                    <SimpleGrid
+                        columns={{ base: 2, sm: 4 }}
+                        spacing={3}
+                        py={3}
+                        borderTop="1px solid"
+                        borderBottom="1px solid"
+                        borderColor={borderColor}
+                    >
+                        <Box>
+                            <Text fontSize="xs" color="gray.500">สถานที่</Text>
+                            <Text fontSize="xs" fontWeight="semibold">📍 {activity.location}</Text>
+                        </Box>
+                        <Box>
+                            <Text fontSize="xs" color="gray.500">คณะ / ภาควิชา</Text>
+                            <Text fontSize="xs" fontWeight="semibold">
+                                🏫 {activity.faculty?.name_th} - {activity.department?.name_th}
+                            </Text>
+                        </Box>
+                        <Box>
+                            <Text fontSize="xs" color="gray.500">วันและเวลา</Text>
+                            <Text fontSize="xs" fontWeight="semibold">
+                                📅 {activity.date} ({activity.start_time} - {activity.end_time})
+                            </Text>
+                        </Box>
+                        <Box>
+                            <Text fontSize="xs" color="gray.500">ลงทะเบียน / คะแนน</Text>
+                            <Text fontSize="xs" fontWeight="semibold" color="orange.600">
+                                👥 {activity.current_register_participants} / {activity.max_participants} คน • ⭐ {activity.point} แต้ม
+                            </Text>
+                        </Box>
+                    </SimpleGrid>
+
+                    {activity.form_link && (
+                        <Text fontSize="xs" color="gray.500">
+                            แบบประเมิน:{" "}
+                            <Text
+                                as="a"
+                                href={activity.form_link}
+                                target="_blank"
+                                rel="noreferrer"
+                                color="orange.500"
+                                textDecoration="underline"
+                            >
+                                {activity.form_link}
+                            </Text>
+                        </Text>
+                    )}
+
+                    {/* Direct Flat Tabs: Participants, E-Stamp, Feedback */}
+                    <Tabs variant="enclosed" colorScheme="orange" mt={2}>
                         <TabList>
-                            <Tab fontWeight="semibold" fontSize="xs">
+                            <Tab fontSize="xs" fontWeight="semibold">
                                 รายชื่อผู้ลงทะเบียน ({activity.registrations?.length || 0})
                             </Tab>
-                            <Tab fontWeight="semibold" fontSize="xs">
+                            <Tab fontSize="xs" fontWeight="semibold">
                                 บันทึก E-Stamp ({estamps.length})
                             </Tab>
-                            <Tab fontWeight="semibold" fontSize="xs">
+                            <Tab fontSize="xs" fontWeight="semibold">
                                 ผลแบบประเมิน
                             </Tab>
                         </TabList>
 
                         <TabPanels>
                             {/* Participants Tab */}
-                            <TabPanel px={0} pt={4}>
-                                <Card variant="outline" borderColor={borderColor}>
-                                    <CardBody p={4}>
-                                        <HStack justify="space-between" mb={4}>
-                                            <Text fontSize="sm" fontWeight="bold">
-                                                รายชื่อนักเรียนที่ลงทะเบียน ({activity.registrations?.length || 0} คน)
-                                            </Text>
-                                            <Button
-                                                size="sm"
-                                                colorScheme="green"
-                                                variant="outline"
-                                                leftIcon={<DownloadIcon />}
-                                                onClick={exportExcel}
-                                                isDisabled={!activity.registrations?.length}
-                                            >
-                                                Export Excel
-                                            </Button>
-                                        </HStack>
+                            <TabPanel px={0} pt={3}>
+                                <HStack justify="space-between" mb={3}>
+                                    <Text fontSize="xs" fontWeight="bold">
+                                        ผู้ลงทะเบียน ({activity.registrations?.length || 0} คน)
+                                    </Text>
+                                    <Button
+                                        size="xs"
+                                        colorScheme="green"
+                                        variant="outline"
+                                        leftIcon={<DownloadIcon />}
+                                        onClick={exportExcel}
+                                        isDisabled={!activity.registrations?.length}
+                                    >
+                                        Export Excel
+                                    </Button>
+                                </HStack>
 
-                                        {!activity.registrations?.length ? (
-                                            <Box py={8} textAlign="center" color="gray.500">
-                                                <Text fontSize="xs">ยังไม่มีผู้ลงทะเบียนในกิจกรรมนี้</Text>
-                                            </Box>
-                                        ) : (
-                                            <TableContainer>
-                                                <Table variant="simple" size="sm">
-                                                    <Thead bg={useColorModeValue("gray.50", "gray.800")}>
-                                                        <Tr>
-                                                            <Th>ชื่อ-สกุล</Th>
-                                                            <Th>อีเมล</Th>
-                                                            <Th>เบอร์โทร</Th>
-                                                            <Th>เวลาลงทะเบียน</Th>
-                                                        </Tr>
-                                                    </Thead>
-                                                    <Tbody>
-                                                        {activity.registrations.map((reg) => (
-                                                            <Tr key={reg.id}>
-                                                                <Td fontWeight="medium">
-                                                                    {reg.student.first_name} {reg.student.last_name}
-                                                                </Td>
-                                                                <Td>{reg.student.email}</Td>
-                                                                <Td>{reg.student.phone}</Td>
-                                                                <Td color="gray.500">
-                                                                    {new Date(reg.registered_at).toLocaleString("th-TH")}
-                                                                </Td>
-                                                            </Tr>
-                                                        ))}
-                                                    </Tbody>
-                                                </Table>
-                                            </TableContainer>
-                                        )}
-                                    </CardBody>
-                                </Card>
+                                {!activity.registrations?.length ? (
+                                    <Box py={8} textAlign="center" color="gray.500">
+                                        <Text fontSize="xs">ยังไม่มีผู้ลงทะเบียนในกิจกรรมนี้</Text>
+                                    </Box>
+                                ) : (
+                                    <TableContainer>
+                                        <Table variant="simple" size="sm">
+                                            <Thead bg={headerBg}>
+                                                <Tr>
+                                                    <Th fontSize="xs">ชื่อ-สกุล</Th>
+                                                    <Th fontSize="xs">อีเมล</Th>
+                                                    <Th fontSize="xs">เบอร์โทร</Th>
+                                                    <Th fontSize="xs">เวลาลงทะเบียน</Th>
+                                                </Tr>
+                                            </Thead>
+                                            <Tbody>
+                                                {activity.registrations.map((reg) => (
+                                                    <Tr key={reg.id}>
+                                                        <Td fontWeight="medium">{reg.student.first_name} {reg.student.last_name}</Td>
+                                                        <Td>{reg.student.email}</Td>
+                                                        <Td>{reg.student.phone}</Td>
+                                                        <Td color="gray.500">
+                                                            {new Date(reg.registered_at).toLocaleString("th-TH")}
+                                                        </Td>
+                                                    </Tr>
+                                                ))}
+                                            </Tbody>
+                                        </Table>
+                                    </TableContainer>
+                                )}
                             </TabPanel>
 
                             {/* E-Stamp Tab */}
-                            <TabPanel px={0} pt={4}>
-                                <Card variant="outline" borderColor={borderColor}>
-                                    <CardBody p={4}>
-                                        <HStack justify="space-between" mb={4}>
-                                            <Text fontSize="sm" fontWeight="bold">
-                                                ประวัติการประทับตรา E-Stamp ({estamps.length} รายการ)
-                                            </Text>
-                                            <Button
-                                                size="sm"
-                                                variant="outline"
-                                                leftIcon={<RepeatIcon />}
-                                                onClick={fetchEstamps}
-                                                isLoading={loadingEstamps}
-                                            >
-                                                รีเฟรช
-                                            </Button>
-                                        </HStack>
+                            <TabPanel px={0} pt={3}>
+                                <HStack justify="space-between" mb={3}>
+                                    <Text fontSize="xs" fontWeight="bold">
+                                        ประวัติการประทับตรา ({estamps.length} รายการ)
+                                    </Text>
+                                    <Button
+                                        size="xs"
+                                        variant="outline"
+                                        leftIcon={<RepeatIcon />}
+                                        onClick={fetchEstamps}
+                                        isLoading={loadingEstamps}
+                                    >
+                                        รีเฟรช
+                                    </Button>
+                                </HStack>
 
-                                        {loadingEstamps ? (
-                                            <HStack justify="center" py={8}>
-                                                <Spinner size="md" color="orange.500" />
-                                            </HStack>
-                                        ) : estamps.length === 0 ? (
-                                            <Box py={8} textAlign="center" color="gray.500">
-                                                <Text fontSize="xs">ยังไม่มีบันทึกการประทับตรา E-Stamp</Text>
-                                            </Box>
-                                        ) : (
-                                            <TableContainer>
-                                                <Table variant="simple" size="sm">
-                                                    <Thead bg={useColorModeValue("gray.50", "gray.800")}>
-                                                        <Tr>
-                                                            <Th>ชื่อ-สกุล</Th>
-                                                            <Th>อีเมล</Th>
-                                                            <Th>เบอร์โทร</Th>
-                                                            <Th>ผู้ประทับตรา</Th>
-                                                            <Th>เวลาที่ประทับ</Th>
-                                                            <Th>คะแนนประเมิน</Th>
-                                                        </Tr>
-                                                    </Thead>
-                                                    <Tbody>
-                                                        {estamps.map((e) => (
-                                                            <Tr key={e.id}>
-                                                                <Td fontWeight="medium">{e.studentName}</Td>
-                                                                <Td>{e.email}</Td>
-                                                                <Td>{e.phone}</Td>
-                                                                <Td>
-                                                                    <Badge variant="subtle" colorScheme="gray" fontSize="xs">
-                                                                        {e.stampedByName || e.stampBy}
-                                                                    </Badge>
-                                                                </Td>
-                                                                <Td color="gray.500">
-                                                                    {new Date(e.issued_at).toLocaleString("th-TH")}
-                                                                </Td>
-                                                                <Td>
-                                                                    {e.rating ? (
-                                                                        <Badge colorScheme="orange" variant="solid" fontSize="xs">
-                                                                            ⭐ {e.rating}
-                                                                        </Badge>
-                                                                    ) : (
-                                                                        "—"
-                                                                    )}
-                                                                </Td>
-                                                            </Tr>
-                                                        ))}
-                                                    </Tbody>
-                                                </Table>
-                                            </TableContainer>
-                                        )}
-                                    </CardBody>
-                                </Card>
+                                {loadingEstamps ? (
+                                    <HStack justify="center" py={8}>
+                                        <Spinner size="md" color="orange.500" />
+                                    </HStack>
+                                ) : estamps.length === 0 ? (
+                                    <Box py={8} textAlign="center" color="gray.500">
+                                        <Text fontSize="xs">ยังไม่มีบันทึกการประทับตรา E-Stamp</Text>
+                                    </Box>
+                                ) : (
+                                    <TableContainer>
+                                        <Table variant="simple" size="sm">
+                                            <Thead bg={headerBg}>
+                                                <Tr>
+                                                    <Th fontSize="xs">ชื่อ-สกุล</Th>
+                                                    <Th fontSize="xs">อีเมล</Th>
+                                                    <Th fontSize="xs">เบอร์โทร</Th>
+                                                    <Th fontSize="xs">ผู้ประทับตรา</Th>
+                                                    <Th fontSize="xs">เวลาที่ประทับ</Th>
+                                                    <Th fontSize="xs">คะแนน</Th>
+                                                </Tr>
+                                            </Thead>
+                                            <Tbody>
+                                                {estamps.map((e) => (
+                                                    <Tr key={e.id}>
+                                                        <Td fontWeight="medium">{e.studentName}</Td>
+                                                        <Td>{e.email}</Td>
+                                                        <Td>{e.phone}</Td>
+                                                        <Td>
+                                                            <Badge variant="subtle" colorScheme="gray" fontSize="xs">
+                                                                {e.stampedByName || e.stampBy}
+                                                            </Badge>
+                                                        </Td>
+                                                        <Td color="gray.500">
+                                                            {new Date(e.issued_at).toLocaleString("th-TH")}
+                                                        </Td>
+                                                        <Td>
+                                                            {e.rating ? (
+                                                                <Badge colorScheme="orange" variant="solid" fontSize="xs">
+                                                                    ⭐ {e.rating}
+                                                                </Badge>
+                                                            ) : (
+                                                                "—"
+                                                            )}
+                                                        </Td>
+                                                    </Tr>
+                                                ))}
+                                            </Tbody>
+                                        </Table>
+                                    </TableContainer>
+                                )}
                             </TabPanel>
 
                             {/* Survey Result Tab */}
-                            <TabPanel px={0} pt={4}>
-                                <Card variant="outline" borderColor={borderColor}>
-                                    <CardBody p={4}>
-                                        <Text fontSize="sm" fontWeight="bold" mb={4}>
-                                            สรุปผลคะแนนแบบประเมินกิจกรรม
+                            <TabPanel px={0} pt={3}>
+                                {loadingEstamps ? (
+                                    <HStack justify="center" py={8}>
+                                        <Spinner size="md" color="orange.500" />
+                                    </HStack>
+                                ) : !surveySummary ? (
+                                    <Box py={8} textAlign="center" color="gray.500">
+                                        <Text fontSize="xs">ยังไม่มีข้อมูลการประเมินกิจกรรม</Text>
+                                    </Box>
+                                ) : (
+                                    <>
+                                        <Box width="100%" height={200}>
+                                            <ResponsiveContainer width="100%" height="100%">
+                                                <BarChart
+                                                    data={[
+                                                        { name: "1 ดาว", count: surveySummary.ratingCounts["1"] || 0 },
+                                                        { name: "2 ดาว", count: surveySummary.ratingCounts["2"] || 0 },
+                                                        { name: "3 ดาว", count: surveySummary.ratingCounts["3"] || 0 },
+                                                        { name: "4 ดาว", count: surveySummary.ratingCounts["4"] || 0 },
+                                                        { name: "5 ดาว", count: surveySummary.ratingCounts["5"] || 0 },
+                                                    ]}
+                                                    margin={{ top: 20, right: 20, left: 20, bottom: 20 }}
+                                                >
+                                                    <CartesianGrid strokeDasharray="3 3" />
+                                                    <XAxis dataKey="name" fontSize={11} />
+                                                    <YAxis allowDecimals={false} fontSize={11} />
+                                                    <Tooltip />
+                                                    <Bar dataKey="count" fill="#FA4616">
+                                                        <LabelList dataKey="count" position="top" fontSize={11} />
+                                                    </Bar>
+                                                </BarChart>
+                                            </ResponsiveContainer>
+                                        </Box>
+
+                                        <HStack mt={3} p={2} bg={headerBg} rounded="md">
+                                            <Text fontSize="xs">คะแนนเฉลี่ย:</Text>
+                                            <Text fontWeight="bold" fontSize="sm" color="orange.500">
+                                                {surveySummary.averageRating ? Number(surveySummary.averageRating).toFixed(2) : "—"} / 5.00
+                                            </Text>
+                                            <Text fontSize="xs" color="gray.500">
+                                                (จากผู้ตอบ {surveySummary.ratingCounted || 0} คน)
+                                            </Text>
+                                        </HStack>
+
+                                        <Divider my={3} />
+
+                                        <Text fontSize="xs" fontWeight="bold" mb={2}>
+                                            ข้อเสนอแนะ (Feedback)
                                         </Text>
 
-                                        {loadingEstamps ? (
-                                            <HStack justify="center" py={8}>
-                                                <Spinner size="md" color="orange.500" />
-                                            </HStack>
-                                        ) : !surveySummary ? (
-                                            <Box py={8} textAlign="center" color="gray.500">
-                                                <Text fontSize="xs">ยังไม่มีข้อมูลการประเมินกิจกรรม</Text>
-                                            </Box>
+                                        {!surveySummary.feedbacks?.length ? (
+                                            <Text fontSize="xs" color="gray.500">ยังไม่มีข้อเสนอแนะ</Text>
                                         ) : (
-                                            <>
-                                                <Box width="100%" height={240}>
-                                                    <ResponsiveContainer width="100%" height="100%">
-                                                        <BarChart
-                                                            data={[
-                                                                { name: "1 ดาว", count: surveySummary.ratingCounts["1"] || 0 },
-                                                                { name: "2 ดาว", count: surveySummary.ratingCounts["2"] || 0 },
-                                                                { name: "3 ดาว", count: surveySummary.ratingCounts["3"] || 0 },
-                                                                { name: "4 ดาว", count: surveySummary.ratingCounts["4"] || 0 },
-                                                                { name: "5 ดาว", count: surveySummary.ratingCounts["5"] || 0 },
-                                                            ]}
-                                                            margin={{ top: 20, right: 20, left: 20, bottom: 20 }}
-                                                        >
-                                                            <CartesianGrid strokeDasharray="3 3" />
-                                                            <XAxis dataKey="name" fontSize={12} />
-                                                            <YAxis allowDecimals={false} fontSize={12} />
-                                                            <Tooltip />
-                                                            <Bar dataKey="count" fill="#FA4616">
-                                                                <LabelList dataKey="count" position="top" fontSize={12} />
-                                                            </Bar>
-                                                        </BarChart>
-                                                    </ResponsiveContainer>
-                                                </Box>
-
-                                                <HStack mt={4} p={3} bg={useColorModeValue("gray.50", "gray.800")} rounded="lg">
-                                                    <Text fontSize="xs">คะแนนเฉลี่ย:</Text>
-                                                    <Text fontWeight="bold" fontSize="md" color="orange.500">
-                                                        {surveySummary.averageRating ? Number(surveySummary.averageRating).toFixed(2) : "—"} / 5.00
-                                                    </Text>
-                                                    <Text fontSize="xs" color="gray.500">
-                                                        (จากผู้ตอบทั้งหมด {surveySummary.ratingCounted || 0} คน)
-                                                    </Text>
-                                                </HStack>
-
-                                                <Divider my={4} />
-
-                                                <Text fontSize="sm" fontWeight="bold" mb={3}>
-                                                    ข้อเสนอแนะเพิ่มเติม (Feedback)
-                                                </Text>
-
-                                                {!surveySummary.feedbacks?.length ? (
-                                                    <Text fontSize="xs" color="gray.500">ยังไม่มีข้อเสนอแนะ</Text>
-                                                ) : (
-                                                    <VStack align="stretch" spacing={2}>
-                                                        {surveySummary.feedbacks.map((f) => (
-                                                            <Box
-                                                                key={f.id}
-                                                                p={3}
-                                                                border="1px solid"
-                                                                borderColor={borderColor}
-                                                                rounded="lg"
-                                                            >
-                                                                <HStack justify="space-between" mb={1}>
-                                                                    <Text fontSize="xs" fontWeight="bold">
-                                                                        {f.studentName}
-                                                                    </Text>
-                                                                    {f.rating && (
-                                                                        <Badge colorScheme="orange" variant="subtle" fontSize="xs">
-                                                                            ⭐ {f.rating}
-                                                                        </Badge>
-                                                                    )}
-                                                                </HStack>
-                                                                <Text fontSize="xs" color="gray.600" _dark={{ color: "gray.300" }}>
-                                                                    {f.feedback}
-                                                                </Text>
-                                                                <Text fontSize="xs" color="gray.400" mt={1}>
-                                                                    {new Date(f.issued_at).toLocaleString("th-TH")}
-                                                                </Text>
-                                                            </Box>
-                                                        ))}
-                                                    </VStack>
-                                                )}
-                                            </>
+                                            <VStack align="stretch" spacing={2}>
+                                                {surveySummary.feedbacks.map((f) => (
+                                                    <Box
+                                                        key={f.id}
+                                                        p={2.5}
+                                                        border="1px solid"
+                                                        borderColor={borderColor}
+                                                        rounded="md"
+                                                    >
+                                                        <HStack justify="space-between" mb={1}>
+                                                            <Text fontSize="xs" fontWeight="bold">
+                                                                {f.studentName}
+                                                            </Text>
+                                                            {f.rating && (
+                                                                <Badge colorScheme="orange" variant="subtle" fontSize="xs">
+                                                                    ⭐ {f.rating}
+                                                                </Badge>
+                                                            )}
+                                                        </HStack>
+                                                        <Text fontSize="xs" color="gray.600" _dark={{ color: "gray.300" }}>
+                                                            {f.feedback}
+                                                        </Text>
+                                                        <Text fontSize="xs" color="gray.400" mt={1}>
+                                                            {new Date(f.issued_at).toLocaleString("th-TH")}
+                                                        </Text>
+                                                    </Box>
+                                                ))}
+                                            </VStack>
                                         )}
-                                    </CardBody>
-                                </Card>
+                                    </>
+                                )}
                             </TabPanel>
                         </TabPanels>
                     </Tabs>
 
-                    {/* Clean Chakra Edit Modal */}
-                    <Modal isOpen={isOpen} onClose={onClose} size="2xl">
+                    {/* Edit Modal */}
+                    <Modal isOpen={isOpen} onClose={onClose} size="lg">
                         <ModalOverlay />
                         <ModalContent>
-                            <ModalHeader fontSize="md" pb={2}>
-                                แก้ไขข้อมูลกิจกรรม #{activity.id}
+                            <ModalHeader fontSize="sm">
+                                แก้ไขกิจกรรม #{activity.id}
                             </ModalHeader>
                             <ModalCloseButton />
                             <ModalBody>
-                                <VStack spacing={4} align="stretch">
-                                    {/* Super Admin Ownership Control */}
+                                <VStack spacing={3} align="stretch">
                                     {isSuperAdmin && (
-                                        <Card variant="outline" borderColor="orange.200" bg="orange.50" _dark={{ bg: "whiteAlpha.50", borderColor: "orange.700" }}>
-                                            <CardBody p={3}>
-                                                <FormControl>
-                                                    <HStack justify="space-between" mb={1}>
-                                                        <FormLabel mb={0} fontSize="xs" fontWeight="bold">
-                                                            คณะ / ส่วนงานเจ้าของกิจกรรม
-                                                        </FormLabel>
-                                                        <Badge colorScheme="orange" variant="subtle" fontSize="xs">
-                                                            Super Admin Control
-                                                        </Badge>
-                                                    </HStack>
-                                                    <Select
-                                                        size="sm"
-                                                        bg="white"
-                                                        _dark={{ bg: "gray.800" }}
-                                                        rounded="lg"
-                                                        focusBorderColor="orange.500"
-                                                        value={form.ownerId || ""}
-                                                        onChange={(e) =>
-                                                            setForm({
-                                                                ...form,
-                                                                ownerId: e.target.value ? Number(e.target.value) : undefined,
-                                                            })
-                                                        }
-                                                    >
-                                                        <option value="">-- ไม่ระบุ / คงเดิม --</option>
-                                                        {adminOwners.map((admin) => (
-                                                            <option key={admin.id} value={admin.id}>
-                                                                {admin.name} ({admin.username})
-                                                            </option>
-                                                        ))}
-                                                    </Select>
-                                                    <FormHelperText fontSize="xs" color="gray.600" _dark={{ color: "gray.400" }}>
-                                                        การเปลี่ยนเจ้าของกิจกรรมจะ Re-sync การมอบหมาย Staff ไปยังคณะใหม่โดยอัตโนมัติ
-                                                    </FormHelperText>
-                                                </FormControl>
-                                            </CardBody>
-                                        </Card>
+                                        <FormControl>
+                                            <FormLabel fontSize="xs" fontWeight="bold">
+                                                สังกัดคณะ / เจ้าของกิจกรรม (Super Admin)
+                                            </FormLabel>
+                                            <Select
+                                                size="sm"
+                                                rounded="lg"
+                                                focusBorderColor="orange.500"
+                                                value={form.ownerId || ""}
+                                                onChange={(e) =>
+                                                    setForm({
+                                                        ...form,
+                                                        ownerId: e.target.value ? Number(e.target.value) : undefined,
+                                                    })
+                                                }
+                                            >
+                                                <option value="">-- ไม่ระบุ / คงเดิม --</option>
+                                                {adminOwners.map((admin) => (
+                                                    <option key={admin.id} value={admin.id}>
+                                                        {admin.name} ({admin.username})
+                                                    </option>
+                                                ))}
+                                            </Select>
+                                            <FormHelperText fontSize="xs">
+                                                เปลี่ยนสังกัดคณะจะ Re-assign Staff อัตโนมัติ
+                                            </FormHelperText>
+                                        </FormControl>
                                     )}
 
-                                    {/* Display Switch */}
                                     <FormControl display="flex" alignItems="center" justifyContent="space-between">
-                                        <Box>
-                                            <FormLabel htmlFor="display-toggle" mb={0} fontSize="xs" fontWeight="semibold">
-                                                แสดงกิจกรรมให้นักเรียนเห็น
-                                            </FormLabel>
-                                            <FormHelperText fontSize="xs" mt={0}>
-                                                {form.display ? "เปิดแสดงในหน้ารายการกิจกรรม" : "ซ่อนกิจกรรม ไม่แสดงในหน้ารายการ"}
-                                            </FormHelperText>
-                                        </Box>
+                                        <FormLabel htmlFor="display-toggle" mb={0} fontSize="xs" fontWeight="semibold">
+                                            แสดงกิจกรรมให้นักเรียนเห็น
+                                        </FormLabel>
                                         <Switch
                                             id="display-toggle"
                                             colorScheme="orange"
@@ -732,7 +690,7 @@ export const ViewActivityPage = () => {
                                         <Textarea
                                             size="sm"
                                             rounded="lg"
-                                            rows={3}
+                                            rows={2}
                                             focusBorderColor="orange.500"
                                             value={form.description || ""}
                                             onChange={(e) => setForm({ ...form, description: e.target.value })}
@@ -752,7 +710,7 @@ export const ViewActivityPage = () => {
                                         </FormControl>
 
                                         <FormControl isRequired>
-                                            <FormLabel fontSize="xs" fontWeight="semibold">วันที่จัดกิจกรรม</FormLabel>
+                                            <FormLabel fontSize="xs" fontWeight="semibold">วันที่</FormLabel>
                                             <Input
                                                 size="sm"
                                                 rounded="lg"
@@ -787,7 +745,7 @@ export const ViewActivityPage = () => {
                                         </FormControl>
 
                                         <FormControl>
-                                            <FormLabel fontSize="xs" fontWeight="semibold">คะแนนกิจกรรม (E-Stamp)</FormLabel>
+                                            <FormLabel fontSize="xs" fontWeight="semibold">คะแนน</FormLabel>
                                             <NumberInput
                                                 size="sm"
                                                 min={0}
@@ -805,7 +763,7 @@ export const ViewActivityPage = () => {
                                         </FormControl>
 
                                         <FormControl>
-                                            <FormLabel fontSize="xs" fontWeight="semibold">จำนวนผู้เข้าร่วมสูงสุด</FormLabel>
+                                            <FormLabel fontSize="xs" fontWeight="semibold">ผู้เข้าร่วมสูงสุด</FormLabel>
                                             <NumberInput
                                                 size="sm"
                                                 min={0}
@@ -823,7 +781,7 @@ export const ViewActivityPage = () => {
                                     </SimpleGrid>
 
                                     <FormControl>
-                                        <FormLabel fontSize="xs" fontWeight="semibold">ลิงก์แบบประเมิน (Form Link)</FormLabel>
+                                        <FormLabel fontSize="xs" fontWeight="semibold">ลิงก์แบบประเมิน</FormLabel>
                                         <Input
                                             size="sm"
                                             rounded="lg"
@@ -843,9 +801,8 @@ export const ViewActivityPage = () => {
                                     size="sm"
                                     onClick={handleSave}
                                     isLoading={saving}
-                                    loadingText="กำลังบันทึก..."
                                 >
-                                    บันทึกการเปลี่ยนแปลง
+                                    บันทึก
                                 </Button>
                             </ModalFooter>
                         </ModalContent>
