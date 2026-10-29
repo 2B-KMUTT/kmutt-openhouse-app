@@ -22,29 +22,42 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ error: "Missing email or password" });
   }
 
-  const student = await prisma.students.findUnique({
-    where: { email },
+  const identifier = email.trim();
+
+  const students = await prisma.students.findMany({
+    where: {
+      OR: [
+        { email: identifier },
+        { citizen_id: identifier },
+        { passport_id: identifier },
+        { phone: identifier },
+      ],
+    },
   });
 
-  if (!student) {
-    return res.status(401).json({ error: "Invalid credentials" });
+  let matchedStudent = null;
+  for (const s of students) {
+    const isValid = await bcrypt.compare(password, s.password_hash);
+    if (isValid) {
+      matchedStudent = s;
+      break;
+    }
   }
 
-  const isValid = await bcrypt.compare(password, student.password_hash);
-  if (!isValid) {
+  if (!matchedStudent) {
     return res.status(401).json({ error: "Invalid credentials" });
   }
 
   const payload = {
-    id: student.id,
-    role: "student",
-    name: student.first_name + " " + student.last_name,
-    school: student.school,
-    province: student.province,
-    uuid: student.uuid,
-    citizen_id: student.citizen_id,
-    phone: student.phone,
-    email: student.email,
+    id: matchedStudent.id,
+    role: matchedStudent.role,
+    name: `${matchedStudent.first_name} ${matchedStudent.last_name}`.trim(),
+    school: matchedStudent.school,
+    province: matchedStudent.province,
+    uuid: matchedStudent.uuid,
+    citizen_id: matchedStudent.citizen_id,
+    phone: matchedStudent.phone,
+    email: matchedStudent.email,
   };
 
   const accessToken = jwt.sign(payload, EXTERNAL_JWT_SECRET, { expiresIn: "1h" });
