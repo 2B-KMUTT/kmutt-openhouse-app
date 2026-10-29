@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit",
     "test:auth": "node scripts/verify-auth-roles.js",
     "test:superadmin": "node scripts/verify-superadmin-activities.js",
+    "test:storage": "node scripts/verify-rustfs-migration.js",
     "seed": "node prisma/seed.js",
     "seed:force": "node prisma/seed.js --force",
     "seed:admins": "node prisma/seed.js --admins-only",
@@ -24,12 +25,12 @@
     "seed": "node prisma/seed.js"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1160.0",
     "@chakra-ui/icons": "^2.2.4",
     "@chakra-ui/react": "2.10.9",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@prisma/client": "^6.15.0",
-    "@supabase/supabase-js": "^2.75.0",
     "axios": "^1.12.2",
     "bcrypt": "^6.0.0",
     "browser-image-compression": "^2.0.2",

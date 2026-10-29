@@ -30,7 +30,7 @@ A comprehensive web application for managing the KMUTT Open House event. The pla
 - **Frontend:** Next.js (Pages Router), React 19, Chakra UI v2, Framer Motion
 - **Backend:** Next.js API Routes, NextAuth.js (Credentials Provider)
 - **Database & ORM:** MySQL 8.0, Prisma ORM
-- **Object Storage:** Supabase Storage
+- **Object Storage:** RustFS (Self-hosted S3-compatible Object Storage)
 - **Container & Deployment:** Docker (Multi-stage build with Bun & Node 22 Standalone), Docker Compose, Nginx Load Balancer
 - **Monitoring:** Prometheus, Grafana, Node Exporter
 
@@ -153,7 +153,7 @@ npm run seed:test     # สร้างข้อมูล Mock สำหรั�
 ```
 
 ### Full Backup (Read-Only / Export Only)
-Safely exports MySQL database, Supabase storage assets, and certificates without deleting data:
+Safely exports MySQL database, RustFS storage volume, and certificates without deleting data:
 ```bash
 bash scripts/backup-all.sh
 ```

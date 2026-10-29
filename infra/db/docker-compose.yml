@@ -71,6 +71,22 @@ services:
       - rustfs_data:/data
       - rustfs_logs:/app/logs
 
+  rustfs-init:
+    image: rustfs/rc:latest
+    container_name: openhouse_rustfs_init
+    restart: "no"
+    depends_on:
+      - rustfs
+    env_file:
+      - .env
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        rc alias set local http://rustfs:9000 $${RUSTFS_ACCESS_KEY:-rustfsadmin} $${RUSTFS_SECRET_KEY}
+        rc bucket create local/$${S3_BUCKET_NAME:-openhouse-uploads} || true
+        rc bucket anonymous set download local/$${S3_BUCKET_NAME:-openhouse-uploads} || true
+
   # ==========================================
   # Observability & Monitoring Stack (INT531)
   # Host: OpenHouse-DB (10.2.15.91)
