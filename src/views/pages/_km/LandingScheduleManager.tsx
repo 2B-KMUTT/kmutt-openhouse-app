@@ -74,6 +74,10 @@ export default function LandingScheduleManager() {
     const borderColor = useColorModeValue("gray.200", "gray.600");
     const textColor = useColorModeValue("gray.800", "gray.100");
     const headBg = useColorModeValue("orange.50", "whiteAlpha.100");
+    const rowHoverBg = useColorModeValue("blackAlpha.50", "whiteAlpha.50");
+    const subSectionBg = useColorModeValue("orange.50", "whiteAlpha.50");
+    const subSectionBorderColor = useColorModeValue("orange.200", "orange.700");
+    const subSectionContainerBg = useColorModeValue("gray.50", "gray.800");
 
     const toast = useToast();
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -423,14 +427,14 @@ export default function LandingScheduleManager() {
                                 ) : filteredItems.length === 0 ? (
                                     <Tr>
                                         <Td colSpan={7} textAlign="center" py={8} color="gray.500">
-                                            ไม่พบรายการในหมวดนี้ คลิกปุ่ม "+ เพิ่มกำหนดการ" เพื่อสร้างรายการใหม่
+                                            ไม่พบรายการในหมวดนี้ คลิกปุ่ม &quot;+ เพิ่มกำหนดการ&quot; เพื่อสร้างรายการใหม่
                                         </Td>
                                     </Tr>
                                 ) : (
                                     filteredItems.map((item, idx) => (
                                         <Tr
                                             key={item.id}
-                                            _hover={{ bg: useColorModeValue("blackAlpha.50", "whiteAlpha.50") }}
+                                            _hover={{ bg: rowHoverBg }}
                                             opacity={item.display ? 1 : 0.6}
                                         >
                                             {/* Reorder Buttons */}
@@ -493,10 +497,10 @@ export default function LandingScheduleManager() {
                                                         <Box
                                                             mt={1}
                                                             p={2}
-                                                            bg={useColorModeValue("orange.50", "whiteAlpha.50")}
+                                                            bg={subSectionBg}
                                                             rounded="md"
                                                             border="1px dashed"
-                                                            borderColor={useColorModeValue("orange.200", "orange.700")}
+                                                            borderColor={subSectionBorderColor}
                                                             w="full"
                                                         >
                                                             <Text fontSize="xs" fontWeight="bold" color={PRIMARY}>
@@ -703,7 +707,7 @@ export default function LandingScheduleManager() {
                                     <Box
                                         w="full"
                                         p={4}
-                                        bg={useColorModeValue("gray.50", "gray.800")}
+                                        bg={subSectionContainerBg}
                                         rounded="lg"
                                         border="1px solid"
                                         borderColor={borderColor}

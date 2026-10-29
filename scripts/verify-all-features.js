@@ -81,12 +81,17 @@ async function runTests() {
   // -------------------------------------------------------------
   // TEST 3: Survey Timing - SCENARIO A (Before Oct 30: Locked)
   // -------------------------------------------------------------
-  console.log("--- TEST 3: Survey Timing - SCENARIO A: Before Oct 30 (Current Reality) ---");
-  // Ensure mode is "auto"
+  console.log("--- TEST 3: Survey Timing - SCENARIO A: Before Start Date (Simulated Pre-Event Lock) ---");
+  // Ensure mode is "auto" and set surveyStartDate to a future date to test locked pre-event state
   await prisma.landingConfig.upsert({
     where: { key: "surveyStatus" },
     update: { value: "auto" },
     create: { key: "surveyStatus", value: "auto" },
+  });
+  await prisma.landingConfig.upsert({
+    where: { key: "surveyStartDate" },
+    update: { value: "2099-10-30T00:00:00+07:00" },
+    create: { key: "surveyStartDate", value: "2099-10-30T00:00:00+07:00" },
   });
 
   res = await fetch(`${BASE_URL}/api/survey/config`);
@@ -97,8 +102,8 @@ async function runTests() {
   console.log(`   Evaluated Status:    ${surveyConfig.status}`);
   console.log(`   isOpen:              ${surveyConfig.isOpen}`);
 
-  assert(surveyConfig.status === "not_started", "Status is strictly 'not_started' before Oct 30");
-  assert(surveyConfig.isOpen === false, "isOpen is strictly false before Oct 30");
+  assert(surveyConfig.status === "not_started", "Status is strictly 'not_started' before start date");
+  assert(surveyConfig.isOpen === false, "isOpen is strictly false before start date");
 
   // Attempt to submit survey before Oct 30 -> MUST BE REJECTED (403)
   res = await fetch(`${BASE_URL}/api/survey`, {
@@ -250,11 +255,15 @@ async function runTests() {
   console.log(`   Admin ID: ${superadmin.id}, Username: ${superadmin.username}, Email: ${superadmin.email}`);
   console.log("");
 
-  // Final check: survey status is back to 'not_started' and locked
+  // Final check: survey status matches actual date window
   res = await fetch(`${BASE_URL}/api/survey/config`);
   surveyConfig = await res.json();
-  assert(surveyConfig.status === "not_started", "Final check: Status is locked 'not_started'");
-  assert(surveyConfig.isOpen === false, "Final check: isOpen is false (Modal locked before Oct 30)");
+  const now = new Date();
+  const start = new Date(surveyConfig.startDate);
+  const end = new Date(surveyConfig.endDate);
+  const expectedStatus = now < start ? "not_started" : (now > end ? "ended" : "open");
+  assert(surveyConfig.status === expectedStatus, `Final check: Status is '${expectedStatus}' as expected for current date`);
+  assert(surveyConfig.isOpen === (expectedStatus === "open"), `Final check: isOpen is ${expectedStatus === "open"}`);
 
   console.log("=================================================================");
   console.log("🎉 ALL TESTS PASSED SUCCESSFULLY! (100% VERIFIED)");

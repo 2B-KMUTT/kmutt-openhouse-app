@@ -1,5 +1,4 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { recordHttpRequest, incrementInFlight, decrementInFlight } from "@/libs/metrics";
 
 /**
  * Next.js Instrumentation Hook
@@ -9,6 +8,7 @@ import { recordHttpRequest, incrementInFlight, decrementInFlight } from "@/libs/
 export async function register() {
   if (process.env.NEXT_RUNTIME === "nodejs") {
     const http = await import("node:http");
+    const { recordHttpRequest, incrementInFlight, decrementInFlight } = await import("@/libs/metrics");
 
     const serverProto = http.Server.prototype as unknown as {
       __openhouse_instrumented?: boolean;

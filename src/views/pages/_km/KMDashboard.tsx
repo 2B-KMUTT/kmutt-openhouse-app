@@ -34,6 +34,8 @@ const KMDashboardPage = () => {
     const router = useRouter()
     const cardBg = useColorModeValue("white", "gray.700")
     const textColor = useColorModeValue("gray.800", "gray.100")
+    const bannerBg = useColorModeValue("orange.50", "whiteAlpha.100")
+    const bannerBorderColor = useColorModeValue("orange.200", "orange.700")
 
     const [data, setData] = useState<KMProfile | null>(null)
     const [activities, setActivities] = useState<Activity[]>([])
@@ -109,9 +111,9 @@ const KMDashboardPage = () => {
                 {/* Landing Page Management Banner */}
                 <Box
                     p={{ base: 4, md: 5 }}
-                    bg={useColorModeValue("orange.50", "whiteAlpha.100")}
+                    bg={bannerBg}
                     border="1px solid"
-                    borderColor={useColorModeValue("orange.200", "orange.700")}
+                    borderColor={bannerBorderColor}
                     rounded="2xl"
                     mb={6}
                 >

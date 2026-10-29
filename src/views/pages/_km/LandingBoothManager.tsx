@@ -332,7 +332,7 @@ export default function LandingBoothManager() {
                         textAlign="center"
                     >
                         <Text color="gray.500" mb={4}>
-                            ยังไม่มีข้อมูลโซนบูท คลิกปุ่ม "+ เพิ่มโซนบูท" เพื่อสร้างโซนแรก
+                            ยังไม่มีข้อมูลโซนบูท คลิกปุ่ม &quot;+ เพิ่มโซนบูท&quot; เพื่อสร้างโซนแรก
                         </Text>
                         <Button size="sm" colorScheme="orange" onClick={handleOpenAdd}>
                             + เพิ่มโซนบูท

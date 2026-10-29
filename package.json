@@ -10,7 +10,8 @@
     "start": "next start",
     "lint": "eslint",
     "seed:admins": "node scripts/generate-admin-accounts.js",
-    "seed:staffs": "node scripts/generate-staff-accounts.js"
+    "seed:staffs": "node scripts/generate-staff-accounts.js",
+    "sync:admins": "node scripts/sync-admins-from-csv.js"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.2.4",

@@ -50,6 +50,8 @@ export default function SurveySettingsManager() {
     const borderColor = useColorModeValue("gray.200", "gray.600");
     const textColor = useColorModeValue("gray.800", "gray.100");
     const subTextColor = useColorModeValue("gray.500", "gray.400");
+    const bannerBg = useColorModeValue("orange.50", "whiteAlpha.100");
+    const optionBg = useColorModeValue("gray.50", "gray.750");
 
     const toast = useToast();
     const [loading, setLoading] = useState(true);
@@ -290,7 +292,7 @@ export default function SurveySettingsManager() {
                     border="1px solid"
                     borderColor={borderColor}
                     mb={6}
-                    bg={useColorModeValue("orange.50", "whiteAlpha.100")}
+                    bg={bannerBg}
                 >
                     <CardBody p={5}>
                         <Flex
@@ -456,7 +458,7 @@ export default function SurveySettingsManager() {
                                                 rounded="xl"
                                                 border="1px solid"
                                                 borderColor={borderColor}
-                                                bg={useColorModeValue("gray.50", "gray.750")}
+                                                bg={optionBg}
                                                 justify="space-between"
                                             >
                                                 <HStack spacing={3}>

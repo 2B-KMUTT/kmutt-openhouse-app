@@ -179,6 +179,8 @@ export const PublicSurvey = () => {
     const borderColor = useColorModeValue("gray.200", "gray.700")
     const textColor = useColorModeValue("gray.800", "gray.100")
     const mutedColor = useColorModeValue("gray.500", "gray.400")
+    const pageBg = useColorModeValue("gray.50", "gray.900")
+    const noticeBoxBg = useColorModeValue("orange.50", "whiteAlpha.100")
 
     // Dynamic config state
     const [configData, setConfigData] = useState<any>(null)
@@ -460,7 +462,7 @@ export const PublicSurvey = () => {
 
     if (isLoadingConfig) {
         return (
-            <Box minH="100vh" py={20} px={4} bg={useColorModeValue("gray.50", "gray.900")}>
+            <Box minH="100vh" py={20} px={4} bg={pageBg}>
                 <Center flexDirection="column">
                     <Spinner size="xl" color="orange.500" thickness="4px" speed="0.65s" mb={4} />
                     <Text color={mutedColor} fontSize="md">กำลังตรวจสอบสถานะแบบประเมิน...</Text>
@@ -472,7 +474,7 @@ export const PublicSurvey = () => {
     // Locked Screen: Survey Not Started Yet
     if (!isPreview && configData?.status === "not_started") {
         return (
-            <Box minH="100vh" py={{ base: 12, md: 20 }} px={4} bg={useColorModeValue("gray.50", "gray.900")}>
+            <Box minH="100vh" py={{ base: 12, md: 20 }} px={4} bg={pageBg}>
                 <Head>
                     <title>แบบประเมินยังไม่เปิดให้บริการ · KMUTT Open House</title>
                 </Head>
@@ -503,7 +505,7 @@ export const PublicSurvey = () => {
                             <Box
                                 p={4}
                                 rounded="2xl"
-                                bg={useColorModeValue("orange.50", "whiteAlpha.100")}
+                                bg={noticeBoxBg}
                                 border="1px dashed"
                                 borderColor="orange.300"
                                 mb={8}
@@ -534,7 +536,7 @@ export const PublicSurvey = () => {
     // Locked Screen: Survey Ended or Force Closed
     if (!isPreview && (configData?.status === "ended" || configData?.status === "closed")) {
         return (
-            <Box minH="100vh" py={{ base: 12, md: 20 }} px={4} bg={useColorModeValue("gray.50", "gray.900")}>
+            <Box minH="100vh" py={{ base: 12, md: 20 }} px={4} bg={pageBg}>
                 <Head>
                     <title>แบบประเมินปิดรับคำตอบแล้ว · KMUTT Open House</title>
                 </Head>
@@ -583,7 +585,7 @@ export const PublicSurvey = () => {
             minH="100vh"
             py={{ base: 6, md: 10 }}
             px={{ base: 4, md: 8 }}
-            bg={useColorModeValue("gray.50", "gray.900")}
+            bg={pageBg}
         >
             <Head>
                 <title>แบบสอบถาม เปิดเฮือน มจธ. (ร้อยเอ็ด)</title>

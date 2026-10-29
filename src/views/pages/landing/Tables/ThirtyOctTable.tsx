@@ -144,6 +144,8 @@ const ThirtyOctTable: React.FC<ThirtyOctTableProps> = ({ filter = "all" }) => {
     const hoverBg = useColorModeValue("blackAlpha.50", "whiteAlpha.100");
     const textColor = useColorModeValue("gray.800", "gray.100");
     const subTextColor = useColorModeValue("gray.600", "gray.300");
+    const subSectionBg = useColorModeValue("orange.50", "whiteAlpha.50");
+    const subSectionBorderColor = useColorModeValue("orange.200", "orange.700");
 
     const [scheduleList, setScheduleList] = useState<LandingScheduleItem[]>(defaultScheduleData);
 
@@ -298,10 +300,10 @@ const ThirtyOctTable: React.FC<ThirtyOctTableProps> = ({ filter = "all" }) => {
                                                 <Box
                                                     mt={2}
                                                     p={3}
-                                                    bg={useColorModeValue("orange.50", "whiteAlpha.50")}
+                                                    bg={subSectionBg}
                                                     rounded="xl"
                                                     border="1px dashed"
-                                                    borderColor={useColorModeValue("orange.200", "orange.700")}
+                                                    borderColor={subSectionBorderColor}
                                                     w="100%"
                                                 >
                                                     {item.subSectionTitle && (
