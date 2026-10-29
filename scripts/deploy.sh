@@ -118,6 +118,10 @@ echo "--> Updating openhouse_app_3..."
 docker compose -f "$COMPOSE_FILE" up -d --no-deps openhouse_app_3
 wait_for_port 83
 
+# Exporters for OpenHouse-VM Telemetry (Prometheus scraping)
+echo "--> Ensuring OpenHouse-VM exporters (node-exporter, nginx-exporter) are running..."
+docker compose -f "$COMPOSE_FILE" up -d node-exporter nginx-exporter
+
 # 5. Reload Nginx configuration and clean up
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] [STEP 5/5] Reloading Nginx & Pruning dangling images..."
 if docker ps -q -f name=openhouse_nginx | grep -q .; then

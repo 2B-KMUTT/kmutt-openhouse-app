@@ -7,26 +7,70 @@ groups:
         for: 1m
         labels:
           severity: critical
+          tier: page
         annotations:
           summary: "Target instance {{ $labels.instance }} ({{ $labels.job }}) is down"
           description: "Prometheus failed to scrape metrics from {{ $labels.instance }} for over 1 minute."
+          runbook_url: "https://github.com/kmutt-openhouse-app/docs/runbooks/target-instance-down.md"
 
-      # 2. Availability SLI Alert (INT531 Slide 1.7: Availability SLI / 5xx error ratio > 1%)
-      - alert: HighErrorRateSLI
+      # 2. Fast Burn Rate: Consuming 2% of 30-day budget in 1 hour (14.4x burn rate) -> Immediate Page
+      - alert: ErrorBudgetBurnRateFast
         expr: |
           (
-            sum(rate(http_requests_total{status=~"5.."}[5m]))
-            /
-            sum(rate(http_requests_total[5m]))
-          ) > 0.01
+            sum(rate(http_requests_total{status=~"5.."}[1h])) / sum(rate(http_requests_total[1h])) > (14.4 * 0.001)
+          )
+          and
+          (
+            sum(rate(http_requests_total{status=~"5.."}[5m])) / sum(rate(http_requests_total[5m])) > (14.4 * 0.001)
+          )
         for: 2m
         labels:
           severity: critical
+          tier: page
         annotations:
-          summary: "High HTTP 5xx error rate (Availability SLI below 99%)"
-          description: "Server error rate is {{ $value | humanizePercentage }} over the last 5 minutes."
+          summary: "Critical Error Budget Burn Rate (14.4x - 2% exhausted in 1 hour)"
+          description: "Current 5m and 1h error rates are exhausting the 99.9% SLO error budget rapidly."
+          runbook_url: "https://github.com/kmutt-openhouse-app/docs/runbooks/error-budget-burn-rate.md"
 
-      # 3. Latency SLI Alert (INT531 Slide 1.7: p99 Latency > 2.5s)
+      # 3. Slow Burn Rate: Consuming 5% of 30-day budget in 6 hours (6x burn rate) -> Page
+      - alert: ErrorBudgetBurnRateSlow
+        expr: |
+          (
+            sum(rate(http_requests_total{status=~"5.."}[6h])) / sum(rate(http_requests_total[6h])) > (6 * 0.001)
+          )
+          and
+          (
+            sum(rate(http_requests_total{status=~"5.."}[30m])) / sum(rate(http_requests_total[30m])) > (6 * 0.001)
+          )
+        for: 15m
+        labels:
+          severity: warning
+          tier: page
+        annotations:
+          summary: "Moderate Error Budget Burn Rate (6x - 5% exhausted in 6 hours)"
+          description: "Sustained error rate across 30m and 6h windows is consuming error budget."
+          runbook_url: "https://github.com/kmutt-openhouse-app/docs/runbooks/error-budget-burn-rate.md"
+
+      # 4. Low Burn Rate: Consuming 10% of 30-day budget in 24 hours (3x burn rate) -> Ticket
+      - alert: ErrorBudgetBurnRateTicket
+        expr: |
+          (
+            sum(rate(http_requests_total{status=~"5.."}[24h])) / sum(rate(http_requests_total[24h])) > (3 * 0.001)
+          )
+          and
+          (
+            sum(rate(http_requests_total{status=~"5.."}[2h])) / sum(rate(http_requests_total[2h])) > (3 * 0.001)
+          )
+        for: 1h
+        labels:
+          severity: info
+          tier: ticket
+        annotations:
+          summary: "Low Error Budget Burn Rate (3x - 10% exhausted in 24 hours)"
+          description: "Persistent background errors detected. Investigate during business hours."
+          runbook_url: "https://github.com/kmutt-openhouse-app/docs/runbooks/error-budget-burn-rate.md"
+
+      # 5. Latency SLI Alert (INT531 Slide 1.7: p99 Latency > 2.5s)
       - alert: HighLatencyP99
         expr: |
           histogram_quantile(
@@ -36,46 +80,56 @@ groups:
         for: 3m
         labels:
           severity: warning
+          tier: page
         annotations:
           summary: "Cluster 99th percentile latency > 2.5s"
           description: "99% of requests are taking {{ $value | humanizeDuration }} to respond."
+          runbook_url: "https://github.com/kmutt-openhouse-app/docs/runbooks/high-latency.md"
 
-      # 4. Host Memory Saturation (< 10% available)
+      # 6. Host Memory Saturation (< 10% available)
       - alert: HostMemoryCritical
         expr: (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) < 0.10
         for: 3m
         labels:
           severity: critical
+          tier: page
         annotations:
-          summary: "Host {{ $labels.host }} memory critically low"
+          summary: "Host {{ $labels.host }} memory critically low (< 10% available)"
           description: "Available memory on {{ $labels.host }} is less than 10%."
+          runbook_url: "https://github.com/kmutt-openhouse-app/docs/runbooks/host-memory.md"
 
-      # 5. Host Disk Space Low (< 15% free)
+      # 7. Host Disk Space Low (< 15% free)
       - alert: HostDiskSpaceLow
         expr: (node_filesystem_free_bytes{fstype!~"tmpfs|overlay"} / node_filesystem_size_bytes{fstype!~"tmpfs|overlay"}) < 0.15
         for: 5m
         labels:
           severity: warning
+          tier: ticket
         annotations:
           summary: "Host {{ $labels.host }} filesystem free space < 15%"
           description: "Filesystem {{ $labels.mountpoint }} on {{ $labels.host }} has {{ $value | humanizePercentage }} free space remaining."
+          runbook_url: "https://github.com/kmutt-openhouse-app/docs/runbooks/disk-space.md"
 
-      # 6. Database Connection Pool Saturation (> 80% max_connections)
+      # 8. Database Connection Pool Saturation (> 80% max_connections)
       - alert: MySQLConnectionsHigh
         expr: (mysql_global_status_threads_connected / mysql_global_variables_max_connections) > 0.80
         for: 2m
         labels:
           severity: warning
+          tier: ticket
         annotations:
           summary: "MySQL active connections > 80% limit"
           description: "Active database threads ({{ $value | humanizePercentage }}) are nearing max_connections limit."
+          runbook_url: "https://github.com/kmutt-openhouse-app/docs/runbooks/mysql-connections.md"
 
-      # 7. Monitoring Self-Protection against Cardinality Trap (INT531 Slide 1.9 & 1.12 Case Study 1)
+      # 9. Monitoring Self-Protection against Cardinality Trap (INT531 Slide 1.9 & 1.12 Case Study 1)
       - alert: PrometheusCardinalitySpike
         expr: prometheus_tsdb_head_series > 50000
         for: 5m
         labels:
           severity: critical
+          tier: page
         annotations:
           summary: "Prometheus active TSDB head series > 50,000"
           description: "TSDB head series count is rapidly growing ({{ $value }} series). Check for unbounded label injection (Cardinality Trap)."
+          runbook_url: "https://github.com/kmutt-openhouse-app/docs/runbooks/cardinality-spike.md"

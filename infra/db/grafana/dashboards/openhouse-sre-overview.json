@@ -30,7 +30,7 @@
         "y": 0
       },
       "id": 100,
-      "title": "แถวที่ 1: ระบบบริการยังทำงานเป็นปกติดีอยู่หรือไม่? (Service Health & SLIs)",
+      "title": "Tier 1: Service Health & SLIs (Availability, Error Budget, RPS)",
       "type": "row"
     },
     {
@@ -69,7 +69,7 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 4,
+        "w": 6,
         "x": 0,
         "y": 1
       },
@@ -96,13 +96,156 @@
             "uid": "Prometheus"
           },
           "editorMode": "code",
-          "expr": "100 * (sum(rate(http_requests_total{status!~\"5..\"}[5m])) or 1) / (sum(rate(http_requests_total[5m])) or 1)",
+          "expr": "(sum(rate(http_requests_total{status!~\"5..\"}[5m])) / (sum(rate(http_requests_total[5m])) > 0) * 100) or vector(100)",
           "legendFormat": "Availability SLI",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Availability SLI (5m)",
+      "title": "Availability SLI (5m Rolling)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "Prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 1.0
+              },
+              {
+                "color": "red",
+                "value": 6.0
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 1
+      },
+      "id": 7,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "10.0.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Prometheus"
+          },
+          "editorMode": "code",
+          "expr": "((sum(rate(http_requests_total{status=~\"5..\"}[1h])) / (sum(rate(http_requests_total[1h])) > 0)) / 0.001) or vector(0)",
+          "legendFormat": "Burn Rate (1h)",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Error Budget Burn Rate (1h)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "Prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 20.0
+              },
+              {
+                "color": "green",
+                "value": 50.0
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 12,
+        "y": 1
+      },
+      "id": 8,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "10.0.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Prometheus"
+          },
+          "editorMode": "code",
+          "expr": "clamp_min((1 - ((sum(increase(http_requests_total{status=~\"5..\"}[30d])) or vector(0)) / ((sum(increase(http_requests_total[30d])) or vector(1)) * 0.001))) * 100, 0)",
+          "legendFormat": "Budget Remaining",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "30-Day Error Budget Remaining",
       "type": "stat"
     },
     {
@@ -131,8 +274,8 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 4,
-        "x": 4,
+        "w": 6,
+        "x": 18,
         "y": 1
       },
       "id": 2,
@@ -157,13 +300,13 @@
             "uid": "Prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(rate(http_requests_total[1m])) or 0",
+          "expr": "sum(rate(http_requests_total[1m])) or vector(0)",
           "legendFormat": "Requests per Second",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "HTTP Traffic (RPS)",
+      "title": "Global HTTP Throughput (RPS)",
       "type": "stat"
     },
     {
@@ -199,10 +342,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 4,
-        "w": 4,
-        "x": 8,
-        "y": 1
+        "h": 3,
+        "w": 6,
+        "x": 0,
+        "y": 5
       },
       "id": 3,
       "options": {
@@ -226,135 +369,13 @@
             "uid": "Prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(http_requests_in_flight) or 0",
+          "expr": "sum(http_requests_in_flight) or vector(0)",
           "legendFormat": "Active In-Flight",
           "range": true,
           "refId": "A"
         }
       ],
       "title": "In-Flight Requests",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "Prometheus"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "blue",
-                "value": null
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 4,
-        "x": 12,
-        "y": 1
-      },
-      "id": 4,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "Prometheus"
-          },
-          "editorMode": "code",
-          "expr": "sum(openhouse_registered_users_total) or 0",
-          "legendFormat": "Users",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Total Registered Users",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "Prometheus"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "purple",
-                "value": null
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 4,
-        "x": 16,
-        "y": 1
-      },
-      "id": 5,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "Prometheus"
-          },
-          "editorMode": "code",
-          "expr": "openhouse_estamps_total or 0",
-          "legendFormat": "E-Stamps",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "E-Stamps Awarded",
       "type": "stat"
     },
     {
@@ -399,10 +420,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 4,
-        "w": 4,
-        "x": 20,
-        "y": 1
+        "h": 3,
+        "w": 6,
+        "x": 6,
+        "y": 5
       },
       "id": 6,
       "options": {
@@ -436,15 +457,137 @@
       "type": "stat"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "Prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 12,
+        "y": 5
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Prometheus"
+          },
+          "editorMode": "code",
+          "expr": "sum(max by (role) (openhouse_registered_users_total)) or vector(0)",
+          "legendFormat": "Users",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Total Registered Users",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "Prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "purple",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 18,
+        "y": 5
+      },
+      "id": 5,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "Prometheus"
+          },
+          "editorMode": "code",
+          "expr": "max(openhouse_estamps_total) or vector(0)",
+          "legendFormat": "E-Stamps",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "E-Stamps Awarded",
+      "type": "stat"
+    },
+    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 5
+        "y": 8
       },
       "id": 200,
-      "title": "แถวที่ 2: อาการแย่แค่ไหน และส่งผลกระทบต่อส่วนใด? (Latency, Errors & Services)",
+      "title": "Tier 2: Traffic, Latency & Error Distribution (RED Method)",
       "type": "row"
     },
     {
@@ -503,7 +646,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 6
+        "y": 9
       },
       "id": 11,
       "options": {
@@ -616,7 +759,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 6
+        "y": 9
       },
       "id": 12,
       "options": {
@@ -707,7 +850,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 14
+        "y": 17
       },
       "id": 13,
       "options": {
@@ -809,7 +952,7 @@
         "h": 7,
         "w": 12,
         "x": 12,
-        "y": 14
+        "y": 17
       },
       "id": 14,
       "options": {
@@ -872,10 +1015,10 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 21
+        "y": 24
       },
       "id": 300,
-      "title": "แถวที่ 3: ทรัพยากรโครงสร้างพื้นฐานระดับล่างส่วนใดที่กำลังวิกฤต? (Host Infrastructure: VM vs DB)",
+      "title": "Tier 3: Infrastructure Saturation (USE Method)",
       "type": "row"
     },
     {
@@ -944,7 +1087,7 @@
         "h": 7,
         "w": 6,
         "x": 0,
-        "y": 22
+        "y": 25
       },
       "id": 21,
       "options": {
@@ -1045,7 +1188,7 @@
         "h": 7,
         "w": 6,
         "x": 6,
-        "y": 22
+        "y": 25
       },
       "id": 22,
       "options": {
@@ -1146,7 +1289,7 @@
         "h": 7,
         "w": 6,
         "x": 12,
-        "y": 22
+        "y": 25
       },
       "id": 23,
       "options": {
@@ -1235,7 +1378,7 @@
         "h": 7,
         "w": 6,
         "x": 18,
-        "y": 22
+        "y": 25
       },
       "id": 24,
       "options": {

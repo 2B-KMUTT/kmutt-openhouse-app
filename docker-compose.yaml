@@ -81,8 +81,6 @@ services:
     image: nginx/nginx-prometheus-exporter:latest
     container_name: openhouse_nginx_exporter
     restart: unless-stopped
-    depends_on:
-      - nginx
     command:
       - "--nginx.scrape-uri=http://nginx:80/nginx_status"
     ports:
