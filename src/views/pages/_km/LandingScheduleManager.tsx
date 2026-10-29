@@ -294,7 +294,9 @@ export default function LandingScheduleManager() {
         }
     };
 
-    const handleMove = async (index: number, direction: "up" | "down") => {
+    const handleMove = async (itemId: number, direction: "up" | "down") => {
+        const index = items.findIndex((i) => i.id === itemId);
+        if (index === -1) return;
         const targetIndex = direction === "up" ? index - 1 : index + 1;
         if (targetIndex < 0 || targetIndex >= items.length) return;
 
@@ -317,8 +319,7 @@ export default function LandingScheduleManager() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ type: "schedule", items: reorderPayload }),
             });
-        } catch (err) {
-            console.error("Reorder failed:", err);
+        } catch {
             fetchItems();
         }
     };
@@ -529,19 +530,19 @@ export default function LandingScheduleManager() {
                                                     icon={<ArrowUpIcon />}
                                                     size="xs"
                                                     variant="outline"
-                                                    isDisabled={idx === 0}
-                                                    onClick={() => handleMove(idx, "up")}
+                                                    isDisabled={items.findIndex((i) => i.id === item.id) === 0}
+                                                    onClick={() => handleMove(item.id, "up")}
                                                 />
                                                 <IconButton
                                                     aria-label="Move Down"
                                                     icon={<ArrowDownIcon />}
                                                     size="xs"
                                                     variant="outline"
-                                                    isDisabled={idx === filteredItems.length - 1}
-                                                    onClick={() => handleMove(idx, "down")}
+                                                    isDisabled={items.findIndex((i) => i.id === item.id) === items.length - 1}
+                                                    onClick={() => handleMove(item.id, "down")}
                                                 />
                                                 <Text fontSize="2xs" color="gray.400" ml={1}>
-                                                    #{idx + 1}
+                                                    #{items.findIndex((i) => i.id === item.id) + 1}
                                                 </Text>
                                             </HStack>
 
@@ -618,16 +619,16 @@ export default function LandingScheduleManager() {
                                                                 icon={<ArrowUpIcon />}
                                                                 size="xs"
                                                                 variant="ghost"
-                                                                isDisabled={idx === 0}
-                                                                onClick={() => handleMove(idx, "up")}
+                                                                isDisabled={items.findIndex((i) => i.id === item.id) === 0}
+                                                                onClick={() => handleMove(item.id, "up")}
                                                             />
                                                             <IconButton
                                                                 aria-label="Move Down"
                                                                 icon={<ArrowDownIcon />}
                                                                 size="xs"
                                                                 variant="ghost"
-                                                                isDisabled={idx === filteredItems.length - 1}
-                                                                onClick={() => handleMove(idx, "down")}
+                                                                isDisabled={items.findIndex((i) => i.id === item.id) === items.length - 1}
+                                                                onClick={() => handleMove(item.id, "down")}
                                                             />
                                                         </HStack>
                                                     </Td>
