@@ -16,7 +16,8 @@
     "seed:admins": "node prisma/seed.js --admins-only",
     "seed:staffs": "node prisma/seed.js --staffs-only",
     "seed:test": "node prisma/seed-test.js",
-    "sync:admins": "node scripts/sync-admins-from-csv.js"
+    "sync:admins": "node scripts/sync-admins-from-csv.js",
+    "sync:staffs": "node scripts/sync-staffs-from-csv.js"
   },
   "prisma": {
     "seed": "node prisma/seed.js"
