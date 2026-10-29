@@ -21,7 +21,7 @@ export default function Document() {
         <link rel="icon" href="/favicon.ico" />
 
         {/* Theme color */}
-        <meta name="theme-color" content="#F04E23" />
+        <meta name="theme-color" content="#FA4616" />
 
         {/* Open Graph / Facebook */}
         <meta property="og:title" content="KMUTT Open House 2025 - A Journey of Discovery" />

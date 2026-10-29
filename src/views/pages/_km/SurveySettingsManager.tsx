@@ -43,7 +43,7 @@ import KMAppLayout from "@/views/layouts/KMAppLayout";
 import Link from "next/link";
 import { DEFAULT_SURVEY_CONFIG } from "@/pages/api/survey/config";
 
-const PRIMARY = "#F04E23";
+const PRIMARY = "#FA4616";
 
 export default function SurveySettingsManager() {
     const cardBg = useColorModeValue("white", "gray.700");
@@ -62,8 +62,8 @@ export default function SurveySettingsManager() {
     const [currentStatus, setCurrentStatus] = useState<string>("not_started");
     const [currentTime, setCurrentTime] = useState<string>("");
 
-    // 3 พระจอม Ranking question config
-    const [threeJomEnabled, setThreeJomEnabled] = useState<boolean>(true);
+    // 3 พระจอม Ranking question config (Disabled by user request)
+    const [threeJomEnabled, setThreeJomEnabled] = useState<boolean>(false);
     const [threeJomTitle, setThreeJomTitle] = useState<string>(
         "ความสนใจในกลุ่ม 3 พระจอม (เรียงลำดับความสนใจที่ท่านชื่นชอบ 1-3)"
     );
@@ -272,7 +272,7 @@ export default function SurveySettingsManager() {
                         <Button
                             size="sm"
                             bg={PRIMARY}
-                            _hover={{ bg: "#d6451f" }}
+                            _hover={{ bg: "#E0380B" }}
                             color="white"
                             leftIcon={<CheckIcon />}
                             isLoading={saving}
@@ -616,7 +616,7 @@ export default function SurveySettingsManager() {
                         <Button
                             size="lg"
                             bg={PRIMARY}
-                            _hover={{ bg: "#d6451f" }}
+                            _hover={{ bg: "#E0380B" }}
                             color="white"
                             leftIcon={<CheckIcon />}
                             isLoading={saving}

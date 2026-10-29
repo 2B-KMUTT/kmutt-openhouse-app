@@ -18,7 +18,7 @@ import { Menu, X, Moon, Sun } from "lucide-react";
 import { ReactNode, useState } from "react";
 import LogoutButton from "@/components/Auth/LogoutButton";
 
-const PRIMARY = "#F04E23"; // KMUTT Orange Red
+const PRIMARY = "#FA4616"; // KMUTT Orange Red
 const SECONDARY = "#FFC233"; // KMUTT Yellow
 
 type StudentLayoutProps = {
@@ -90,7 +90,7 @@ export default function GuestLayout({ children }: StudentLayoutProps) {
                             <Box display={{ base: "none", md: "block" }}>
                                 <LogoutButton
                                     bg={PRIMARY}
-                                    _hover={{ bg: "#d6451f" }}
+                                    _hover={{ bg: "#E0380B" }}
                                     color="white"
                                     rounded="xl"
                                 >
@@ -132,7 +132,7 @@ export default function GuestLayout({ children }: StudentLayoutProps) {
                                     w="full"
                                     size={{ base: "sm", md: "md" }}
                                     bg={PRIMARY}
-                                    _hover={{ bg: "#d6451f" }}
+                                    _hover={{ bg: "#E0380B" }}
                                     color="white"
                                     rounded="xl"
                                     fontSize={{ base: "sm", md: "md" }}

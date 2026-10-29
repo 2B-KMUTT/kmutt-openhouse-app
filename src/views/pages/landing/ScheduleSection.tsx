@@ -24,7 +24,7 @@ const ScheduleSection = () => {
     return (
         <Box as="section" id="schedule" py={{ base: 12, md: 20 }} px={{ base: 4, md: 6 }} maxW="7xl" mx="auto">
             <VStack spacing={4} textAlign="center" mb={{ base: 6, md: 10 }}>
-                <Heading size={{ base: "lg", md: "xl" }} color="#F04E23">
+                <Heading size={{ base: "lg", md: "xl" }} color="#FA4616">
                     กำหนดการจัดกิจกรรม KMUTT Open House
                 </Heading>
                 <Heading size={{ base: "xs", sm: "sm", md: "md" }} color="gray.500" fontWeight="normal">
@@ -51,7 +51,7 @@ const ScheduleSection = () => {
                         fontWeight="medium"
                         shadow="xs"
                     >
-                        <Icon as={Calendar} color="#F04E23" />
+                        <Icon as={Calendar} color="#FA4616" />
                         <Text>วันเสาร์ที่ 30 ตุลาคม 2569 เวลา 09.00 – 17.00 น.</Text>
                     </HStack>
                     <HStack
@@ -66,7 +66,7 @@ const ScheduleSection = () => {
                         fontWeight="medium"
                         shadow="xs"
                     >
-                        <Icon as={MapPin} color="#F04E23" />
+                        <Icon as={MapPin} color="#FA4616" />
                         <Text>ณ โรงแรมเพชรรัชต์การ์เด้น อ.เมือง จ.ร้อยเอ็ด</Text>
                     </HStack>
                 </Stack>

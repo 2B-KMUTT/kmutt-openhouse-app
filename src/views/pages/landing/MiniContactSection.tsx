@@ -1,7 +1,7 @@
 import { Box, Text, Button, useColorModeValue } from "@chakra-ui/react";
 import { FaLine } from "react-icons/fa";
 
-const PRIMARY = "#F04E23"; // KMUTT Orange Red
+const PRIMARY = "#FA4616"; // KMUTT Orange Red
 const SECONDARY = "#FFC233"; // KMUTT Yellow
 
 const ContactSection = () => {

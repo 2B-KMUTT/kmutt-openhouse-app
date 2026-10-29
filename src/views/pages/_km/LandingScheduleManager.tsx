@@ -56,7 +56,7 @@ import KMAppLayout from "@/views/layouts/KMAppLayout";
 import { LandingScheduleItem } from "@/interfaces/LandingContent";
 import Link from "next/link";
 
-const PRIMARY = "#F04E23";
+const PRIMARY = "#FA4616";
 
 const categoryColorOptions = [
     { label: "ส้ม (Orange)", value: "orange" },
@@ -362,7 +362,7 @@ export default function LandingScheduleManager() {
                         <Button
                             size="sm"
                             bg={PRIMARY}
-                            _hover={{ bg: "#d6451f" }}
+                            _hover={{ bg: "#E0380B" }}
                             color="white"
                             leftIcon={<AddIcon />}
                             onClick={handleOpenAdd}
@@ -456,7 +456,7 @@ export default function LandingScheduleManager() {
                                             </Td>
 
                                             {/* Time */}
-                                            <Td fontWeight="bold" color="#F04E23" whiteSpace="nowrap">
+                                            <Td fontWeight="bold" color="#FA4616" whiteSpace="nowrap">
                                                 {item.time}
                                             </Td>
 
@@ -499,7 +499,7 @@ export default function LandingScheduleManager() {
                                                             borderColor={useColorModeValue("orange.200", "orange.700")}
                                                             w="full"
                                                         >
-                                                            <Text fontSize="xs" fontWeight="bold" color="#F04E23">
+                                                            <Text fontSize="xs" fontWeight="bold" color="#FA4616">
                                                                 {item.subSectionTitle}
                                                             </Text>
                                                             {item.subSectionItems?.map((zone, zIdx) => (
@@ -799,7 +799,7 @@ export default function LandingScheduleManager() {
                             </Button>
                             <Button
                                 bg={PRIMARY}
-                                _hover={{ bg: "#d6451f" }}
+                                _hover={{ bg: "#E0380B" }}
                                 color="white"
                                 isLoading={submitting}
                                 onClick={handleSave}

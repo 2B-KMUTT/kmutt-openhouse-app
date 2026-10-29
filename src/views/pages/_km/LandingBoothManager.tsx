@@ -47,7 +47,7 @@ import KMAppLayout from "@/views/layouts/KMAppLayout";
 import { LandingBoothItem } from "@/interfaces/LandingContent";
 import Link from "next/link";
 
-const PRIMARY = "#F04E23";
+const PRIMARY = "#FA4616";
 
 export default function LandingBoothManager() {
     const cardBg = useColorModeValue("white", "gray.700");
@@ -308,7 +308,7 @@ export default function LandingBoothManager() {
                         <Button
                             size="sm"
                             bg={PRIMARY}
-                            _hover={{ bg: "#d6451f" }}
+                            _hover={{ bg: "#E0380B" }}
                             color="white"
                             leftIcon={<AddIcon />}
                             onClick={handleOpenAdd}
@@ -530,7 +530,7 @@ export default function LandingBoothManager() {
                             </Button>
                             <Button
                                 bg={PRIMARY}
-                                _hover={{ bg: "#d6451f" }}
+                                _hover={{ bg: "#E0380B" }}
                                 color="white"
                                 isLoading={submitting}
                                 onClick={handleSave}

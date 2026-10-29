@@ -30,7 +30,7 @@ import { useSession } from "next-auth/react";
 import FAQSection from "./FAQSection";
 import LogoutButton from "@/components/Auth/LogoutButton";
 
-const PRIMARY = "#F04E23"; // KMUTT Orange Red
+const PRIMARY = "#FA4616"; // KMUTT Orange Red
 const SECONDARY = "#FFC233"; // KMUTT Yellow
 
 const LandingPage = () => {
@@ -169,7 +169,7 @@ const LandingPage = () => {
                                             as={Link}
                                             href={getDashboardUrl(session?.user?.role)}
                                             bg={PRIMARY}
-                                            _hover={{ bg: "#d6451f" }}
+                                            _hover={{ bg: "#E0380B" }}
                                             color="white"
                                             rounded="xl"
                                         >
@@ -191,7 +191,7 @@ const LandingPage = () => {
                                         as={Link}
                                         href="/login"
                                         bg={PRIMARY}
-                                        _hover={{ bg: "#d6451f" }}
+                                        _hover={{ bg: "#E0380B" }}
                                         color="white"
                                         rounded="xl"
                                         display={{ base: "none", md: "inline-flex" }}
@@ -264,7 +264,7 @@ const LandingPage = () => {
                                                 href={getDashboardUrl(session?.user?.role)}
                                                 w="full"
                                                 bg={PRIMARY}
-                                                _hover={{ bg: "#d6451f" }}
+                                                _hover={{ bg: "#E0380B" }}
                                                 color="white"
                                                 rounded="xl"
                                                 onClick={() => setMenuOpen(false)}
@@ -289,7 +289,7 @@ const LandingPage = () => {
                                             href="/login"
                                             w="full"
                                             bg={PRIMARY}
-                                            _hover={{ bg: "#d6451f" }}
+                                            _hover={{ bg: "#E0380B" }}
                                             color="white"
                                             rounded="xl"
                                         >
@@ -368,7 +368,7 @@ const LandingPage = () => {
                                 href="/register"
                                 size={{ base: "md", md: "lg" }}
                                 bg={PRIMARY}
-                                _hover={{ bg: "#d6451f" }}
+                                _hover={{ bg: "#E0380B" }}
                                 color="white"
                                 rounded="xl"
                                 px={8}

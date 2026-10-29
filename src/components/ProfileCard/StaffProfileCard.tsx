@@ -10,7 +10,7 @@ import {
     useColorModeValue,
 } from "@chakra-ui/react"
 
-const PRIMARY = "#F04E23"
+const PRIMARY = "#FA4616"
 import { StaffProfile } from "@/interfaces/KMProfile"
 
 const StaffProfileCard = ({ data }: { data: StaffProfile }) => {

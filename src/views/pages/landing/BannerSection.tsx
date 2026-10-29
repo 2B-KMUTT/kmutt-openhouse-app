@@ -27,7 +27,7 @@ const BannerSection = () => {
     const [isHovered, setIsHovered] = useState(false);
     const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-    const activeDotColor = useColorModeValue("#F04E23", "#FFC233");
+    const activeDotColor = useColorModeValue("#FA4616", "#FFC233");
     const inactiveDotColor = useColorModeValue("blackAlpha.400", "whiteAlpha.400");
 
     useEffect(() => {

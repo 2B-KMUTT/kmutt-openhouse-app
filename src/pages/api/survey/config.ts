@@ -71,7 +71,7 @@ export const DEFAULT_SURVEY_CONFIG = {
     "หลักสูตรเรียนล่วงหน้า เทียบโอนหน่วยกิต",
   ],
   threeJomQuestion: {
-    enabled: true,
+    enabled: false,
     title: "ความสนใจในกลุ่ม 3 พระจอม (เรียงลำดับความสนใจที่ท่านชื่นชอบ 1-3)",
     options: [
       "มจธ. - มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าธนบุรี (บางมด)",

@@ -24,7 +24,7 @@ import {
 } from "@chakra-ui/react"
 import { useRouter } from "next/router"
 import Head from "next/head"
-import { CheckCircle2, AlertCircle, Clock, Lock, RotateCcw, Award } from "lucide-react"
+import { CheckCircle2, AlertCircle, Clock, Lock } from "lucide-react"
 
 // Default Options constants
 const DEFAULT_PROVINCES = [
@@ -123,9 +123,6 @@ export const PublicSurvey = () => {
     const [decisionFactors, setDecisionFactors] = useState<string[]>([])
     const [worryPoints, setWorryPoints] = useState<string>("")
 
-    // State: 3 พระจอม ranking (for นักเรียน or anyone)
-    const [threeJomRanking, setThreeJomRanking] = useState<string[]>([])
-
     // State: ผู้ปกครอง
     const [parentGrade, setParentGrade] = useState<string>("")
     const [parentWorries, setParentWorries] = useState<string[]>([])
@@ -178,38 +175,6 @@ export const PublicSurvey = () => {
     const parentChannelsList = configData?.surveyConfig?.parentChannels || DEFAULT_PARENT_CHANNELS
     const teacherNeedsList = configData?.surveyConfig?.teacherNeeds || DEFAULT_TEACHER_NEEDS
 
-    const threeJomConfig = configData?.surveyConfig?.threeJomQuestion || {
-        enabled: true,
-        title: "ความสนใจในกลุ่ม 3 พระจอม (เรียงลำดับความสนใจที่ท่านชื่นชอบ 1-3)",
-        options: [
-            "มจธ. - มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าธนบุรี (บางมด)",
-            "สจล. - สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง",
-            "มจพ. - มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ",
-        ],
-    }
-
-    // Handle 3 พระจอม Ranking Toggle
-    const handleToggleThreeJom = (option: string) => {
-        if (threeJomRanking.includes(option)) {
-            setThreeJomRanking(threeJomRanking.filter((item) => item !== option))
-        } else {
-            if (threeJomRanking.length >= threeJomConfig.options.length) {
-                toast({
-                    title: `จัดอันดับครบ ${threeJomConfig.options.length} ลำดับแล้ว`,
-                    status: "info",
-                    duration: 2000,
-                    isClosable: true,
-                })
-                return
-            }
-            setThreeJomRanking([...threeJomRanking, option])
-        }
-    }
-
-    const handleResetThreeJom = () => {
-        setThreeJomRanking([])
-    }
-
     // Helper for multi-select chips with max limit
     const toggleMultiSelect = (
         currentList: string[],
@@ -251,10 +216,6 @@ export const PublicSurvey = () => {
             if (interestedFaculty.length > 0) answered++
             if (decisionFactors.length > 0) answered++
             if (worryPoints) answered++
-            if (threeJomConfig.enabled) {
-                totalRequired += 1
-                if (threeJomRanking.length === threeJomConfig.options.length) answered++
-            }
         } else if (role === "ผู้ปกครอง") {
             totalRequired += 4
             if (parentGrade) answered++
@@ -277,8 +238,6 @@ export const PublicSurvey = () => {
         interestedFaculty,
         decisionFactors,
         worryPoints,
-        threeJomRanking,
-        threeJomConfig,
         parentGrade,
         parentWorries,
         parentInfoNeeded,
@@ -325,13 +284,6 @@ export const PublicSurvey = () => {
                 toast({ title: "กรุณาเลือกเรื่องที่กังวลที่สุดหากมาเรียน มจธ.", status: "error" })
                 return
             }
-            if (threeJomConfig.enabled && threeJomRanking.length > 0 && threeJomRanking.length < threeJomConfig.options.length) {
-                toast({
-                    title: `กรุณาจัดอันดับ 3 พระจอมให้ครบทั้ง ${threeJomConfig.options.length} ลำดับ`,
-                    status: "warning",
-                })
-                return
-            }
         } else if (role === "ผู้ปกครอง") {
             if (!parentGrade) {
                 toast({ title: "กรุณาเลือกระดับชั้นของบุตรหลาน", status: "error" })
@@ -371,17 +323,6 @@ export const PublicSurvey = () => {
 
         setIsSubmitting(true)
         try {
-            // Build confusionRanking format
-            let confusionPayload: any = null
-            if (threeJomRanking.length > 0) {
-                confusionPayload = {
-                    ranking: threeJomRanking,
-                    rank1: threeJomRanking[0] || null,
-                    rank2: threeJomRanking[1] || null,
-                    rank3: threeJomRanking[2] || null,
-                }
-            }
-
             const payload = {
                 role,
                 province,
@@ -402,7 +343,6 @@ export const PublicSurvey = () => {
                 recommendIntent,
                 overallSatisfaction,
                 feedbackNote,
-                confusionRanking: confusionPayload,
             }
 
             const res = await fetch("/api/survey", {
@@ -844,7 +784,7 @@ export const PublicSurvey = () => {
                                 </Box>
 
                                 {/* Q8: Worry */}
-                                <Box mb={6}>
+                                <Box>
                                     <Text fontWeight="semibold" fontSize="md" mb={3} color={textColor}>
                                         8. ถ้าจะมาเรียน มจธ. กังวลเรื่องใดที่สุด <Text as="span" color="red.500">*</Text>
                                     </Text>
@@ -863,103 +803,6 @@ export const PublicSurvey = () => {
                                         ))}
                                     </Flex>
                                 </Box>
-
-                                {/* Q9: 3 พระจอม Ranking Question (Dynamic) */}
-                                {threeJomConfig.enabled && (
-                                    <Box
-                                        p={{ base: 4, md: 5 }}
-                                        rounded="2xl"
-                                        bg={useColorModeValue("orange.50", "whiteAlpha.100")}
-                                        border="1px solid"
-                                        borderColor={useColorModeValue("orange.200", "orange.700")}
-                                        mb={2}
-                                    >
-                                        <HStack justify="space-between" align="center" mb={1}>
-                                            <HStack spacing={2}>
-                                                <Icon as={Award} color="orange.500" />
-                                                <Text fontWeight="bold" fontSize="md" color={textColor}>
-                                                    9. {threeJomConfig.title || "ความสนใจในกลุ่ม 3 พระจอม (เรียงลำดับ 1-3)"}
-                                                </Text>
-                                            </HStack>
-                                            {threeJomRanking.length > 0 && (
-                                                <Button
-                                                    size="xs"
-                                                    variant="ghost"
-                                                    leftIcon={<Icon as={RotateCcw} />}
-                                                    onClick={handleResetThreeJom}
-                                                    colorScheme="orange"
-                                                >
-                                                    รีเซ็ต
-                                                </Button>
-                                            )}
-                                        </HStack>
-                                        <Text fontSize="xs" color={mutedColor} mb={4}>
-                                            แตะที่สถาบันตามลำดับที่ท่านชื่นชอบมากที่สุดไปน้อยที่สุด (อันดับ 1 ➔ อันดับ 2 ➔ อันดับ 3)
-                                        </Text>
-
-                                        <VStack spacing={2.5} align="stretch">
-                                            {threeJomConfig.options.map((opt: string) => {
-                                                const rankIndex = threeJomRanking.indexOf(opt)
-                                                const isRanked = rankIndex !== -1
-                                                const rankBadges = ["🥇 อันดับ 1", "🥈 อันดับ 2", "🥉 อันดับ 3"]
-
-                                                return (
-                                                    <Box
-                                                        key={opt}
-                                                        p={3.5}
-                                                        rounded="xl"
-                                                        border="2px solid"
-                                                        borderColor={isRanked ? "orange.400" : borderColor}
-                                                        bg={isRanked ? useColorModeValue("white", "gray.800") : useColorModeValue("whiteAlpha.700", "gray.750")}
-                                                        cursor="pointer"
-                                                        onClick={() => handleToggleThreeJom(opt)}
-                                                        transition="all 0.2s"
-                                                        _hover={{ borderColor: "orange.300", transform: "translateY(-1px)" }}
-                                                    >
-                                                        <Flex justify="space-between" align="center">
-                                                            <Text
-                                                                fontSize="sm"
-                                                                fontWeight={isRanked ? "bold" : "medium"}
-                                                                color={isRanked ? "orange.600" : textColor}
-                                                            >
-                                                                {opt}
-                                                            </Text>
-                                                            {isRanked ? (
-                                                                <Badge
-                                                                    colorScheme={rankIndex === 0 ? "orange" : rankIndex === 1 ? "blue" : "purple"}
-                                                                    fontSize="xs"
-                                                                    px={2.5}
-                                                                    py={1}
-                                                                    rounded="full"
-                                                                >
-                                                                    {rankBadges[rankIndex] || `อันดับ ${rankIndex + 1}`}
-                                                                </Badge>
-                                                            ) : (
-                                                                <Badge variant="outline" colorScheme="gray" fontSize="2xs" px={2} py={0.5} rounded="md">
-                                                                    แตะเพื่อเลือก
-                                                                </Badge>
-                                                            )}
-                                                        </Flex>
-                                                    </Box>
-                                                )
-                                            })}
-                                        </VStack>
-
-                                        {threeJomRanking.length > 0 && (
-                                            <Box mt={3} pt={2} borderTop="1px dashed" borderColor="orange.200">
-                                                <Text fontSize="xs" color="gray.600">
-                                                    ลำดับที่คุณเลือก:{" "}
-                                                    {threeJomRanking.map((r, i) => (
-                                                        <strong key={r}>
-                                                            {i > 0 && " ➔ "}
-                                                            {i + 1}. {r.split(" - ")[0]}
-                                                        </strong>
-                                                    ))}
-                                                </Text>
-                                            </Box>
-                                        )}
-                                    </Box>
-                                )}
                             </Box>
                         )}
 

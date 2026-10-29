@@ -16,7 +16,7 @@ import {
 import { signOut } from "next-auth/react"
 
 const GuestSidebar = () => {
-    const PRIMARY = "#F04E23"
+    const PRIMARY = "#FA4616"
     const bgColor = useColorModeValue("white", "gray.700")
     const hoverBg = useColorModeValue("gray.200", "gray.700")
     const textColor = useColorModeValue("gray.800", "gray.100")

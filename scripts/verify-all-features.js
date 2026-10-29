@@ -135,7 +135,7 @@ async function runTests() {
   assert(surveyConfig.status === "open", "Status becomes 'open' during the event window");
   assert(surveyConfig.isOpen === true, "isOpen becomes true during the event window (Modal will pop up)");
 
-  // Submit full survey with 3 พระจอม Ranking
+  // Submit survey without 3 พระจอม
   const testSurveyPayload = {
     role: "นักเรียน",
     province: "ร้อยเอ็ด",
@@ -148,16 +148,6 @@ async function runTests() {
     recommendIntent: 5,
     overallSatisfaction: 5,
     feedbackNote: "ระบบตอบสนองดีมาก",
-    confusionRanking: {
-      ranking: [
-        "มจธ. - มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าธนบุรี (บางมด)",
-        "สจล. - สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง",
-        "มจพ. - มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ",
-      ],
-      rank1: "มจธ. - มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าธนบุรี (บางมด)",
-      rank2: "สจล. - สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง",
-      rank3: "มจพ. - มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ",
-    },
   };
 
   res = await fetch(`${BASE_URL}/api/survey`, {
@@ -174,11 +164,6 @@ async function runTests() {
     where: { id: createdSurvey.survey.id },
   });
   assert(dbRecord !== null, "Record found in MySQL database");
-  assert(
-    dbRecord.confusionRanking && dbRecord.confusionRanking.rank1.includes("มจธ"),
-    "confusionRanking (3 พระจอม) verified in MySQL JSON column"
-  );
-  console.log(`   Verified 3 พระจอม saved in DB: Rank 1 = "${dbRecord.confusionRanking.rank1}"`);
 
   // Clean up test survey record
   await prisma.publicSurvey.delete({ where: { id: createdSurvey.survey.id } });

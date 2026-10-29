@@ -20,7 +20,7 @@ import { ReactNode, useState } from "react";
 import Image from "next/image";
 import LogoutButton from "@/components/Auth/LogoutButton";
 
-const PRIMARY = "#F04E23"; // KMUTT Orange Red
+const PRIMARY = "#FA4616"; // KMUTT Orange Red
 const SECONDARY = "#FFC233"; // KMUTT Yellow
 
 type StudentLayoutProps = {
@@ -97,7 +97,7 @@ export default function StudentLayout({ children }: StudentLayoutProps) {
                             <Box display={{ base: "none", md: "block" }}>
                                 <LogoutButton
                                     bg={PRIMARY}
-                                    _hover={{ bg: "#d6451f" }}
+                                    _hover={{ bg: "#E0380B" }}
                                     color="white"
                                     rounded="xl"
                                 >
@@ -160,7 +160,7 @@ export default function StudentLayout({ children }: StudentLayoutProps) {
                                 <LogoutButton
                                     w="full"
                                     bg={PRIMARY}
-                                    _hover={{ bg: "#d6451f" }}
+                                    _hover={{ bg: "#E0380B" }}
                                     color="white"
                                     fontSize={"sm"}
                                     rounded="xl"

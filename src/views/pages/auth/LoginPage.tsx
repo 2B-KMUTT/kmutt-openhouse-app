@@ -23,7 +23,7 @@ import { ArrowBackIcon, LockIcon } from "@chakra-ui/icons"
 import Head from "next/head"
 
 // KMUTT Colors
-const PRIMARY = "#F04E23"
+const PRIMARY = "#FA4616"
 const SECONDARY = "#FFC233"
 
 const LoginPage = () => {

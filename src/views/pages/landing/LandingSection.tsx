@@ -16,7 +16,7 @@ import Link from "next/link";
 import BoothSection from "./BoothSection";
 
 // KMUTT Colors
-const PRIMARY = "#F04E23"; // Orange Red
+const PRIMARY = "#FA4616"; // Orange Red
 const SECONDARY = "#FFC233"; // Yellow
 
 export function LandingSections() {

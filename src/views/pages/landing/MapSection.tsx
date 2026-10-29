@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Box, Image, Text, useColorModeValue, Modal, ModalOverlay, ModalContent, ModalBody, ModalCloseButton, useDisclosure } from "@chakra-ui/react";
 
-const PRIMARY = "#F04E23"; // KMUTT Orange Red
+const PRIMARY = "#FA4616"; // KMUTT Orange Red
 const SECONDARY = "#FFC233"; // KMUTT Yellow
 
 const MapSection = () => {

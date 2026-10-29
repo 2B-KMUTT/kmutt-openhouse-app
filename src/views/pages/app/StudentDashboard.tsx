@@ -27,7 +27,7 @@ import { FaCameraRetro, FaCertificate, FaClipboardList, FaQrcode } from "react-i
 import { useRouter } from "next/router"
 import { GiJourney } from "react-icons/gi"
 
-const PRIMARY = "#F04E23"
+const PRIMARY = "#FA4616"
 
 type Activity = {
     id: number

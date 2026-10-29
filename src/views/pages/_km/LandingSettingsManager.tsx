@@ -29,7 +29,7 @@ import KMAppLayout from "@/views/layouts/KMAppLayout";
 import Link from "next/link";
 import { DEFAULT_LANDING_CONFIG } from "@/interfaces/LandingContent";
 
-const PRIMARY = "#F04E23";
+const PRIMARY = "#FA4616";
 
 export default function LandingSettingsManager() {
     const cardBg = useColorModeValue("white", "gray.700");
@@ -206,7 +206,7 @@ export default function LandingSettingsManager() {
                         <Button
                             size="sm"
                             bg={PRIMARY}
-                            _hover={{ bg: "#d6451f" }}
+                            _hover={{ bg: "#E0380B" }}
                             color="white"
                             leftIcon={<CheckIcon />}
                             isLoading={saving}
@@ -429,7 +429,7 @@ export default function LandingSettingsManager() {
                         <Button
                             size="lg"
                             bg={PRIMARY}
-                            _hover={{ bg: "#d6451f" }}
+                            _hover={{ bg: "#E0380B" }}
                             color="white"
                             leftIcon={<CheckIcon />}
                             isLoading={saving}

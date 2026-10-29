@@ -26,7 +26,7 @@ import { UserPlus } from "lucide-react"
 import Head from "next/head"
 
 // KMUTT Colors
-const PRIMARY = "#F04E23"
+const PRIMARY = "#FA4616"
 const SECONDARY = "#FFC233"
 
 // รายชื่อจังหวัดไทย

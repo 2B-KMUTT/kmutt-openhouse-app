@@ -99,7 +99,7 @@ e-Stamp: ตราประทับอิเล็กทรอนิกส์�
 const FAQSection = () => {
     return (
         <Box py={12} px={6} maxW="900px" mx="auto">
-            <Heading mb={8} textAlign="center" color="#F04E23">
+            <Heading mb={8} textAlign="center" color="#FA4616">
                 คำถามที่พบบ่อย
             </Heading>
 

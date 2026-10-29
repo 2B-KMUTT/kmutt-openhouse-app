@@ -21,7 +21,7 @@ import { LockIcon, CheckCircleIcon, ArrowBackIcon } from "@chakra-ui/icons"
 import Link from "next/link"
 
 // KMUTT Colors
-const PRIMARY = "#F04E23"
+const PRIMARY = "#FA4616"
 const SECONDARY = "#FFC233"
 
 const ResetPasswordPage = () => {

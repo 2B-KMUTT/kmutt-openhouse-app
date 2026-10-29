@@ -125,7 +125,7 @@ const KMDashboardPage = () => {
                                 <Badge colorScheme="orange" fontSize="xs" px={2} py={0.5} rounded="md">
                                     ระบบจัดการหน้าแรก & แบบสอบถาม
                                 </Badge>
-                                <Text fontWeight="bold" fontSize={{ base: "sm", md: "md" }} color="#F04E23">
+                                <Text fontWeight="bold" fontSize={{ base: "sm", md: "md" }} color="#FA4616">
                                     ศูนย์ควบคุมข้อมูลหน้าแรก & แบบสอบถาม (Landing & Survey Control Center)
                                 </Text>
                             </HStack>
@@ -171,7 +171,7 @@ const KMDashboardPage = () => {
                                 colorScheme="orange"
                                 onClick={() => router.push("/_km/survey-settings")}
                             >
-                                📊 ตั้งค่าแบบสอบถาม (3 จอม)
+                                📊 ตั้งค่าแบบสอบถาม
                             </Button>
                         </HStack>
                     </Flex>

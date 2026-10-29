@@ -23,7 +23,7 @@ import { useRouter } from "next/router"
 import { signOut } from "next-auth/react"
 
 const KMSidebar = () => {
-    const PRIMARY = "#F04E23"
+    const PRIMARY = "#FA4616"
     const bgColor = useColorModeValue("white", "gray.700")
     const hoverBg = useColorModeValue("gray.200", "gray.700")
     const textColor = useColorModeValue("gray.800", "gray.100")
@@ -39,7 +39,7 @@ const KMSidebar = () => {
         { label: "จัดการกำหนดการหน้าแรก", icon: MdCalendarToday, link: "/_km/landing-schedule" },
         { label: "จัดการบูท & โซนหน้าแรก", icon: MdStorefront, link: "/_km/landing-booth" },
         { divider: true },
-        { label: "ตั้งค่าแบบสอบถาม (3 พระจอม)", icon: MdPoll, link: "/_km/survey-settings" },
+        { label: "ตั้งค่าแบบสอบถาม", icon: MdPoll, link: "/_km/survey-settings" },
         { label: "รายงานผลแบบสอบถาม", icon: MdAssessment, link: "/survey-report" },
         { divider: true },
         { label: "ออกจากระบบ", icon: MdLogout, isLogout: true },

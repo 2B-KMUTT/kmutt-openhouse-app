@@ -22,7 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         <title>Student Login</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <style>
-          :root { --uni-red: #F04E23; --uni-yellow: #FFC233; }
+          :root { --uni-red: #FA4616; --uni-yellow: #FFC233; }
         </style>
       </head>
       <body class="bg-gray-50 min-h-screen flex flex-col">

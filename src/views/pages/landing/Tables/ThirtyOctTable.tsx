@@ -184,7 +184,7 @@ const ThirtyOctTable: React.FC<ThirtyOctTableProps> = ({ filter = "all" }) => {
                     <Thead bg={headBg}>
                         <Tr>
                             <Th
-                                color="#F04E23"
+                                color="#FA4616"
                                 fontSize="sm"
                                 py={4}
                                 width={{ base: "40%", sm: "30%", md: "25%" }}
@@ -197,7 +197,7 @@ const ThirtyOctTable: React.FC<ThirtyOctTableProps> = ({ filter = "all" }) => {
                                 </HStack>
                             </Th>
                             <Th
-                                color="#F04E23"
+                                color="#FA4616"
                                 fontSize="sm"
                                 py={4}
                                 textTransform="none"
@@ -225,7 +225,7 @@ const ThirtyOctTable: React.FC<ThirtyOctTableProps> = ({ filter = "all" }) => {
                                         <Text
                                             fontWeight="bold"
                                             fontSize={{ base: "xs", sm: "sm", md: "md" }}
-                                            color="#F04E23"
+                                            color="#FA4616"
                                             whiteSpace={{ base: "normal", sm: "nowrap" }}
                                             lineHeight="1.4"
                                         >
@@ -282,7 +282,7 @@ const ThirtyOctTable: React.FC<ThirtyOctTableProps> = ({ filter = "all" }) => {
                                                         >
                                                             <ListIcon
                                                                 as={CheckCircle2}
-                                                                color="#F04E23"
+                                                                color="#FA4616"
                                                                 mt="3px"
                                                                 boxSize="14px"
                                                                 flexShrink={0}
@@ -307,7 +307,7 @@ const ThirtyOctTable: React.FC<ThirtyOctTableProps> = ({ filter = "all" }) => {
                                                         <Text
                                                             fontWeight="semibold"
                                                             fontSize={{ base: "xs", sm: "sm" }}
-                                                            color="#F04E23"
+                                                            color="#FA4616"
                                                             mb={2}
                                                         >
                                                             {item.subSectionTitle}
@@ -324,7 +324,7 @@ const ThirtyOctTable: React.FC<ThirtyOctTableProps> = ({ filter = "all" }) => {
                                                                     color={subTextColor}
                                                                     lineHeight="1.5"
                                                                 >
-                                                                    <Text mr={2} color="#F04E23" fontWeight="bold">
+                                                                    <Text mr={2} color="#FA4616" fontWeight="bold">
                                                                         •
                                                                     </Text>
                                                                     <Text wordBreak="break-word">{zone}</Text>
