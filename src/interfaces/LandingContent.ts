@@ -49,9 +49,9 @@ export const DEFAULT_LANDING_CONFIG = {
   regisLink: "https://kmutt.me/oph_Ratchaburi",
   openChatLink: "https://kmutt.me/OpenChatOPH2025",
   mapUrl: "https://maps.google.com/?q=Xen+Hotel+Nakhon+Pathom",
-  coordinatorName: "สำนักงาน มจธ.ราชบุรี",
-  coordinatorPhone: "0 3272 6700",
-  coordinatorEmail: "admission@kmutt.ac.th",
+  coordinatorName: "คุณศราวุฒิ จันทร์แฉล้ม",
+  coordinatorPhone: "032-726510",
+  coordinatorEmail: "sarawut.jun@kmutt.ac.th",
 };
 
 export type KnownLandingConfigKey =

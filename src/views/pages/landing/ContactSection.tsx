@@ -7,9 +7,9 @@ import { PRIMARY, SECONDARY } from "@/constants/colors";
 const ContactSection = () => {
     const text = useColorModeValue("gray.800", "gray.200");
 
-    const [coordinatorName, setCoordinatorName] = useState("สำนักงาน มจธ.ราชบุรี");
-    const [coordinatorPhone, setCoordinatorPhone] = useState("0 3272 6700");
-    const [coordinatorEmail, setCoordinatorEmail] = useState("admission@kmutt.ac.th");
+    const [coordinatorName, setCoordinatorName] = useState("คุณศราวุฒิ จันทร์แฉล้ม");
+    const [coordinatorPhone, setCoordinatorPhone] = useState("032-726510");
+    const [coordinatorEmail, setCoordinatorEmail] = useState("sarawut.jun@kmutt.ac.th");
     const [openChatLink, setOpenChatLink] = useState("https://kmutt.me/OpenChatOPH2025");
 
     useEffect(() => {

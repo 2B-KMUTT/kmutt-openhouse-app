@@ -14,9 +14,9 @@ export const EVENT_CONFIG = {
     registrationLink: "https://kmutt.me/oph_Ratchaburi",
     openChatLink: "https://kmutt.me/OpenChatOPH2025",
     coordinator: {
-        name: "สำนักงาน มจธ.ราชบุรี",
-        phone: "0 3272 6700",
-        email: "admission@kmutt.ac.th",
+        name: "คุณศราวุฒิ จันทร์แฉล้ม",
+        phone: "032-726510",
+        email: "sarawut.jun@kmutt.ac.th",
     },
     availableDates: ["21/11/2026", "30/10/2026"],
     rounds: [
