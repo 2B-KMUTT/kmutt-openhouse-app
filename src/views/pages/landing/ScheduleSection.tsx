@@ -14,7 +14,7 @@ import {
     useColorModeValue,
 } from "@chakra-ui/react";
 import { Calendar, MapPin } from "lucide-react";
-import ThirtyOctTable from "./Tables/ThirtyOctTable";
+import ScheduleTable from "./Tables/ScheduleTable";
 import { PRIMARY } from "@/constants/colors";
 
 interface ScheduleSectionProps {
@@ -101,17 +101,17 @@ const ScheduleSection: React.FC<ScheduleSectionProps> = ({
                 <TabPanels>
                     {/* ---------------- ทั้งหมด ---------------- */}
                     <TabPanel px={0}>
-                        <ThirtyOctTable filter="all" />
+                        <ScheduleTable filter="all" />
                     </TabPanel>
 
                     {/* ---------------- รอบเช้า ---------------- */}
                     <TabPanel px={0}>
-                        <ThirtyOctTable filter="morning" />
+                        <ScheduleTable filter="morning" />
                     </TabPanel>
 
                     {/* ---------------- รอบบ่าย ---------------- */}
                     <TabPanel px={0}>
-                        <ThirtyOctTable filter="afternoon" />
+                        <ScheduleTable filter="afternoon" />
                     </TabPanel>
                 </TabPanels>
             </Tabs>

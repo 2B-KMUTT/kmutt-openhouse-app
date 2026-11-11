@@ -78,3 +78,21 @@
 - **RED Method (Application-level)**: Rate (throughput in RPS), Errors (4xx/5xx error rates), Duration (p50/p90/p99 latency percentiles via Histograms).
 - **USE Method (Infrastructure-level)**: Utilization (percentage of time resource was busy), Saturation (queue depth / pending work), Errors (count of physical hardware/network errors).
 
+---
+
+## 5. การจัดการข้อมูลหลักของรอบงาน (Event Master Data & Lifecycle)
+
+### Event Master Data (ข้อมูลหลักของรอบงาน)
+- **นิยาม**: ชุดข้อมูลสารสนเทศที่เป็นแกนกลางของรอบการจัดกิจกรรม Open House สัญจร ประกอบด้วย ชื่องาน, วันที่และเวลา, สถานที่จัดงาน, ข้อมูลผู้ประสานงาน, แบนเนอร์, กำหนดการ (Schedules), รายการบูท (Booths), และการตั้งค่าแบบสอบถาม (Survey Config)
+- **ตำแหน่งจัดเก็บ**: ไฟล์ JSON ในไดเรกทอรี `prisma/data/` (`landing-configs.json`, `landing-banners.json`, `landing-schedules.json`, `landing-booths.json`)
+
+### Seed Baseline (ชุดข้อมูลตั้งต้นของระบบ)
+- **นิยาม**: สถานะข้อมูลที่ถูกควบคุมเวอร์ชันผ่าน Git (Version-controlled Baseline) ทำหน้าที่เป็น Single Source of Truth (SSOT) สำหรับกระบวนการ Seeding (`prisma/seed.js`) และค่า Default Fallbacks ในระดับโค้ด TypeScript เพื่อให้ระบบสามารถตั้งต้นใหม่ได้อย่างถูกต้องหลังจากการรันกระบวนการ Reset หรือ Backup
+
+### Roadshow Lifecycle (วงจรรอบการจัดงานสัญจร)
+- **นิยาม**: กระบวนการเปลี่ยนผ่านจากงานในพื้นที่หนึ่งไปยังอีกพื้นที่หนึ่ง (เช่น จากร้อยเอ็ด สู่นครปฐม) ผ่านกระบวนการ:
+  1. สำรองข้อมูลรอบเดิม (Backup DB & Storage) ผ่านสคริปต์ `scripts/backup.sh`
+  2. ล้างข้อมูลระบบ (Truncate & Clean Storage)
+  3. ติดตั้งข้อมูลรอบใหม่จาก Master Seed Baseline (`node prisma/seed.js`)
+
+

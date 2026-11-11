@@ -3,45 +3,9 @@ import { Container, Box, Heading, SimpleGrid, Text, VStack, Stack, Badge, useCol
 import { LandingBoothItem } from "@/interfaces/LandingContent";
 
 import { PRIMARY, SECONDARY } from "@/constants/colors";
+import defaultBoothDataRaw from "../../../../prisma/data/landing-booths.json";
 
-const defaultBoothData: LandingBoothItem[] = [
-    {
-        id: 1,
-        location: "บูธ 1: หลักสูตรวิศวกรรมระบบปัญญาประดิษฐ์ (AISE)",
-        units: [
-            "แนะนำหลักสูตรวิศวกรรมศาสตรบัณฑิต สาขาวิชาวิศวกรรมระบบปัญญาประดิษฐ์ (Artificial Intelligence Systems Engineering: AISE)",
-            "ให้ข้อมูลเกี่ยวกับโครงสร้างหลักสูตรและแนวทางการจัดการเรียนการสอน",
-            "แนะนำแนวทางการประกอบอาชีพและโอกาสในการศึกษาต่อ",
-            "ให้คำปรึกษาและตอบข้อซักถามเกี่ยวกับหลักสูตร",
-        ],
-        orderIndex: 1,
-        display: true,
-    },
-    {
-        id: 2,
-        location: "บูธ 2: นวัตกรรมการศึกษาแบบ Residential College (RC)",
-        units: [
-            "แนะนำรูปแบบการจัดการศึกษาแบบ Residential College",
-            "นำเสนอแนวคิดการเรียนรู้ผ่านการใช้ชีวิตร่วมกันในมหาวิทยาลัย ภายใต้แนวคิด Learning + Working + Sharing",
-            "ให้ข้อมูลเกี่ยวกับการพัฒนาทักษะชีวิต ทักษะสังคม และการอยู่ร่วมกับผู้อื่น",
-            "แนะนำประสบการณ์และรูปแบบการใช้ชีวิตของนักศึกษา มจธ. ราชบุรี",
-        ],
-        orderIndex: 2,
-        display: true,
-    },
-    {
-        id: 3,
-        location: "บูธ 3: หลักสูตรและหน่วยงานต่าง ๆ",
-        units: [
-            "แนะนำหลักสูตรและสาขาวิชาต่าง ๆ ภายใน มจธ. ราชบุรี",
-            "ให้ข้อมูลเกี่ยวกับแนวทางการศึกษาและรายละเอียดของแต่ละหลักสูตร",
-            "นำเสนอผลงานและข้อมูลจากหน่วยงานต่าง ๆ",
-            "ให้คำปรึกษาและตอบข้อซักถามเกี่ยวกับการเข้าศึกษาต่อ",
-        ],
-        orderIndex: 3,
-        display: true,
-    },
-];
+const defaultBoothData: LandingBoothItem[] = defaultBoothDataRaw as LandingBoothItem[];
 
 interface BoothSectionProps {
     eventDateTh?: string;

@@ -1,22 +1,29 @@
+import landingConfigsSeed from "../../prisma/data/landing-configs.json";
+
+const seedConfigMap: Record<string, string> = {};
+for (const item of landingConfigsSeed) {
+    seedConfigMap[item.key] = typeof item.value === "string" ? item.value : JSON.stringify(item.value);
+}
+
 export const EVENT_CONFIG = {
-    name: "KMUTT Open House",
-    subName: "เปิดบ้าน KMUTT Ratchaburi มดออนทัวร์ @นครปฐม",
-    fullTitle: "KMUTT Open House - เปิดบ้าน KMUTT Ratchaburi มดออนทัวร์ @นครปฐม",
+    name: seedConfigMap.heroTitle || "KMUTT Open House",
+    subName: seedConfigMap.heroSubtitle || "เปิดบ้าน KMUTT Ratchaburi มดออนทัวร์ @นครปฐม",
+    fullTitle: `${seedConfigMap.heroTitle || "KMUTT Open House"} - ${seedConfigMap.heroSubtitle || "เปิดบ้าน KMUTT Ratchaburi มดออนทัวร์ @นครปฐม"}`,
     year: "2569",
     date: "21/11/2026",
     dateThai: "21 พฤศจิกายน 2569",
-    dateDayThai: "วันเสาร์ที่ 21 พฤศจิกายน 2569",
+    dateDayThai: seedConfigMap.heroDateText ? seedConfigMap.heroDateText.split(" เวลา")[0] : "วันเสาร์ที่ 21 พฤศจิกายน 2569",
     time: "09.00 – 15.00 น.",
-    location: "ณ โรงแรมเซ็น อ.เมืองนครปฐม จ.นครปฐม",
+    location: seedConfigMap.eventLocationTh || "ณ โรงแรมเซ็น อ.เมืองนครปฐม จ.นครปฐม",
     locationShort: "โรงแรมเซ็น จ.นครปฐม",
-    googleMapUrl: "https://maps.google.com/?q=Xen+Hotel+Nakhon+Pathom",
-    registrationDeadline: "20 พฤศจิกายน 2569",
-    registrationLink: "https://kmutt.me/oph_Ratchaburi",
-    openChatLink: "https://kmutt.me/OpenChatOPH2025",
+    googleMapUrl: seedConfigMap.mapUrl || "https://maps.google.com/?q=Xen+Hotel+Nakhon+Pathom",
+    registrationDeadline: seedConfigMap.regisDeadlineText || "20 พฤศจิกายน 2569",
+    registrationLink: seedConfigMap.regisLink || "https://kmutt.me/oph_Ratchaburi",
+    openChatLink: seedConfigMap.openChatLink || "https://kmutt.me/OpenChatOPH2025",
     coordinator: {
-        name: "คุณศราวุฒิ จันทร์แฉล้ม",
-        phone: "032-726510",
-        email: "sarawut.jun@kmutt.ac.th",
+        name: seedConfigMap.coordinatorName || "คุณศราวุฒิ จันทร์แฉล้ม",
+        phone: seedConfigMap.coordinatorPhone || "032-726510",
+        email: seedConfigMap.coordinatorEmail || "sarawut.jun@kmutt.ac.th",
     },
     availableDates: ["21/11/2026", "30/10/2026"],
     rounds: [
@@ -31,9 +38,9 @@ export const EVENT_CONFIG = {
     } as Record<string, string>,
     surveyModal: {
         // Starts on event day: 21 November 2026 00:00:00 (UTC+7)
-        startDate: process.env.NEXT_PUBLIC_SURVEY_START_DATE || "2026-11-21T00:00:00+07:00",
+        startDate: process.env.NEXT_PUBLIC_SURVEY_START_DATE || seedConfigMap.surveyStartDate || "2026-11-21T00:00:00+07:00",
         // Stops 7 days after the event: 28 November 2026 23:59:59 (UTC+7)
-        endDate: process.env.NEXT_PUBLIC_SURVEY_END_DATE || "2026-11-28T23:59:59+07:00",
+        endDate: process.env.NEXT_PUBLIC_SURVEY_END_DATE || seedConfigMap.surveyEndDate || "2026-11-28T23:59:59+07:00",
     },
 };
 

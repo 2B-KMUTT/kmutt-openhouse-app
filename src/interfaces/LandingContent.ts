@@ -36,22 +36,29 @@ export interface LandingBannerItem {
   updated_at?: string;
 }
 
+import landingConfigsSeed from "../../prisma/data/landing-configs.json";
+
+const seedConfigMap: Record<string, string> = {};
+for (const item of landingConfigsSeed) {
+  seedConfigMap[item.key] = typeof item.value === "string" ? item.value : JSON.stringify(item.value);
+}
+
 export const DEFAULT_LANDING_CONFIG = {
-  heroTitle: "KMUTT OPEN HOUSE",
-  heroSubtitle: "เปิดบ้าน KMUTT Ratchaburi มดออนทัวร์ @นครปฐม",
-  heroDateText: "วันเสาร์ที่ 21 พฤศจิกายน 2569 เวลา 09.00 – 15.00 น.",
-  heroLocationText: "ณ โรงแรมเซ็น อ.เมืองนครปฐม จ.นครปฐม",
-  eventDateTh: "วันเสาร์ที่ 21 พฤศจิกายน 2569 เวลา 09.00 – 15.00 น.",
-  eventLocationTh: "ณ โรงแรมเซ็น อ.เมืองนครปฐม จ.นครปฐม",
-  eventDateEn: "Saturday, November 21, 2026, from 09:00 a.m. to 3:00 p.m.",
-  eventLocationEn: "at Xen Hotel, Mueang Nakhon Pathom, Nakhon Pathom",
-  regisDeadlineText: "20 พฤศจิกายน 2569",
-  regisLink: "https://kmutt.me/oph_Ratchaburi",
-  openChatLink: "https://kmutt.me/OpenChatOPH2025",
-  mapUrl: "https://maps.google.com/?q=Xen+Hotel+Nakhon+Pathom",
-  coordinatorName: "คุณศราวุฒิ จันทร์แฉล้ม",
-  coordinatorPhone: "032-726510",
-  coordinatorEmail: "sarawut.jun@kmutt.ac.th",
+  heroTitle: seedConfigMap.heroTitle || "KMUTT OPEN HOUSE",
+  heroSubtitle: seedConfigMap.heroSubtitle || "เปิดบ้าน KMUTT Ratchaburi มดออนทัวร์ @นครปฐม",
+  heroDateText: seedConfigMap.heroDateText || seedConfigMap.eventDateTh || "วันเสาร์ที่ 21 พฤศจิกายน 2569 เวลา 09.00 – 15.00 น.",
+  heroLocationText: seedConfigMap.heroLocationText || seedConfigMap.eventLocationTh || "ณ โรงแรมเซ็น อ.เมืองนครปฐม จ.นครปฐม",
+  eventDateTh: seedConfigMap.eventDateTh || "วันเสาร์ที่ 21 พฤศจิกายน 2569 เวลา 09.00 – 15.00 น.",
+  eventLocationTh: seedConfigMap.eventLocationTh || "ณ โรงแรมเซ็น อ.เมืองนครปฐม จ.นครปฐม",
+  eventDateEn: seedConfigMap.eventDateEn || "Saturday, November 21, 2026, from 09:00 a.m. to 3:00 p.m.",
+  eventLocationEn: seedConfigMap.eventLocationEn || "at Xen Hotel, Mueang Nakhon Pathom, Nakhon Pathom",
+  regisDeadlineText: seedConfigMap.regisDeadlineText || "20 พฤศจิกายน 2569",
+  regisLink: seedConfigMap.regisLink || "https://kmutt.me/oph_Ratchaburi",
+  openChatLink: seedConfigMap.openChatLink || "https://kmutt.me/OpenChatOPH2025",
+  mapUrl: seedConfigMap.mapUrl || "https://maps.google.com/?q=Xen+Hotel+Nakhon+Pathom",
+  coordinatorName: seedConfigMap.coordinatorName || "คุณศราวุฒิ จันทร์แฉล้ม",
+  coordinatorPhone: seedConfigMap.coordinatorPhone || "032-726510",
+  coordinatorEmail: seedConfigMap.coordinatorEmail || "sarawut.jun@kmutt.ac.th",
 };
 
 export type KnownLandingConfigKey =
@@ -94,7 +101,7 @@ export interface LandingConfigMap {
   surveyStatus?: "auto" | "open" | "closed";
   surveyStartDate?: string;
   surveyEndDate?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface ThreeJomQuestionConfig {

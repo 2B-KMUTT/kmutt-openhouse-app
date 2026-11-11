@@ -12,15 +12,10 @@ import {
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import { LandingBannerItem } from "@/interfaces/LandingContent";
 import { KMUTT_CI } from "@/constants/colors";
+import defaultBannersRaw from "../../../../prisma/data/landing-banners.json";
 
-const defaultBanner: LandingBannerItem = {
-    id: 1,
-    imageUrl: "/images/banner_mod_ontour.png",
-    altText: "เปิดบ้าน KMUTT Ratchaburi มดออนทัวร์ @นครปฐม - เปิดโลกการเรียนรู้ สู่อนาคตที่น้องเลือกเอง วันเสาร์ที่ 21 พฤศจิกายน 2569 ณ โรงแรมเซ็น อ.เมืองนครปฐม จ.นครปฐม",
-    linkUrl: null,
-    orderIndex: 1,
-    display: true,
-};
+const defaultBanners: LandingBannerItem[] = defaultBannersRaw as LandingBannerItem[];
+const defaultBanner: LandingBannerItem = defaultBanners[0];
 
 const BannerSection = () => {
     const [banners, setBanners] = useState<LandingBannerItem[]>([defaultBanner]);
