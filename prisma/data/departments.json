@@ -232,5 +232,23 @@
     "name_th": "คณะวิศวกรรมศาสตร์",
     "name_en": "Faculty of Engineering",
     "facultyId": 1
+  },
+  {
+    "id": 40,
+    "name_th": "คณะครุศาสตร์อุตสาหกรรมและเทคโนโลยี",
+    "name_en": "Faculty of Industrial Education and Technology",
+    "facultyId": 5
+  },
+  {
+    "id": 41,
+    "name_th": "คณะวิทยาศาสตร์",
+    "name_en": "Faculty of Science",
+    "facultyId": 3
+  },
+  {
+    "id": 42,
+    "name_th": "กิจกรรมส่วนกลาง มจธ.บางมด",
+    "name_en": "KMUTT (Bangmod)",
+    "facultyId": 2
   }
 ]

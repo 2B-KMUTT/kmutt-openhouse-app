@@ -245,6 +245,7 @@ const AddActivityPage = () => {
                             focusBorderColor="orange.500"
                             onChange={e => setDate(e.target.value)}
                         >
+                            <option value="21/11/2026">21 พฤศจิกายน 2569</option>
                             <option value="30/10/2026">30 ตุลาคม 2569</option>
                         </Select>
                     </FormControl>

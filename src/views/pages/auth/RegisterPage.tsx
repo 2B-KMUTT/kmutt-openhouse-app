@@ -88,8 +88,8 @@ export function RegisterPage() {
     const [usePassport, setUsePassport] = useState(false)
     const router = useRouter()
 
-    const [eventSubtitleTh, setEventSubtitleTh] = useState("เปิดเฮือน มจธ. (มดอีสาน) ณ โรงแรมเพชรรัชต์การ์เด้น จ.ร้อยเอ็ด")
-    const [eventSubtitleEn, setEventSubtitleEn] = useState("KMUTT Open House at Petcharat Garden Hotel, Roi Et")
+    const [eventSubtitleTh, setEventSubtitleTh] = useState("เปิดบ้าน KMUTT Ratchaburi มดออนทัวร์ @นครปฐม ณ โรงแรมเซ็น จ.นครปฐม")
+    const [eventSubtitleEn, setEventSubtitleEn] = useState("KMUTT Open House at Xen Hotel, Nakhon Pathom")
 
     useEffect(() => {
         fetch("/api/landing/config")
@@ -99,11 +99,11 @@ export function RegisterPage() {
             })
             .then((data) => {
                 if (!data) return
-                const subTh = data.heroSubtitle || "เปิดเฮือน มจธ. (มดอีสาน)"
-                const locTh = data.heroLocationText || data.eventLocationTh || "ณ โรงแรมเพชรรัชต์การ์เด้น จ.ร้อยเอ็ด"
+                const subTh = data.heroSubtitle || "เปิดบ้าน KMUTT Ratchaburi มดออนทัวร์ @นครปฐม"
+                const locTh = data.heroLocationText || data.eventLocationTh || "ณ โรงแรมเซ็น จ.นครปฐม"
                 setEventSubtitleTh(`${subTh} ${locTh}`)
                 const titleEn = data.heroTitle || "KMUTT Open House"
-                const locEn = data.eventLocationEn || "at Petcharat Garden Hotel, Roi Et"
+                const locEn = data.eventLocationEn || "at Xen Hotel, Nakhon Pathom"
                 setEventSubtitleEn(`${titleEn} ${locEn}`)
             })
             .catch(() => {})

@@ -5,16 +5,17 @@ const prisma = new PrismaClient();
 
 export const DEFAULT_SURVEY_CONFIG = {
   provinces: [
+    "นครปฐม",
+    "ราชบุรี",
+    "กาญจนบุรี",
+    "สุพรรณบุรี",
+    "สมุทรสาคร",
+    "สมุทรสงคราม",
+    "เพชรบุรี",
+    "กรุงเทพมหานคร",
+    "นนทบุรี",
+    "ปทุมธานี",
     "ร้อยเอ็ด",
-    "มหาสารคาม",
-    "กาฬสินธุ์",
-    "ยโสธร",
-    "ขอนแก่น",
-    "มุกดาหาร",
-    "สกลนคร",
-    "นครราชสีมา",
-    "นครพนม",
-    "อุดรธานี",
     "อื่น ๆ",
   ],
   sourceChannels: [
@@ -101,8 +102,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const surveyStatus = configMap.surveyStatus || "auto";
-    const startDateStr = configMap.surveyStartDate || "2026-10-30T00:00:00+07:00";
-    const endDateStr = configMap.surveyEndDate || "2026-11-06T23:59:59+07:00";
+    const startDateStr = configMap.surveyStartDate || "2026-11-21T00:00:00+07:00";
+    const endDateStr = configMap.surveyEndDate || "2026-11-28T23:59:59+07:00";
 
     let parsedConfig = DEFAULT_SURVEY_CONFIG;
     if (configMap.surveyConfig) {

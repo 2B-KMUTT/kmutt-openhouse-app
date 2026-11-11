@@ -20,8 +20,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
 
       const surveyStatus = cfg.surveyStatus || "auto";
-      const startDate = new Date(cfg.surveyStartDate || "2026-10-30T00:00:00+07:00");
-      const endDate = new Date(cfg.surveyEndDate || "2026-11-06T23:59:59+07:00");
+      const startDate = new Date(cfg.surveyStartDate || "2026-11-21T00:00:00+07:00");
+      const endDate = new Date(cfg.surveyEndDate || "2026-11-28T23:59:59+07:00");
       const now = new Date();
 
       if (surveyStatus === "closed") {
@@ -30,7 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (surveyStatus === "auto") {
         if (now < startDate) {
           return res.status(403).json({
-            error: "แบบสอบถามยังไม่เปิดให้ทำ (จะเปิดในวันกิจกรรม 30 ตุลาคม 2569)",
+            error: "แบบสอบถามยังไม่เปิดให้ทำ (จะเปิดในวันกิจกรรม 21 พฤศจิกายน 2569)",
           });
         }
         if (now > endDate) {

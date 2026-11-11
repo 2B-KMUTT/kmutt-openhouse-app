@@ -37,20 +37,20 @@ export interface LandingBannerItem {
 }
 
 export const DEFAULT_LANDING_CONFIG = {
-  heroTitle: "KMUTT Open House",
-  heroSubtitle: "เปิดเฮือน มจธ. (มดอีสาน) ครั้งที่ 1",
-  heroDateText: "วันศุกร์ที่ 30 ตุลาคม 2569 เวลา 09.00 – 16.00 น.",
-  heroLocationText: "ณ โรงแรมเพชรรัชต์การ์เด้น อ.เมือง จ.ร้อยเอ็ด",
-  eventDateTh: "วันที่ 30 ตุลาคม 2569 เวลา 09.00 – 17.00 น.",
-  eventLocationTh: "ณ โรงแรมเพชรรัชต์การ์เด้น อ.เมือง จ.ร้อยเอ็ด",
-  eventDateEn: "October 30, 2026, from 09:00 a.m. to 5:00 p.m.",
-  eventLocationEn: "at Petcharat Garden Hotel, Mueang, Roi Et",
-  regisDeadlineText: "26 ตุลาคม 2569",
-  regisLink: "https://kmutt.me/oph_RoiEt",
+  heroTitle: "KMUTT OPEN HOUSE",
+  heroSubtitle: "เปิดบ้าน KMUTT Ratchaburi มดออนทัวร์ @นครปฐม",
+  heroDateText: "วันเสาร์ที่ 21 พฤศจิกายน 2569 เวลา 09.00 – 15.00 น.",
+  heroLocationText: "ณ โรงแรมเซ็น อ.เมืองนครปฐม จ.นครปฐม",
+  eventDateTh: "วันเสาร์ที่ 21 พฤศจิกายน 2569 เวลา 09.00 – 15.00 น.",
+  eventLocationTh: "ณ โรงแรมเซ็น อ.เมืองนครปฐม จ.นครปฐม",
+  eventDateEn: "Saturday, November 21, 2026, from 09:00 a.m. to 3:00 p.m.",
+  eventLocationEn: "at Xen Hotel, Mueang Nakhon Pathom, Nakhon Pathom",
+  regisDeadlineText: "20 พฤศจิกายน 2569",
+  regisLink: "https://kmutt.me/oph_Ratchaburi",
   openChatLink: "https://kmutt.me/OpenChatOPH2025",
-  mapUrl: "https://maps.google.com/?q=Petcharat+Garden+Hotel+Roi+Et",
-  coordinatorName: "นางสาวสุวะรักษ์ ศิริวรรณ์",
-  coordinatorPhone: "0 2470 8471",
+  mapUrl: "https://maps.google.com/?q=Xen+Hotel+Nakhon+Pathom",
+  coordinatorName: "สำนักงาน มจธ.ราชบุรี",
+  coordinatorPhone: "0 3272 6700",
   coordinatorEmail: "admission@kmutt.ac.th",
 };
 

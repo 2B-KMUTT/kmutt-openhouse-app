@@ -101,16 +101,17 @@ const RatingScale = ({
 
 // Default Options constants
 const DEFAULT_PROVINCES = [
+    "นครปฐม",
+    "ราชบุรี",
+    "กาญจนบุรี",
+    "สุพรรณบุรี",
+    "สมุทรสาคร",
+    "สมุทรสงคราม",
+    "เพชรบุรี",
+    "กรุงเทพมหานคร",
+    "นนทบุรี",
+    "ปทุมธานี",
     "ร้อยเอ็ด",
-    "มหาสารคาม",
-    "กาฬสินธุ์",
-    "ยโสธร",
-    "ขอนแก่น",
-    "มุกดาหาร",
-    "สกลนคร",
-    "นครราชสีมา",
-    "นครพนม",
-    "อุดรธานี",
     "อื่น ๆ",
 ]
 
@@ -500,7 +501,7 @@ export const PublicSurvey = () => {
                             </Heading>
                             <Text color="gray.600" fontSize="md" mb={6} lineHeight="tall">
                                 แบบสอบถามความพึงพอใจจะเปิดให้ร่วมตอบความคิดเห็นอัตโนมัติในวันกิจกรรม <br />
-                                <strong>วันศุกร์ที่ 30 ตุลาคม 2569 เวลา 00:00 น. เป็นต้นไป</strong>
+                                <strong>วันเสาร์ที่ 21 พฤศจิกายน 2569 เวลา 00:00 น. เป็นต้นไป</strong>
                             </Text>
                             <Box
                                 p={4}
@@ -588,8 +589,8 @@ export const PublicSurvey = () => {
             bg={pageBg}
         >
             <Head>
-                <title>แบบสอบถาม เปิดเฮือน มจธ. (ร้อยเอ็ด)</title>
-                <meta name="description" content="แบบสอบถามความคิดเห็น เปิดเฮือน มจธ. ร้อยเอ็ด" />
+                <title>แบบสอบถาม เปิดบ้าน KMUTT Ratchaburi มดออนทัวร์ @นครปฐม</title>
+                <meta name="description" content="แบบสอบถามความคิดเห็น เปิดบ้าน KMUTT Ratchaburi มดออนทัวร์ @นครปฐม" />
             </Head>
 
             <Box maxW="720px" mx="auto">
@@ -605,7 +606,7 @@ export const PublicSurvey = () => {
                 >
                     <HStack justify="space-between" align="center" mb={2}>
                         <Badge colorScheme="orange" px={2.5} py={0.5} rounded="md">
-                            KMUTT Open House · ร้อยเอ็ด
+                            KMUTT Open House · นครปฐม
                         </Badge>
                         {isPreview && (
                             <Badge colorScheme="purple" px={2} py={0.5} rounded="md">
@@ -614,12 +615,12 @@ export const PublicSurvey = () => {
                         )}
                     </HStack>
                     <Heading fontSize={{ base: "xl", md: "2xl" }} color="orange.600" mb={2}>
-                        แบบสอบถาม เปิดเฮือน มจธ.
+                        แบบสอบถาม KMUTT Open House (มดออนทัวร์)
                     </Heading>
                     <Text fontSize="sm" color={mutedColor} mb={4}>
                         ขอความร่วมมือตอบแบบสอบถามสั้น ๆ ประมาณ 2 นาที
                         คำตอบของท่านจะช่วยให้ มจธ. จัดกิจกรรมแนะแนวได้ตรงกับความต้องการของนักเรียน
-                        ผู้ปกครอง และครูในภาคอีสานมากยิ่งขึ้น
+                        ผู้ปกครอง และครูมากยิ่งขึ้น
                     </Text>
 
                     {/* Progress Bar */}
@@ -1054,7 +1055,7 @@ export const PublicSurvey = () => {
                                         ข้อมูลนี้ใช้เพื่อประสานงานกิจกรรมแนะแนวของ มจธ. เท่านั้น
                                     </Text>
                                     <Input
-                                        placeholder="เช่น โรงเรียนร้อยเอ็ดวิทยาลัย, ครูสมชาย 081-xxx-xxxx, somchai@school.ac.th"
+                                        placeholder="เช่น โรงเรียนพระปฐมวิทยาลัย, ครูสมชาย 081-xxx-xxxx, somchai@school.ac.th"
                                         value={teacherSchoolContact}
                                         onChange={(e) => setTeacherSchoolContact(e.target.value)}
                                         rounded="xl"

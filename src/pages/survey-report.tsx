@@ -433,7 +433,7 @@ export default function SurveyReportPage() {
     return (
         <Box py={{ base: 6, md: 10 }} px={{ base: 4, md: 8 }} bg={pageBg} minH="100vh">
             <Head>
-                <title>รายงานสรุปผลแบบสอบถาม เปิดเฮือน มจธ. (ร้อยเอ็ด)</title>
+                <title>รายงานสรุปผลแบบสอบถาม KMUTT Open House (มดออนทัวร์ @นครปฐม)</title>
             </Head>
 
             <Box maxW="1280px" mx="auto">
@@ -447,7 +447,7 @@ export default function SurveyReportPage() {
                 >
                     <Box>
                         <Badge colorScheme="orange" px={3} py={1} rounded="md" mb={2}>
-                            KMUTT Open House · ร้อยเอ็ด
+                            KMUTT Open House · นครปฐม
                         </Badge>
                         <Heading fontSize={{ base: "2xl", md: "3xl" }} color="orange.600">
                             รายงานสรุปผลแบบสอบถาม

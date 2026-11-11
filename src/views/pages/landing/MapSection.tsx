@@ -15,8 +15,8 @@ const MapSection: React.FC<MapSectionProps> = ({
     const text = useColorModeValue("gray.800", "gray.200");
     const { isOpen, onOpen, onClose } = useDisclosure();
 
-    const [location, setLocation] = useState(eventLocationTh || "ณ โรงแรมเพชรรัชต์การ์เด้น อ.เมือง จ.ร้อยเอ็ด");
-    const [googleMapUrl, setGoogleMapUrl] = useState(mapUrl || "https://maps.google.com/?q=Petcharat+Garden+Hotel+Roi+Et");
+    const [location, setLocation] = useState(eventLocationTh || "ณ โรงแรมเซ็น อ.เมืองนครปฐม จ.นครปฐม");
+    const [googleMapUrl, setGoogleMapUrl] = useState(mapUrl || "https://maps.google.com/?q=Xen+Hotel+Nakhon+Pathom");
 
     useEffect(() => {
         if (eventLocationTh) setLocation(eventLocationTh);

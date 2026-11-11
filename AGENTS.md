@@ -15,6 +15,11 @@
 - **Database Schema & Seeds**: `prisma/schema.prisma`, `prisma/seed.js`, `prisma/seed-test.js`, `prisma/data/`.
 - **Verification Scripts**: `scripts/verify-all-features.js` (landing & survey), `scripts/verify-auth-roles.js` (multi-role auth & routing), `scripts/verify-superadmin-activities.js` (Super Admin cross-tenant activities & staff scoping), `scripts/verify-rustfs-migration.js` (RustFS S3 object storage migration & volume backup).
 - **Object Storage (RustFS)**: `src/libs/s3.ts` (S3 client singleton & bucket management), `infra/db/docker-compose.yml` (`rustfs` & `rustfs-init`). Dual-layer storage proxy: `next.config.ts` (Next.js rewrites `/storage/:path*` for local dev/standalone) and `nginx.conf` (`/storage/` proxy block for production multi-replica).
+- **Environment & CLI Tooling**:
+  - Node.js runtime is globally symlinked at `/usr/local/bin/node` (Node v24).
+  - Use `rg` (ripgrep) for searching the repo; it respects `.gitignore` and ignores `node_modules` and `.next`.
+  - For quick Prisma scripts via `node -e`, always load env via `if (typeof process.loadEnvFile === 'function') process.loadEnvFile();` and disconnect via `prisma.$disconnect()`.
+  - Direct database operations should only modify target records without modifying source seed JSONs or re-running full seed suites unless requested.
 
 ## Agent skills
 

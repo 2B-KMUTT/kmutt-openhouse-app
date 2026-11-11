@@ -7,46 +7,48 @@ import { PRIMARY, SECONDARY } from "@/constants/colors";
 const defaultBoothData: LandingBoothItem[] = [
     {
         id: 1,
-        location: "โซนที่ 1: Admission Consult & Portfolio Clinic",
+        location: "บูธ 1: หลักสูตรวิศวกรรมระบบปัญญาประดิษฐ์ (AISE)",
         units: [
-            "ให้คำปรึกษาการสมัครเข้าศึกษาต่อ",
-            "คลินิกแฟ้มสะสมผลงาน (Portfolio Clinic)",
-            "แนะนำทุนการศึกษา มจธ.",
-            "พบปะและปรึกษากับเจ้าหน้าที่สำนักงานคัดเลือกและสรรหานักศึกษา",
+            "แนะนำหลักสูตรวิศวกรรมศาสตรบัณฑิต สาขาวิชาวิศวกรรมระบบปัญญาประดิษฐ์ (Artificial Intelligence Systems Engineering: AISE)",
+            "ให้ข้อมูลเกี่ยวกับโครงสร้างหลักสูตรและแนวทางการจัดการเรียนการสอน",
+            "แนะนำแนวทางการประกอบอาชีพและโอกาสในการศึกษาต่อ",
+            "ให้คำปรึกษาและตอบข้อซักถามเกี่ยวกับหลักสูตร",
         ],
         orderIndex: 1,
         display: true,
     },
     {
         id: 2,
-        location: "โซนที่ 2: บูทคณะและหน่วยงานต่าง ๆ",
+        location: "บูธ 2: นวัตกรรมการศึกษาแบบ Residential College (RC)",
         units: [
-            "ให้ข้อมูลหลักสูตรระดับปริญญาตรีและแนวทางการศึกษา",
-            "คัดเลือกแฟ้มสะสมผลงานโดยคณาจารย์จาก มจธ. อย่างใกล้ชิด",
-            "คณะวิศวกรรมศาสตร์",
-            "คณะวิทยาศาสตร์",
-            "คณะครุศาสตร์อุตสาหกรรมและเทคโนโลยี",
-            "คณะเทคโนโลยีสารสนเทศ",
-            "คณะสถาปัตยกรรมศาสตร์และการออกแบบ",
-            "มจธ.ราชบุรี",
+            "แนะนำรูปแบบการจัดการศึกษาแบบ Residential College",
+            "นำเสนอแนวคิดการเรียนรู้ผ่านการใช้ชีวิตร่วมกันในมหาวิทยาลัย ภายใต้แนวคิด Learning + Working + Sharing",
+            "ให้ข้อมูลเกี่ยวกับการพัฒนาทักษะชีวิต ทักษะสังคม และการอยู่ร่วมกับผู้อื่น",
+            "แนะนำประสบการณ์และรูปแบบการใช้ชีวิตของนักศึกษา มจธ. ราชบุรี",
         ],
         orderIndex: 2,
         display: true,
     },
     {
         id: 3,
-        location: "โซนที่ 3: KMUTT Industry Consultation Clinic",
+        location: "บูธ 3: หลักสูตรและหน่วยงานต่าง ๆ",
         units: [
-            "ให้คำปรึกษาแก่ผู้ประกอบการและศิษย์เก่า",
-            "แนะนำหลักสูตรและบริการโดยทีม LISA (Lifelong Learning Support and Administration Unit)",
-            "เวลา 15.00 – 17.00 น.",
+            "แนะนำหลักสูตรและสาขาวิชาต่าง ๆ ภายใน มจธ. ราชบุรี",
+            "ให้ข้อมูลเกี่ยวกับแนวทางการศึกษาและรายละเอียดของแต่ละหลักสูตร",
+            "นำเสนอผลงานและข้อมูลจากหน่วยงานต่าง ๆ",
+            "ให้คำปรึกษาและตอบข้อซักถามเกี่ยวกับการเข้าศึกษาต่อ",
         ],
         orderIndex: 3,
         display: true,
     },
 ];
 
-const BoothSection = () => {
+interface BoothSectionProps {
+    eventDateTh?: string;
+    subtitle?: string;
+}
+
+const BoothSection: React.FC<BoothSectionProps> = ({ eventDateTh, subtitle }) => {
     const bgSection = useColorModeValue("gray.50", "gray.800");
     const bgCard = useColorModeValue("white", "gray.700");
     const textColor = useColorModeValue("gray.700", "gray.200");
@@ -97,13 +99,13 @@ const BoothSection = () => {
         <Box as="section" id="booth" py={{ base: 8, md: 12 }} px={{ base: 4, md: 8 }} bg={bgSection}>
             <VStack spacing={3} mb={10} textAlign="center">
                 <Heading size="xl" color={PRIMARY} lineHeight="short">
-                   บูทแนะนำหลักสูตร & กิจกรรมภายในงาน
+                    บูธแนะนำหลักสูตร & กิจกรรมภายในงาน
                 </Heading>
                 <Text fontSize={{ base: "sm", md: "md" }} color={textColor} maxW="700px">
-                    เปิดโอกาสให้นักเรียน ครูแนะแนว ผู้ประกอบการ และผู้สนใจ พบปะคณาจารย์และผู้เชี่ยวชาญจาก มจธ. อย่างใกล้ชิด
+                    {subtitle || "เปิดโลกการเรียนรู้ สู่อนาคตที่น้องเลือกเอง"}
                 </Text>
                 <Badge bg={badgeBg} color={badgeText} px={4} py={1} fontSize={{ base: "sm", sm: "md", md: "1.1rem" }} rounded="full">
-                    วันเสาร์ที่ 30 ตุลาคม 2569 | 09.00 – 17.00 น.
+                    {eventDateTh || "วันเสาร์ที่ 21 พฤศจิกายน 2569 | 09.00 – 15.00 น."}
                 </Badge>
             </VStack>
             <Container maxW={containerMaxW} centerContent px={{ base: 0, sm: 4 }}>

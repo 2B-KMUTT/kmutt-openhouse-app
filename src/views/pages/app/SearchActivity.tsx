@@ -184,8 +184,10 @@ const SearchActivityPage = () => {
                     <Text fontWeight="bold" mb={2} mt={2}>เลือกวัน:</Text>
                     <CheckboxGroup value={selectedDates} onChange={handleDateChange}>
                         <Stack direction="row" wrap="wrap">
-                            {["30/10/2026"].map((d) => (
-                                <Checkbox key={d} value={d}>30 ตุลาคม 2569 ({d})</Checkbox>
+                            {["21/11/2026", "30/10/2026"].map((d) => (
+                                <Checkbox key={d} value={d}>
+                                    {d === "21/11/2026" ? "21 พฤศจิกายน 2569" : "30 ตุลาคม 2569"} ({d})
+                                </Checkbox>
                             ))}
                         </Stack>
                     </CheckboxGroup>

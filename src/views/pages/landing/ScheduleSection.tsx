@@ -37,7 +37,7 @@ const ScheduleSection: React.FC<ScheduleSectionProps> = ({
                     กำหนดการจัดกิจกรรม KMUTT Open House
                 </Heading>
                 <Heading size={{ base: "xs", sm: "sm", md: "md" }} color="gray.500" fontWeight="normal">
-                    เปิดเฮือน มจธ. เส้นทางค้นพบแรงบันดาลใจและกิจกรรมหลากหลาย ตลอดวัน
+                    เปิดบ้าน KMUTT Ratchaburi มดออนทัวร์ @นครปฐม ตลอดวัน
                 </Heading>
 
                 {/* Event Date & Location Info */}
@@ -61,7 +61,7 @@ const ScheduleSection: React.FC<ScheduleSectionProps> = ({
                         shadow="xs"
                     >
                         <Icon as={Calendar} color={PRIMARY} />
-                        <Text>{eventDateTh || "วันที่ 30 ตุลาคม 2569 เวลา 09.00 – 17.00 น."}</Text>
+                        <Text>{eventDateTh || "วันเสาร์ที่ 21 พฤศจิกายน 2569 เวลา 09.00 – 15.00 น."}</Text>
                     </HStack>
                     <HStack
                         bg={badgeBg}
@@ -76,7 +76,7 @@ const ScheduleSection: React.FC<ScheduleSectionProps> = ({
                         shadow="xs"
                     >
                         <Icon as={MapPin} color={PRIMARY} />
-                        <Text>{eventLocationTh || "ณ โรงแรมเพชรรัชต์การ์เด้น อ.เมือง จ.ร้อยเอ็ด"}</Text>
+                        <Text>{eventLocationTh || "ณ โรงแรมเซ็น อ.เมืองนครปฐม จ.นครปฐม"}</Text>
                     </HStack>
                 </Stack>
             </VStack>
@@ -85,7 +85,7 @@ const ScheduleSection: React.FC<ScheduleSectionProps> = ({
                 <TabList>
                     <Tab fontWeight="bold" fontSize={{ base: "xs", sm: "sm", md: "md" }}>
                         <Text display={{ base: "inline", md: "none" }}>ทั้งหมด</Text>
-                        <Text display={{ base: "none", md: "inline" }}>กำหนดการตลอดวัน (09.00 – 17.00 น.)</Text>
+                        <Text display={{ base: "none", md: "inline" }}>กำหนดการตลอดวัน (09.00 – 15.00 น.)</Text>
                     </Tab>
                     <Tab fontWeight="bold" fontSize={{ base: "xs", sm: "sm", md: "md" }}>
                         <Text display={{ base: "inline", md: "none" }}>รอบเช้า</Text>
@@ -93,7 +93,7 @@ const ScheduleSection: React.FC<ScheduleSectionProps> = ({
                     </Tab>
                     <Tab fontWeight="bold" fontSize={{ base: "xs", sm: "sm", md: "md" }}>
                         <Text display={{ base: "inline", md: "none" }}>รอบบ่าย</Text>
-                        <Text display={{ base: "none", md: "inline" }}>รอบบ่าย (13.00 – 17.00 น.)</Text>
+                        <Text display={{ base: "none", md: "inline" }}>รอบบ่าย (12.00 – 15.00 น.)</Text>
                     </Tab>
                 </TabList>
 
@@ -115,6 +115,12 @@ const ScheduleSection: React.FC<ScheduleSectionProps> = ({
                     </TabPanel>
                 </TabPanels>
             </Tabs>
+
+            <Box mt={6} textAlign="center">
+                <Text fontSize="xs" color="gray.500" fontStyle="italic">
+                    หมายเหตุ: กำหนดการอาจมีการเปลี่ยนแปลงตามความเหมาะสม
+                </Text>
+            </Box>
         </Box>
     );
 };

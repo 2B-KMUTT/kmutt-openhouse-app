@@ -44,11 +44,11 @@ const LandingPage = () => {
 
     const [heroConfig, setHeroConfig] = useState({
         heroTitle: "KMUTT OPEN HOUSE",
-        heroSubtitle: "เปิดเฮือน มจธ. (มดอีสาน)",
-        eventDateTh: "วันที่ 30 ตุลาคม 2569 เวลา 09.00 – 17.00 น.",
-        eventLocationTh: "ณ โรงแรมเพชรรัชต์การ์เด้น อ.เมือง จ.ร้อยเอ็ด",
-        eventDateEn: "October 30, 2026, from 09:00 a.m. to 5:00 p.m.",
-        eventLocationEn: "at Petcharat Garden Hotel, Mueang, Roi Et",
+        heroSubtitle: "เปิดบ้าน KMUTT Ratchaburi มดออนทัวร์ @นครปฐม",
+        eventDateTh: "วันเสาร์ที่ 21 พฤศจิกายน 2569 เวลา 09.00 – 15.00 น.",
+        eventLocationTh: "ณ โรงแรมเซ็น อ.เมืองนครปฐม จ.นครปฐม",
+        eventDateEn: "Saturday, November 21, 2026, from 09:00 a.m. to 3:00 p.m.",
+        eventLocationEn: "at Xen Hotel, Mueang Nakhon Pathom, Nakhon Pathom",
     });
 
     useEffect(() => {
@@ -405,7 +405,10 @@ const LandingPage = () => {
                     eventDateTh={heroConfig.eventDateTh}
                     eventLocationTh={heroConfig.eventLocationTh}
                 />
-                <BoothSection />
+                <BoothSection
+                    eventDateTh={heroConfig.eventDateTh}
+                    subtitle="เปิดโลกการเรียนรู้ สู่อนาคตที่น้องเลือกเอง"
+                />
 
                 {/* <MapSection /> */}
                 <ContactSection />
