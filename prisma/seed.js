@@ -134,6 +134,15 @@ async function seedLandingContent() {
 
   // 1. LandingBooth
   const booths = loadJson("landing-booths.json");
+  const boothIds = booths.map((b) => b.id).filter((id) => typeof id === "number");
+  if (boothIds.length > 0) {
+    const deletedBooths = await prisma.landingBooth.deleteMany({
+      where: { id: { notIn: boothIds } },
+    });
+    if (deletedBooths.count > 0) {
+      console.log(`  -> Pruned ${deletedBooths.count} obsolete landing booths.`);
+    }
+  }
   for (const item of booths) {
     await prisma.landingBooth.upsert({
       where: { id: item.id },
@@ -156,6 +165,15 @@ async function seedLandingContent() {
 
   // 2. LandingSchedule
   const schedules = loadJson("landing-schedules.json");
+  const scheduleIds = schedules.map((s) => s.id).filter((id) => typeof id === "number");
+  if (scheduleIds.length > 0) {
+    const deletedSchedules = await prisma.landingSchedule.deleteMany({
+      where: { id: { notIn: scheduleIds } },
+    });
+    if (deletedSchedules.count > 0) {
+      console.log(`  -> Pruned ${deletedSchedules.count} obsolete landing schedules.`);
+    }
+  }
   for (const item of schedules) {
     await prisma.landingSchedule.upsert({
       where: { id: item.id },
@@ -192,6 +210,15 @@ async function seedLandingContent() {
 
   // 3. LandingBanner
   const banners = loadJson("landing-banners.json");
+  const bannerIds = banners.map((b) => b.id).filter((id) => typeof id === "number");
+  if (bannerIds.length > 0) {
+    const deletedBanners = await prisma.landingBanner.deleteMany({
+      where: { id: { notIn: bannerIds } },
+    });
+    if (deletedBanners.count > 0) {
+      console.log(`  -> Pruned ${deletedBanners.count} obsolete landing banners.`);
+    }
+  }
   for (const item of banners) {
     await prisma.landingBanner.upsert({
       where: { id: item.id },
@@ -643,6 +670,14 @@ async function main() {
 
   if (args.includes("--staffs-only")) {
     await generateStaffAccounts();
+    return;
+  }
+
+  if (args.includes("--landing-only") || args.includes("--landing")) {
+    await seedLandingContent();
+    console.log("\n=================================================================");
+    console.log("✅ LANDING CONTENT UPDATED SUCCESSFULLY!");
+    console.log("=================================================================\n");
     return;
   }
 
