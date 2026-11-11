@@ -245,8 +245,11 @@ if docker ps -q -f name=openhouse_app_ >/dev/null 2>&1; then
 fi
 
 # 6.4 รัน Seed ใหม่ทั้งหมด
-echo -e "\n${YELLOW}[Step 4/4] Running Master Database Seeder (seed.js)...${NC}"
+echo -e "\n${YELLOW}[Step 4/4] Generating Prisma client & running Master Seeder (seed.js)...${NC}"
 cd "${APP_DIR}"
+if [ -f "./node_modules/.bin/prisma" ]; then
+  ./node_modules/.bin/prisma generate >/dev/null 2>&1 || true
+fi
 node prisma/seed.js --force --reset-passwords
 
 echo -e "\n${GREEN}${BOLD}======================================================================${NC}"
