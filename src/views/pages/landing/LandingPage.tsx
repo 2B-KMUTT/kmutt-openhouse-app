@@ -19,15 +19,12 @@ import { useEffect, useState } from "react";
 import { LandingSections } from "./LandingSection";
 import { ScheduleSection } from "./ScheduleSection";
 import BoothSection from "./BoothSection";
-import MapSection from "./MapSection";
 import { IoCalendar, IoLogIn } from "react-icons/io5";
 import BannerSection from "./BannerSection";
 import Head from "next/head";
 import Image from "next/image";
 import ContactSection from "./ContactSection";
-import StatSection from "./StatSection";
 import { useSession } from "next-auth/react";
-import FAQSection from "./FAQSection";
 import LogoutButton from "@/components/Auth/LogoutButton";
 
 import { PRIMARY, SECONDARY } from "@/constants/colors";
@@ -412,7 +409,6 @@ const LandingPage = () => {
 
                 {/* <MapSection /> */}
                 <ContactSection />
-                <StatSection />
                 {/* <FAQSection /> */}
                 {/* ===== OTHER SECTIONS ===== */}
                 <LandingSections />
