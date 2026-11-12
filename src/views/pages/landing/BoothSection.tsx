@@ -63,7 +63,7 @@ const BoothSection: React.FC<BoothSectionProps> = ({ eventDateTh, subtitle }) =>
         <Box as="section" id="booth" py={{ base: 8, md: 12 }} px={{ base: 4, md: 8 }} bg={bgSection}>
             <VStack spacing={3} mb={10} textAlign="center">
                 <Heading size="xl" color={PRIMARY} lineHeight="short">
-                    บูธแนะนำหลักสูตร & กิจกรรมภายในงาน
+                    บูทแนะนำหลักสูตร & กิจกรรมภายในงาน
                 </Heading>
                 <Text fontSize={{ base: "sm", md: "md" }} color={textColor} maxW="700px">
                     {subtitle || "เปิดโลกการเรียนรู้ สู่อนาคตที่น้องเลือกเอง"}

@@ -212,7 +212,7 @@ export function LandingSections() {
                         <Text>© {new Date().getFullYear()} King {"Mongkut's"} University of Technology Thonburi</Text>
                         <HStack spacing={6} mt={{ base: 4, md: 0 }}>
                             <Link href="#schedule">กำหนดการ</Link>
-                            <Link href="#booth">บูธแนะนำหลักสูตร</Link>
+                            <Link href="#booth">บูทแนะนำหลักสูตร</Link>
                             {/* <Link href="#map">แผนที่</Link> */}
                         </HStack>
                     </Flex>

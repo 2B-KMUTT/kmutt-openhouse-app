@@ -161,7 +161,7 @@ const LandingPage = () => {
                             >
                                 {/* <Link href="#how">วิธีใช้งาน</Link> */}
                                 <Link href="#schedule"><center>กำหนดการ <br />Schedule</center></Link>
-                                <Link href="#booth"><center>บูธแนะนำหลักสูตร <br />Program Information Booth</center></Link>
+                                <Link href="#booth"><center>บูทแนะนำหลักสูตร <br />Program Information Booth</center></Link>
                                 {/* <Link href="#map"><center>แผนที่ <br />Map</center></Link> */}
                                 {/* <Link href="#features">ฟีเจอร์</Link>
                             <Link href="#stats">สถิติ</Link>
