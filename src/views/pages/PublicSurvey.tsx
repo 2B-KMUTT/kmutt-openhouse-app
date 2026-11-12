@@ -581,6 +581,11 @@ export const PublicSurvey = () => {
             <Head>
                 <title>แบบสอบถาม เปิดบ้าน KMUTT Ratchaburi มดออนทัวร์ @นครปฐม</title>
                 <meta name="description" content="แบบสอบถามความคิดเห็น เปิดบ้าน KMUTT Ratchaburi มดออนทัวร์ @นครปฐม" />
+                <meta property="og:title" content="แบบสอบถาม เปิดบ้าน KMUTT Ratchaburi มดออนทัวร์ @นครปฐม" />
+                <meta property="og:description" content="แบบสอบถามความคิดเห็น เปิดบ้าน KMUTT Ratchaburi มดออนทัวร์ @นครปฐม" />
+                <meta property="og:image" content="/images/og_banner_mod_ontour.png" />
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:image" content="/images/og_banner_mod_ontour.png" />
             </Head>
 
             <Box maxW="720px" mx="auto">

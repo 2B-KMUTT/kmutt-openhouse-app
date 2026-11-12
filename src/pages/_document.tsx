@@ -25,23 +25,26 @@ export default function Document() {
         <meta name="theme-color" content={KMUTT_CI.orange} />
 
         {/* Open Graph / Facebook */}
-        <meta property="og:title" content="KMUTT Open House 2025 - A Journey of Discovery" />
+        <meta property="og:title" content="KMUTT Open House - เปิดบ้าน KMUTT Ratchaburi มดออนทัวร์ @นครปฐม" />
         <meta
           property="og:description"
-          content="ร่วมเป็นส่วนหนึ่งของการเดินทางครั้งใหม่ Journey of Discovery | เปิดประสบการณ์กับทุกคณะและหน่วยงานของ มจธ."
+          content="เปิดบ้าน KMUTT Ratchaburi มดออนทัวร์ @นครปฐม | วันเสาร์ที่ 21 พฤศจิกายน 2569 ณ โรงแรมเซ็น จ.นครปฐม"
         />
-        <meta property="og:image" content="/images/banner.png" />
+        <meta property="og:image" content="/images/og_banner_mod_ontour.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="500" />
+        <meta property="og:image:type" content="image/png" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://openhouse.kmutt.ac.th" />
 
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="KMUTT Open House 2025 - A Journey of Discovery" />
+        <meta name="twitter:title" content="KMUTT Open House - เปิดบ้าน KMUTT Ratchaburi มดออนทัวร์ @นครปฐม" />
         <meta
           name="twitter:description"
-          content="ค้นหาแรงบันดาลใจ และเริ่มต้น Journey of Discovery ไปกับ KMUTT"
+          content="เปิดบ้าน KMUTT Ratchaburi มดออนทัวร์ @นครปฐม | วันเสาร์ที่ 21 พฤศจิกายน 2569 ณ โรงแรมเซ็น จ.นครปฐม"
         />
-        <meta name="twitter:image" content="/images/banner.png" />
+        <meta name="twitter:image" content="/images/og_banner_mod_ontour.png" />
       </Head>
       <body className="antialiased">
         <Main />

@@ -100,7 +100,21 @@ const LandingPage = () => {
                     property="og:description"
                     content={`${heroConfig.heroSubtitle} ${heroConfig.heroTitle} | ${heroConfig.eventDateTh} ${heroConfig.eventLocationTh}`}
                 />
-                <meta property="og:image" content="/images/banner_new.png" />
+                <meta property="og:image" content="/images/og_banner_mod_ontour.png" />
+                <meta property="og:image:width" content="1200" />
+                <meta property="og:image:height" content="500" />
+                <meta property="og:image:type" content="image/png" />
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content="https://openhouse.kmutt.ac.th" />
+
+                {/* Twitter Card */}
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={`${heroConfig.heroSubtitle} - ${heroConfig.heroTitle}`} />
+                <meta
+                    name="twitter:description"
+                    content={`${heroConfig.heroSubtitle} ${heroConfig.heroTitle} | ${heroConfig.eventDateTh} ${heroConfig.eventLocationTh}`}
+                />
+                <meta name="twitter:image" content="/images/og_banner_mod_ontour.png" />
             </Head>
             <Box minH="100vh" bg={useColorModeValue("white", "gray.900")} color={textColor}>
                 {/* ===== NAVBAR ===== */}
