@@ -11,6 +11,7 @@ export interface CreateActivityInput {
   end_time: string;
   location: string;
   point?: number;
+  require_portfolio?: boolean;
   form_link?: string | null;
   image_url?: string | null;
   max_participants?: number;
@@ -55,6 +56,7 @@ export async function createActivity(
       end_time: input.end_time,
       location: input.location,
       point: Number(input.point) || 0,
+      require_portfolio: Boolean(input.require_portfolio),
       form_link: input.form_link?.trim() || null,
       image_url: input.image_url?.trim() || null,
       max_participants: Number(input.max_participants) || 0,

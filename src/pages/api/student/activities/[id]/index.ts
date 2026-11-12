@@ -60,11 +60,13 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
             max_participants: activity.max_participants,
             current_register_participants: activity._count.RegisterActivities,
             stars: activity.stars,
+            require_portfolio: activity.require_portfolio,
             form_link: activity.form_link,
             image_url: activity.image_url,
             activity_type: activity.activity_type,
             created_at: activity.created_at,
-            registered: registration ? true : false, // <-- เพิ่มตรงนี้
+            registered: registration ? true : false,
+            portfolio_url: registration?.portfolio_url || null,
             department: {
                 id: activity.department.id,
                 name_th: activity.department.name_th,

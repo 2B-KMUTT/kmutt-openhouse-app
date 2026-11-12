@@ -61,6 +61,7 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
         form_link: act.form_link,
         image_url: act.image_url,
         stars: act.stars,
+        require_portfolio: act.require_portfolio,
         max_participants: act.max_participants,
         current_register_participants: act._count.RegisterActivities,
         created_at: act.created_at,

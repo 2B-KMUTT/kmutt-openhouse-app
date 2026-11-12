@@ -137,6 +137,7 @@ model Activities {
   display                       Boolean              @default(true)
   image_url                     String?
   stars                         Int                  @default(0)
+  require_portfolio             Boolean              @default(false)
   max_participants              Int
   current_register_participants Int                  @default(0)
   created_at                    DateTime             @default(now())
@@ -151,6 +152,7 @@ model RegisterActivities {
   id            Int      @id @default(autoincrement())
   studentId     Int
   activityId    Int
+  portfolio_url String?  @db.VarChar(2048)
   registered_at DateTime @default(now())
 
   student  Students   @relation(fields: [studentId], references: [id])

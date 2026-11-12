@@ -22,6 +22,7 @@ import {
     Text,
     SimpleGrid,
     useColorModeValue,
+    Switch,
 } from "@chakra-ui/react"
 import { AddIcon } from "@chakra-ui/icons"
 import KMAppLayout from "@/views/layouts/KMAppLayout"
@@ -46,6 +47,7 @@ const AddActivityPage = () => {
     const [endTime, setEndTime] = useState("")
     const [location, setLocation] = useState("")
     const [point, setPoint] = useState(1)
+    const [requirePortfolio, setRequirePortfolio] = useState(false)
     const [formLink, setFormLink] = useState("")
     const [imageUrl, setImageUrl] = useState("")
     const [maxParticipants, setMaxParticipants] = useState(0)
@@ -102,6 +104,7 @@ const AddActivityPage = () => {
             end_time: endTime,
             location: location.trim(),
             point,
+            require_portfolio: requirePortfolio,
             form_link: formLink.trim(),
             image_url: imageUrl.trim(),
             max_participants: maxParticipants,
@@ -360,6 +363,18 @@ const AddActivityPage = () => {
                         value={formLink}
                         focusBorderColor="orange.500"
                         onChange={e => setFormLink(e.target.value)}
+                    />
+                </FormControl>
+
+                <FormControl display="flex" alignItems="center">
+                    <FormLabel htmlFor="require-portfolio" mb="0" fontSize="xs" fontWeight="semibold">
+                        เปิดรับแนบลิงก์ Portfolio
+                    </FormLabel>
+                    <Switch
+                        id="require-portfolio"
+                        colorScheme="orange"
+                        isChecked={requirePortfolio}
+                        onChange={(e) => setRequirePortfolio(e.target.checked)}
                     />
                 </FormControl>
 

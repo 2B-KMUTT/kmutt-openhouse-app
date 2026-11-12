@@ -15,6 +15,8 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
   try {
     const activityId = Number(id);
     const studentId = req.user.id;
+    const { action, portfolio_url } = req.body || {};
+    const trimmedPortfolio = typeof portfolio_url === "string" ? portfolio_url.trim() : null;
 
     // ดึงข้อมูลกิจกรรมที่ต้องการลงทะเบียน
     const activity = await prisma.activities.findUnique({
@@ -32,7 +34,20 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
     });
 
     if (registration) {
-      // ถ้ามีแล้ว => ลบ (ยกเลิก) โดยไม่ตรวจสอบว่าเต็มหรือไม่
+      // หากส่ง action เพื่ออัปเดตลิงก์พอร์ตโฟลิโอโดยเฉพาะ ไม่ต้องลบการลงทะเบียน (ไม่เสียสิทธิ์ที่นั่ง)
+      if (action === "update_portfolio") {
+        const updatedReg = await prisma.registerActivities.update({
+          where: { studentId_activityId: { studentId, activityId } },
+          data: { portfolio_url: trimmedPortfolio },
+        });
+        return res.status(200).json({
+          registered: true,
+          portfolio_url: updatedReg.portfolio_url,
+          message: "อัปเดตลิงก์ Portfolio เรียบร้อย",
+        });
+      }
+
+      // ถ้าไม่มี action อัปเดต => ลบ (ยกเลิกการลงทะเบียน)
       await prisma.registerActivities.delete({
         where: { studentId_activityId: { studentId, activityId } },
       });
@@ -69,11 +84,19 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
     }
 
     // ลงทะเบียนใหม่
-    await prisma.registerActivities.create({
-      data: { studentId, activityId },
+    const newReg = await prisma.registerActivities.create({
+      data: {
+        studentId,
+        activityId,
+        portfolio_url: trimmedPortfolio,
+      },
     });
 
-    return res.status(200).json({ registered: true, message: "ลงทะเบียนเรียบร้อย" });
+    return res.status(200).json({
+      registered: true,
+      portfolio_url: newReg.portfolio_url,
+      message: "ลงทะเบียนเรียบร้อย",
+    });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ message: "Internal server error" });

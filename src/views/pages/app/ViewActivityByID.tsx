@@ -17,6 +17,18 @@ import {
     Flex,
     Stack,
     useToast,
+    Input,
+    FormControl,
+    FormLabel,
+    FormHelperText,
+    useDisclosure,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalCloseButton,
+    ModalBody,
+    ModalFooter,
 } from "@chakra-ui/react"
 import Head from "next/head"
 
@@ -36,6 +48,8 @@ interface Activity {
     form_link?: string
     activity_type: string
     created_at: string
+    require_portfolio?: boolean
+    portfolio_url?: string | null
     department: { id: number; name_th: string; name_en: string }
     faculty: { id: number; name_th: string; name_en: string }
     registered?: boolean
@@ -47,6 +61,8 @@ const ViewActivityByID = () => {
     const [activity, setActivity] = useState<Activity | null>(null)
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
+    const [portfolioUrl, setPortfolioUrl] = useState("")
+    const { isOpen, onOpen, onClose } = useDisclosure()
     const bgColor = useColorModeValue("white", "gray.700")
     const textColor = useColorModeValue("gray.700", "gray.400")
     const regisText = useColorModeValue("gray.700", "gray.400")
@@ -59,10 +75,59 @@ const ViewActivityByID = () => {
             const res = await fetch(`/api/student/activities/${id}`)
             const data: Activity = await res.json()
             setActivity(data)
+            if (data.portfolio_url) {
+                setPortfolioUrl(data.portfolio_url)
+            }
         } catch (err) {
             console.error(err)
         } finally {
             setLoading(false)
+        }
+    }
+
+    const handleSubmitPortfolio = async () => {
+        if (!activity) return
+        setSaving(true)
+        try {
+            const isEditing = Boolean(activity.registered)
+            const payload = isEditing
+                ? { action: "update_portfolio", portfolio_url: portfolioUrl }
+                : { portfolio_url: portfolioUrl }
+
+            const res = await fetch(`/api/student/activities/${activity.id}/register`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+            })
+            const data = await res.json()
+            if (!res.ok) {
+                toast({
+                    title: isEditing ? "แก้ไขไม่สำเร็จ" : "ลงทะเบียนล้มเหลว",
+                    description: data.message,
+                    status: "error",
+                    duration: 3000,
+                    isClosable: true,
+                })
+            } else {
+                toast({
+                    title: isEditing ? "บันทึกการแก้ไขเรียบร้อย" : "ลงทะเบียนสำเร็จ",
+                    status: "success",
+                    duration: 3000,
+                    isClosable: true,
+                })
+                onClose()
+                fetchActivity()
+            }
+        } catch {
+            toast({
+                title: "เกิดข้อผิดพลาด",
+                description: "ไม่สามารถดำเนินการได้",
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+            })
+        } finally {
+            setSaving(false)
         }
     }
 
@@ -136,24 +201,31 @@ const ViewActivityByID = () => {
             <Box maxW="full" bg={bgColor} rounded="xl" p={6} shadow="sm">
                 <VStack spacing={4} align="start">
                     {/* Badge ประเภทกิจกรรม */}
-                    <Badge
-                        fontSize="md"
-                        px={2}
-                        py={1}
-                        colorScheme={
-                            activity.activity_type === "workshop"
-                                ? "blue"
+                    <HStack spacing={2} wrap="wrap">
+                        <Badge
+                            fontSize="md"
+                            px={2}
+                            py={1}
+                            colorScheme={
+                                activity.activity_type === "workshop"
+                                    ? "blue"
+                                    : activity.activity_type === "regis_activity"
+                                        ? "green"
+                                        : "orange"
+                            }
+                        >
+                            {activity.activity_type === "workshop"
+                                ? "Workshop"
                                 : activity.activity_type === "regis_activity"
-                                    ? "green"
-                                    : "orange"
-                        }
-                    >
-                        {activity.activity_type === "workshop"
-                            ? "Workshop"
-                            : activity.activity_type === "regis_activity"
-                                ? "กิจกรรมที่ต้องลงทะเบียน"
-                                : "กิจกรรมทั่วไป"}
-                    </Badge>
+                                    ? "กิจกรรมที่ต้องลงทะเบียน"
+                                    : "กิจกรรมทั่วไป"}
+                        </Badge>
+                        {activity.require_portfolio && (
+                            <Badge colorScheme="purple" fontSize="md" px={2} py={1}>
+                                แนบ Portfolio
+                            </Badge>
+                        )}
+                    </HStack>
 
                     <Heading size={{ base: "md", md: "lg" }} lineHeight={{ base: "10", md: "50px" }}>{activity.title}</Heading>
 
@@ -200,21 +272,112 @@ const ViewActivityByID = () => {
 
 
 
+                    {/* ลิงก์ Portfolio ที่ส่งแล้ว */}
+                    {activity.registered && activity.portfolio_url && (
+                        <Text fontSize="sm" color="gray.600">
+                            ลิงก์พอร์ต:{" "}
+                            <Text
+                                as="a"
+                                href={activity.portfolio_url}
+                                target="_blank"
+                                rel="noreferrer"
+                                color="orange.500"
+                                textDecoration="underline"
+                                fontWeight="medium"
+                            >
+                                {activity.portfolio_url}
+                            </Text>
+                        </Text>
+                    )}
+
                     <Divider />
 
                     {/* ปุ่มลงทะเบียน / ยกเลิก */}
                     {(activity.activity_type === "workshop" || activity.activity_type === "regis_activity") && (
-                        <Button
-                            width={{ base: "full", md: "auto" }}
-                            colorScheme={activity.registered ? "red" : "orange"}
-                            onClick={handleRegister}
-                            isLoading={saving}
-                        >
-                            {activity.registered ? "ยกเลิกการลงทะเบียน" : "ลงทะเบียนกิจกรรม"}
-                        </Button>
+                        <HStack spacing={3} wrap="wrap" w={{ base: "full", md: "auto" }}>
+                            {activity.registered ? (
+                                <>
+                                    {activity.require_portfolio && (
+                                        <Button
+                                            colorScheme="orange"
+                                            variant="outline"
+                                            onClick={onOpen}
+                                            isLoading={saving}
+                                        >
+                                            แก้ไขลิงก์
+                                        </Button>
+                                    )}
+                                    <Button
+                                        colorScheme="red"
+                                        onClick={handleRegister}
+                                        isLoading={saving}
+                                    >
+                                        ยกเลิกการลงทะเบียน
+                                    </Button>
+                                </>
+                            ) : (
+                                <Button
+                                    width={{ base: "full", md: "auto" }}
+                                    colorScheme="orange"
+                                    onClick={() => {
+                                        if (activity.require_portfolio) {
+                                            setPortfolioUrl("")
+                                            onOpen()
+                                        } else {
+                                            handleRegister()
+                                        }
+                                    }}
+                                    isLoading={saving}
+                                >
+                                    ลงทะเบียนกิจกรรม
+                                </Button>
+                            )}
+                        </HStack>
                     )}
                 </VStack>
             </Box >
+
+            {/* Modal แนบลิงก์ Portfolio */}
+            <Modal isOpen={isOpen} onClose={onClose} isCentered size="md">
+                <ModalOverlay />
+                <ModalContent rounded="xl">
+                    <ModalHeader fontSize="md">
+                        {activity.registered ? "แก้ไขลิงก์ Portfolio" : "ลงทะเบียนกิจกรรม"}
+                    </ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody pb={6}>
+                        <VStack spacing={4} align="stretch">
+                            <FormControl isRequired>
+                                <FormLabel fontSize="sm" fontWeight="semibold">ลิงก์ Portfolio</FormLabel>
+                                <Input
+                                    size="md"
+                                    rounded="lg"
+                                    placeholder="วางลิงก์ เช่น Google Drive หรือ Canva"
+                                    value={portfolioUrl}
+                                    focusBorderColor="orange.500"
+                                    onChange={(e) => setPortfolioUrl(e.target.value)}
+                                />
+                                <FormHelperText fontSize="xs" color="orange.500">
+                                    * โปรดตั้งค่าลิงก์เป็นสาธารณะ (Public)
+                                </FormHelperText>
+                            </FormControl>
+                        </VStack>
+                    </ModalBody>
+                    <ModalFooter pt={0}>
+                        <Button variant="ghost" size="sm" mr={3} onClick={onClose}>
+                            ยกเลิก
+                        </Button>
+                        <Button
+                            colorScheme="orange"
+                            size="sm"
+                            onClick={handleSubmitPortfolio}
+                            isLoading={saving}
+                        >
+                            {activity.registered ? "บันทึกการแก้ไข" : "ยืนยันลงทะเบียน"}
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
         </StudentAppLayout >
     )
 }

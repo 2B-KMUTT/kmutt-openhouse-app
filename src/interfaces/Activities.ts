@@ -11,6 +11,7 @@ export interface Activity {
   current_register_participants: number;
   point: number;
   stars: number;
+  require_portfolio?: boolean;
   form_link?: string;
   image_url?: string;
   round: number;
@@ -41,6 +42,7 @@ export interface Activity {
   registrations?: {
     id: number;
     registered_at: string;
+    portfolio_url?: string | null;
     student: {
       id: number;
       first_name: string;

@@ -237,13 +237,14 @@ export const ViewActivityPage = () => {
 
         const studentRows = activity.registrations.map((reg) => ({
             "ชื่อ-สกุล": `${reg.student.first_name} ${reg.student.last_name}`,
-            Email: reg.student.email,
-            เบอร์โทร: reg.student.phone,
+            "อีเมล": reg.student.email,
+            "เบอร์โทร": reg.student.phone,
+            "ลิงก์พอร์ต": reg.portfolio_url || "-",
             "เวลาลงทะเบียน": new Date(reg.registered_at).toLocaleString("th-TH"),
         }));
 
         XLSX.utils.sheet_add_aoa(wsActivity, [[""]], { origin: -1 });
-        XLSX.utils.sheet_add_aoa(wsActivity, [["ชื่อ-สกุล", "Email", "เบอร์โทร", "เวลาลงทะเบียน"]], { origin: -1 });
+        XLSX.utils.sheet_add_aoa(wsActivity, [["ชื่อ-สกุล", "อีเมล", "เบอร์โทร", "ลิงก์พอร์ต", "เวลาลงทะเบียน"]], { origin: -1 });
         XLSX.utils.sheet_add_json(wsActivity, studentRows, { skipHeader: true, origin: -1 });
 
         XLSX.utils.book_append_sheet(wb, wsActivity, "Registrations");
@@ -310,6 +311,11 @@ export const ViewActivityPage = () => {
                                 {activity.owner && isSuperAdmin && (
                                     <Badge colorScheme="orange" variant="outline" fontSize="xs">
                                         สังกัด: {activity.owner.name} ({activity.owner.username})
+                                    </Badge>
+                                )}
+                                {activity.require_portfolio && (
+                                    <Badge colorScheme="purple" fontSize="xs">
+                                        เปิดรับแนบ Portfolio
                                     </Badge>
                                 )}
                             </HStack>
@@ -445,6 +451,7 @@ export const ViewActivityPage = () => {
                                                     <Th fontSize="xs" py={3} minW="160px">ชื่อ-สกุล</Th>
                                                     <Th fontSize="xs" py={3} minW="180px">อีเมล</Th>
                                                     <Th fontSize="xs" py={3} width="120px">เบอร์โทร</Th>
+                                                    <Th fontSize="xs" py={3} minW="130px">ลิงก์พอร์ต</Th>
                                                     <Th fontSize="xs" py={3} width="160px">เวลาลงทะเบียน</Th>
                                                 </Tr>
                                             </Thead>
@@ -454,6 +461,23 @@ export const ViewActivityPage = () => {
                                                         <Td fontWeight="medium" py={3}>{reg.student.first_name} {reg.student.last_name}</Td>
                                                         <Td py={3}>{reg.student.email}</Td>
                                                         <Td py={3}>{reg.student.phone}</Td>
+                                                        <Td py={3}>
+                                                            {reg.portfolio_url ? (
+                                                                <Button
+                                                                    as="a"
+                                                                    href={reg.portfolio_url}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    size="xs"
+                                                                    colorScheme="orange"
+                                                                    variant="outline"
+                                                                >
+                                                                    เปิดลิงก์
+                                                                </Button>
+                                                            ) : (
+                                                                <Text color="gray.400" fontSize="xs">-</Text>
+                                                            )}
+                                                        </Td>
                                                         <Td color="gray.500" py={3} whiteSpace="nowrap">
                                                             {new Date(reg.registered_at).toLocaleString("th-TH")}
                                                         </Td>
@@ -789,6 +813,18 @@ export const ViewActivityPage = () => {
                                             focusBorderColor="orange.500"
                                             value={form.form_link || ""}
                                             onChange={(e) => setForm({ ...form, form_link: e.target.value })}
+                                        />
+                                    </FormControl>
+
+                                    <FormControl display="flex" alignItems="center">
+                                        <FormLabel htmlFor="edit-require-portfolio" mb="0" fontSize="xs" fontWeight="semibold">
+                                            เปิดรับแนบลิงก์ Portfolio
+                                        </FormLabel>
+                                        <Switch
+                                            id="edit-require-portfolio"
+                                            colorScheme="orange"
+                                            isChecked={form.require_portfolio ?? false}
+                                            onChange={(e) => setForm({ ...form, require_portfolio: e.target.checked })}
                                         />
                                     </FormControl>
                                 </VStack>
