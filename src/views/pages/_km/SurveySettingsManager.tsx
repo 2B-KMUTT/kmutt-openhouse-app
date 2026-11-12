@@ -531,7 +531,7 @@ export default function SurveySettingsManager() {
                                 {/* Provinces */}
                                 <Box>
                                     <FormLabel fontSize="sm" fontWeight="bold" mb={2}>
-                                        รายชื่อจังหวัดในภาคอีสานและจังหวัดใกล้เคียง ({provinces.length} จังหวัด)
+                                        รายชื่อจังหวัด ({provinces.length} จังหวัด)
                                     </FormLabel>
                                     <Flex wrap="wrap" gap={2} mb={3}>
                                         {provinces.map((p) => (

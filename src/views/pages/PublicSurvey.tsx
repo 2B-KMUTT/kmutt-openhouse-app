@@ -101,18 +101,8 @@ const RatingScale = ({
 
 // Default Options constants
 const DEFAULT_PROVINCES = [
-    "นครปฐม",
     "ราชบุรี",
-    "กาญจนบุรี",
-    "สุพรรณบุรี",
-    "สมุทรสาคร",
-    "สมุทรสงคราม",
-    "เพชรบุรี",
-    "กรุงเทพมหานคร",
-    "นนทบุรี",
-    "ปทุมธานี",
-    "ร้อยเอ็ด",
-    "อื่น ๆ",
+    "นครปฐม",
 ]
 
 const DEFAULT_SOURCE_CHANNELS = [
@@ -389,7 +379,7 @@ export const PublicSurvey = () => {
         }
 
         if (recommendIntent === null) {
-            toast({ title: "กรุณาประเมินระดับความอยากสมัคร/แนะนำให้มาเรียน มจธ.", status: "error" })
+            toast({ title: "กรุณาประเมินระดับความอยากสมัคร/แนะนำให้มาเรียน มจธ.ราชบุรี", status: "error" })
             return
         }
         if (overallSatisfaction === null) {
@@ -1069,54 +1059,61 @@ export const PublicSurvey = () => {
 
                         {/* ----------------- Section: ปิดท้าย (ทุกคน) ----------------- */}
                         <Box>
-                            <Badge colorScheme="orange" px={2} py={0.5} rounded="md" mb={4}>
-                                ส่วนปิดท้าย
-                            </Badge>
+                            {(() => {
+                                const closingStartNum = role === "นักเรียน" ? 9 : role === "ผู้ปกครอง" ? 8 : 7
+                                return (
+                                    <>
+                                        <Badge colorScheme="orange" px={2} py={0.5} rounded="md" mb={4}>
+                                            ส่วนปิดท้าย
+                                        </Badge>
 
-                            {/* Intent */}
-                            <Box mb={6}>
-                                <Text fontWeight="semibold" fontSize="md" mb={1} color={textColor}>
-                                    หลังจากมางานนี้ อยากสมัคร / แนะนำให้มาเรียน มจธ. แค่ไหน <Text as="span" color="red.500">*</Text>
-                                </Text>
-                                <Text fontSize="xs" color={mutedColor} mb={3}>
-                                    (1 = น้อยที่สุด, 5 = มากที่สุด)
-                                </Text>
-                                <RatingScale
-                                    value={recommendIntent}
-                                    onChange={setRecommendIntent}
-                                />
-                            </Box>
+                                        {/* Intent */}
+                                        <Box mb={6}>
+                                            <Text fontWeight="semibold" fontSize="md" mb={1} color={textColor}>
+                                                {closingStartNum}. หลังจากมางานนี้ อยากสมัคร / แนะนำให้มาเรียน มจธ.ราชบุรี แค่ไหน <Text as="span" color="red.500">*</Text>
+                                            </Text>
+                                            <Text fontSize="xs" color={mutedColor} mb={3}>
+                                                (1 = น้อยที่สุด, 5 = มากที่สุด)
+                                            </Text>
+                                            <RatingScale
+                                                value={recommendIntent}
+                                                onChange={setRecommendIntent}
+                                            />
+                                        </Box>
 
-                            {/* Satisfaction */}
-                            <Box mb={6}>
-                                <Text fontWeight="semibold" fontSize="md" mb={1} color={textColor}>
-                                    ความพึงพอใจต่องานวันนี้ <Text as="span" color="red.500">*</Text>
-                                </Text>
-                                <Text fontSize="xs" color={mutedColor} mb={3}>
-                                    (1 = น้อยที่สุด, 5 = มากที่สุด)
-                                </Text>
-                                <RatingScale
-                                    value={overallSatisfaction}
-                                    onChange={setOverallSatisfaction}
-                                />
-                            </Box>
+                                        {/* Satisfaction */}
+                                        <Box mb={6}>
+                                            <Text fontWeight="semibold" fontSize="md" mb={1} color={textColor}>
+                                                {closingStartNum + 1}. ความพึงพอใจต่องานวันนี้ <Text as="span" color="red.500">*</Text>
+                                            </Text>
+                                            <Text fontSize="xs" color={mutedColor} mb={3}>
+                                                (1 = น้อยที่สุด, 5 = มากที่สุด)
+                                            </Text>
+                                            <RatingScale
+                                                value={overallSatisfaction}
+                                                onChange={setOverallSatisfaction}
+                                            />
+                                        </Box>
 
-                            {/* Feedback Note */}
-                            <Box>
-                                <Text fontWeight="semibold" fontSize="md" mb={1} color={textColor}>
-                                    อยากบอกอะไรเพิ่ม{" "}
-                                    <Text as="span" color={mutedColor} fontSize="sm">
-                                        (ไม่บังคับ)
-                                    </Text>
-                                </Text>
-                                <Textarea
-                                    placeholder="ข้อเสนอแนะเพิ่มเติม สิ่งที่ประทับใจ หรือสิ่งที่อยากให้จัดในครั้งถัดไป..."
-                                    value={feedbackNote}
-                                    onChange={(e) => setFeedbackNote(e.target.value)}
-                                    rows={3}
-                                    rounded="xl"
-                                />
-                            </Box>
+                                        {/* Feedback Note */}
+                                        <Box>
+                                            <Text fontWeight="semibold" fontSize="md" mb={1} color={textColor}>
+                                                {closingStartNum + 2}. อยากบอกอะไรเพิ่ม{" "}
+                                                <Text as="span" color={mutedColor} fontSize="sm">
+                                                    (ไม่บังคับ)
+                                                </Text>
+                                            </Text>
+                                            <Textarea
+                                                placeholder="ข้อเสนอแนะเพิ่มเติม สิ่งที่ประทับใจ หรือสิ่งที่อยากให้จัดในครั้งถัดไป..."
+                                                value={feedbackNote}
+                                                onChange={(e) => setFeedbackNote(e.target.value)}
+                                                rows={3}
+                                                rounded="xl"
+                                            />
+                                        </Box>
+                                    </>
+                                )
+                            })()}
                         </Box>
 
                         <Divider />

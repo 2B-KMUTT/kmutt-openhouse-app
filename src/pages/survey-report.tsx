@@ -384,7 +384,7 @@ export default function SurveyReportPage() {
             สิ่งที่ครูต้องการสนับสนุน: parseArray(s.teacherNeeds).join(", ") || "-",
             ความสนใจเทียบโอน_ครู: s.teacherCreditTransferInterest ?? "-",
             ข้อมูลติดต่อโรงเรียน_ครู: s.teacherSchoolContact || "-",
-            ความอยากสมัครแนะนำมจธ_1ถึง5: s.recommendIntent ?? "-",
+            ความอยากสมัครแนะนำมจธ_ราชบุรี_1ถึง5: s.recommendIntent ?? "-",
             ความพึงพอใจต่องาน_1ถึง5: s.overallSatisfaction ?? "-",
             ข้อเสนอแนะเพิ่มเติม: s.feedbackNote || "-",
             วันที่ตอบ: new Date(s.createdAt).toLocaleString("th-TH"),
@@ -512,7 +512,7 @@ export default function SurveyReportPage() {
                                     <Flex align="center" gap={2} mb={1}>
                                         <HeartHandshake size={18} color="#0088FE" />
                                         <StatLabel color={mutedColor} fontSize="sm">
-                                            ความอยากสมัคร / แนะนำ มจธ.
+                                            ความอยากสมัคร / แนะนำ มจธ.ราชบุรี
                                         </StatLabel>
                                     </Flex>
                                     <StatNumber fontSize="3xl" color="blue.500" fontWeight="bold">
@@ -951,7 +951,7 @@ export default function SurveyReportPage() {
                         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
                             <Card p={5} rounded="xl" shadow="sm" borderWidth="1px" borderColor={borderColor}>
                                 <CardHeader p={0} mb={4}>
-                                    <Heading size="sm">การกระจายตัว: ความอยากสมัคร / แนะนำ มจธ. (1–5)</Heading>
+                                    <Heading size="sm">การกระจายตัว: ความอยากสมัคร / แนะนำ มจธ.ราชบุรี (1–5)</Heading>
                                 </CardHeader>
                                 <CardBody p={0}>
                                     <Box h="220px">
