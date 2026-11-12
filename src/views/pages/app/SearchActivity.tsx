@@ -86,11 +86,14 @@ const SearchActivityPage = () => {
             if (selectedDates.length > 0) params.append("dates", selectedDates.join(","))
 
             const res = await fetch(`/api/student/activities/search?${params.toString()}`)
+            if (!res.ok) throw new Error("Failed to fetch search activities")
             const data = await res.json()
-            setActivities(data.data)
-            setTotalPages(data.meta.totalPages)
+            setActivities(Array.isArray(data?.data) ? data.data : [])
+            setTotalPages(data?.meta?.totalPages || 0)
         } catch (err) {
             console.error(err)
+            setActivities([])
+            setTotalPages(0)
         } finally {
             setLoading(false)
         }

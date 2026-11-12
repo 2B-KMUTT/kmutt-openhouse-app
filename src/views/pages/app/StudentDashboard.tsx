@@ -87,11 +87,14 @@ const StudentDashboardPage = () => {
             setLoading(true)
             try {
                 const res = await fetch(`/api/student/activities?page=${page}&search=${search}`)
+                if (!res.ok) throw new Error("Failed to fetch activities")
                 const data = await res.json()
-                setActivities(data.data)
-                setMeta(data.meta)
+                setActivities(Array.isArray(data?.data) ? data.data : [])
+                setMeta(data?.meta || null)
             } catch (e) {
                 console.error(e)
+                setActivities([])
+                setMeta(null)
             } finally {
                 setLoading(false)
             }
@@ -264,7 +267,7 @@ const StudentDashboardPage = () => {
                     <Flex justify="center" py={10}>
                         <Spinner size="xl" />
                     </Flex>
-                ) : activities.length === 0 ? (
+                ) : !activities || activities.length === 0 ? (
                     <Text color="gray.500">ไม่พบกิจกรรม</Text>
                 ) : (
                     <VStack spacing={4} align="stretch">

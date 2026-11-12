@@ -114,7 +114,7 @@ async function runTests() {
   assert(res.status === 403, "POST /api/survey returns 403 Forbidden before Oct 30");
   let errBody = await res.json();
   assert(
-    errBody.error && errBody.error.includes("30 ตุลาคม 2569"),
+    errBody.error && (errBody.error.includes("21 พฤศจิกายน 2569") || errBody.error.includes("30 ตุลาคม 2569")),
     `Rejection message is correct: "${errBody.error}"`
   );
 

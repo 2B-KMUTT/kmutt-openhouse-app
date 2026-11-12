@@ -73,9 +73,10 @@ const ViewActivityByID = () => {
         setLoading(true)
         try {
             const res = await fetch(`/api/student/activities/${id}`)
+            if (!res.ok) throw new Error("Failed to fetch activity")
             const data: Activity = await res.json()
             setActivity(data)
-            if (data.portfolio_url) {
+            if (data?.portfolio_url) {
                 setPortfolioUrl(data.portfolio_url)
             }
         } catch (err) {
