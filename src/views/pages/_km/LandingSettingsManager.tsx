@@ -175,7 +175,7 @@ export default function LandingSettingsManager() {
     };
 
     return (
-        <KMAppLayout>
+        <KMAppLayout navigation="จัดการข้อความหน้าแรก" superAdminOnly>
             <Box maxW="1000px" mx="auto" pb={16}>
                 {/* Header */}
                 <Flex

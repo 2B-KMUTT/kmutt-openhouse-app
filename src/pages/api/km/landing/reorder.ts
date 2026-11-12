@@ -54,4 +54,4 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
   }
 }
 
-export default withAuth(handler, ["kmuser"]);
+export default withAuth(handler, ["kmuser"], ["SUPER_ADMIN"]);

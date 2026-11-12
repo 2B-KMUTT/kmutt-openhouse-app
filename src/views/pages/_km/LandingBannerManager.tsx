@@ -258,7 +258,7 @@ export default function LandingBannerManager() {
     const activeCount = banners.filter((b) => b.display).length;
 
     return (
-        <KMAppLayout>
+        <KMAppLayout navigation="จัดการ Banner หน้าแรก" superAdminOnly>
             <Box maxW="1200px" mx="auto" pb={12}>
                 {/* Header */}
                 <Flex

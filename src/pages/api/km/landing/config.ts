@@ -98,5 +98,5 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
   return res.status(405).json({ message: "Method not allowed" });
 }
 
-export default withAuth(handler, ["kmuser"]);
+export default withAuth(handler, ["kmuser"], ["SUPER_ADMIN"]);
 

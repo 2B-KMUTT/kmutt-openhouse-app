@@ -332,7 +332,7 @@ export default function LandingScheduleManager() {
     });
 
     return (
-        <KMAppLayout navigation="จัดการกำหนดการหน้าแรก">
+        <KMAppLayout navigation="จัดการกำหนดการหน้าแรก" superAdminOnly>
             <Box>
                 {/* Header Section */}
                 <Flex

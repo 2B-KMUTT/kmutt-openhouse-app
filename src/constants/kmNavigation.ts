@@ -18,6 +18,7 @@ export interface KMMenuItem {
     link?: string
     divider?: boolean
     isLogout?: boolean
+    superAdminOnly?: boolean
 }
 
 export const KM_MENU_ITEMS: KMMenuItem[] = [
@@ -25,11 +26,11 @@ export const KM_MENU_ITEMS: KMMenuItem[] = [
     { label: "เพิ่มกิจกรรม", icon: MdAddBusiness, link: "/_km/activity/add" },
     { label: "จัดการ Staff", icon: MdPerson, link: "/_km/staff" },
     { divider: true },
-    { label: "จัดการ Banner หน้าแรก", icon: MdImage, link: "/_km/landing-banner" },
-    { label: "จัดการข้อความหน้าแรก", icon: MdTune, link: "/_km/landing-settings" },
-    { label: "จัดการกำหนดการหน้าแรก", icon: MdCalendarToday, link: "/_km/landing-schedule" },
-    { label: "จัดการบูท & โซนหน้าแรก", icon: MdStorefront, link: "/_km/landing-booth" },
-    { divider: true },
+    { label: "จัดการ Banner หน้าแรก", icon: MdImage, link: "/_km/landing-banner", superAdminOnly: true },
+    { label: "จัดการข้อความหน้าแรก", icon: MdTune, link: "/_km/landing-settings", superAdminOnly: true },
+    { label: "จัดการกำหนดการหน้าแรก", icon: MdCalendarToday, link: "/_km/landing-schedule", superAdminOnly: true },
+    { label: "จัดการบูท & โซนหน้าแรก", icon: MdStorefront, link: "/_km/landing-booth", superAdminOnly: true },
+    { divider: true, superAdminOnly: true },
     { label: "ตั้งค่าแบบสอบถาม", icon: MdPoll, link: "/_km/survey-settings" },
     { label: "รายงานผลแบบสอบถาม", icon: MdAssessment, link: "/survey-report" },
     { divider: true },

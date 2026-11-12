@@ -273,7 +273,7 @@ export default function LandingBoothManager() {
     };
 
     return (
-        <KMAppLayout navigation="จัดการบูทและโซนหน้าแรก">
+        <KMAppLayout navigation="จัดการบูท & โซนหน้าแรก" superAdminOnly>
             <Box>
                 {/* Header */}
                 <Flex

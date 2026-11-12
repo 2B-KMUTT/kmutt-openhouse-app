@@ -20,7 +20,8 @@ export interface AuthenticatedRequest extends NextApiRequest {
 
 export function withAuth(
   handler: (req: AuthenticatedRequest, res: NextApiResponse) => void | Promise<void>,
-  allowedRoles: Role[] = []
+  allowedRoles: Role[] = [],
+  allowedAdminRoles: AdminRole[] = []
 ) {
   return async (req: NextApiRequest, res: NextApiResponse) => {
     const token = (await getToken({ req, secret })) as JWT | null;
@@ -31,6 +32,10 @@ export function withAuth(
 
     if (allowedRoles.length > 0 && !allowedRoles.includes(token.role)) {
       return res.status(403).json({ error: `Forbidden: Requires ${allowedRoles.join(", ")}` });
+    }
+
+    if (allowedAdminRoles.length > 0 && (!token.adminRole || !allowedAdminRoles.includes(token.adminRole))) {
+      return res.status(403).json({ error: `Forbidden: Requires ${allowedAdminRoles.join(", ")} role` });
     }
 
     const authReq = req as AuthenticatedRequest;

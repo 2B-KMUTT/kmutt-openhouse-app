@@ -6,7 +6,7 @@ import {
     Divider,
 } from "@chakra-ui/react"
 import { useRouter } from "next/router"
-import { signOut } from "next-auth/react"
+import { signOut, useSession } from "next-auth/react"
 import { PRIMARY } from "@/constants/colors"
 import { KM_MENU_ITEMS } from "@/constants/kmNavigation"
 
@@ -15,6 +15,10 @@ const KMSidebar = () => {
     const hoverBg = useColorModeValue("gray.100", "gray.600")
     const textColor = useColorModeValue("gray.800", "gray.100")
     const router = useRouter()
+    const { data: session } = useSession()
+    const isSuperAdmin = session?.user?.adminRole === "SUPER_ADMIN"
+
+    const menuItems = KM_MENU_ITEMS.filter((item) => !item.superAdminOnly || isSuperAdmin)
 
     return (
         <Box
@@ -27,7 +31,7 @@ const KMSidebar = () => {
             flexShrink={0}
         >
             <VStack align="stretch" spacing={1.5}>
-                {KM_MENU_ITEMS.map((item, index) => {
+                {menuItems.map((item, index) => {
                     if (item.divider) {
                         return <Divider key={`divider-${index}`} my={1} />
                     }

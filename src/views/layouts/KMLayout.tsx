@@ -18,7 +18,7 @@ import { Menu, X, Moon, Sun } from "lucide-react";
 import { ReactNode, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import LogoutButton from "@/components/Auth/LogoutButton";
 import { PRIMARY, SECONDARY } from "@/constants/colors";
 import { KM_MENU_ITEMS } from "@/constants/kmNavigation";
@@ -31,6 +31,10 @@ export default function KMLayout({ children }: KMLayoutProps) {
     const [menuOpen, setMenuOpen] = useState(false);
     const { colorMode, toggleColorMode } = useColorMode();
     const router = useRouter();
+    const { data: session } = useSession();
+    const isSuperAdmin = session?.user?.adminRole === "SUPER_ADMIN";
+
+    const menuItems = KM_MENU_ITEMS.filter((item) => !item.superAdminOnly || isSuperAdmin);
 
     const bg = useColorModeValue("white", "gray.900");
     const textColor = useColorModeValue("gray.800", "gray.100");
@@ -133,7 +137,7 @@ export default function KMLayout({ children }: KMLayoutProps) {
                             overflowY="auto"
                         >
                             <VStack align="stretch" spacing={1}>
-                                {KM_MENU_ITEMS.map((item, index) => {
+                                {menuItems.map((item, index) => {
                                     if (item.divider) {
                                         return <Divider key={`divider-${index}`} my={1} />
                                     }
